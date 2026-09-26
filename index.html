@@ -646,15 +646,13 @@ body{
   padding: 0.2rem 0;
 }
 
-/* PERIODIC TABLE PAGE */
+/* PERIODIC TABLE */
 .periodic-page{
   padding:6.5rem clamp(1rem,3vw,2rem) 3rem;
   max-width: 1500px; margin:0 auto; min-height:100vh;
   animation: fadeIn 0.35s ease-out;
 }
-.periodic-header{
-  text-align:center; margin-bottom: 1.5rem;
-}
+.periodic-header{text-align:center; margin-bottom: 1.5rem;}
 .periodic-header h2{
   font-family:'Exo 2',sans-serif; font-size:var(--step-2);
   font-weight:800; margin-bottom:0.5rem;
@@ -663,15 +661,12 @@ body{
   -webkit-text-fill-color:transparent; color:transparent;
 }
 .periodic-header p{color:var(--ink-muted); max-width:600px; margin:0 auto;}
-
 .pt-controls{
   display:flex; gap:1rem; flex-wrap:wrap;
   justify-content:center; align-items:center;
   margin-bottom:1.5rem;
 }
-.pt-search{
-  position:relative; min-width:240px;
-}
+.pt-search{position:relative; min-width:240px;}
 .pt-search input{
   width:100%; padding:0.7rem 1rem 0.7rem 2.4rem;
   background:var(--bg-card); border:1px solid var(--line);
@@ -684,9 +679,7 @@ body{
   content:'🔍'; position:absolute; left:0.85rem; top:50%;
   transform:translateY(-50%); font-size:0.9rem; opacity:0.6;
 }
-.pt-filters{
-  display:flex; gap:0.5rem; flex-wrap:wrap; justify-content:center;
-}
+.pt-filters{display:flex; gap:0.5rem; flex-wrap:wrap; justify-content:center;}
 .pt-filter{
   padding:0.45rem 0.9rem; border-radius:20px;
   border:1px solid var(--line); background:var(--bg-card);
@@ -700,11 +693,7 @@ body{
   color: var(--cat-color, var(--accent-cyan));
   border-color: var(--cat-color, var(--accent-cyan));
 }
-
-.pt-wrap{
-  overflow-x:auto; padding: 1rem 0;
-  -webkit-overflow-scrolling: touch;
-}
+.pt-wrap{overflow-x:auto; padding: 1rem 0; -webkit-overflow-scrolling: touch;}
 .periodic-table{
   display: grid;
   grid-template-columns: repeat(18, minmax(56px, 1fr));
@@ -714,30 +703,23 @@ body{
   margin: 0 auto;
   max-width: 1400px;
 }
-
 .pt-el{
-  position: relative;
-  aspect-ratio: 1;
+  position: relative; aspect-ratio: 1;
   border-radius: 8px;
   border: 1px solid var(--line);
   background: var(--bg-card);
   cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  display: flex; flex-direction: column;
+  justify-content: center; align-items: center;
   padding: 2px 2px 4px;
   font-family: 'Exo 2', sans-serif;
   transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.3s ease;
-  user-select: none;
-  overflow: hidden;
+  user-select: none; overflow: hidden;
 }
 .pt-el::before{
-  content:'';
-  position:absolute; inset:0;
+  content:''; position:absolute; inset:0;
   background: linear-gradient(135deg, var(--cat-color, #22d3ee), transparent);
-  opacity: 0.12;
-  pointer-events:none;
+  opacity: 0.12; pointer-events:none;
   transition: opacity var(--transition);
 }
 .pt-el:hover{
@@ -749,40 +731,29 @@ body{
 }
 .pt-el:hover::before{opacity:0.28}
 .pt-el.dimmed{opacity: 0.15; pointer-events: none;}
-.pt-el.hidden{visibility: hidden; pointer-events:none;}
-
 .pt-el .num{
   position:absolute; top:3px; left:5px;
-  font-size: 0.62rem; color: var(--ink-muted);
-  font-weight:600;
+  font-size: 0.62rem; color: var(--ink-muted); font-weight:600;
 }
 .pt-el .sym{
   font-size: 1.1rem; font-weight:800;
   color: var(--cat-color, var(--ink));
-  line-height: 1;
-  margin-top: 0.3rem;
+  line-height: 1; margin-top: 0.3rem;
 }
 .pt-el .name{
   font-size: 0.55rem; color: var(--ink-muted);
   font-weight: 600; line-height: 1.05;
   text-align: center; margin-top: 2px;
-  padding: 0 2px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  padding: 0 2px; white-space: nowrap;
+  overflow: hidden; text-overflow: ellipsis;
   max-width: 100%;
 }
-.pt-el .mass{
-  font-size: 0.5rem; color: var(--ink-soft);
-  font-weight: 500;
-}
+.pt-el .mass{font-size: 0.5rem; color: var(--ink-soft); font-weight: 500;}
 @media(max-width:900px){
   .pt-el .name{display:none;}
   .pt-el .mass{display:none;}
   .pt-el .sym{font-size:1.2rem;}
 }
-
-/* Легенда */
 .pt-legend{
   display: flex; flex-wrap: wrap; gap: 1rem 1.5rem;
   justify-content: center; margin-top: 2rem;
@@ -801,10 +772,6 @@ body{
   box-shadow: 0 0 6px color-mix(in srgb, var(--dot-color) 50%, transparent);
 }
 
-/* Пустые ячейки для выравнивания */
-.pt-spacer{visibility:hidden; pointer-events:none;}
-
-/* MODAL */
 .pt-modal{
   position: fixed; inset: 0;
   background: rgba(10,14,39,0.85);
@@ -817,7 +784,6 @@ body{
 }
 .pt-modal.open{opacity: 1; pointer-events: auto;}
 [data-theme="light"] .pt-modal{background: rgba(246,247,251,0.85);}
-
 .pt-modal-content{
   background: var(--bg-card);
   border-radius: 24px;
@@ -826,13 +792,11 @@ body{
               0 0 40px color-mix(in srgb, var(--el-color, #22d3ee) 30%, transparent);
   max-width: 620px; width: 100%;
   max-height: 90vh; overflow-y: auto;
-  position: relative;
-  padding: 2rem;
+  position: relative; padding: 2rem;
   transform: scale(0.9);
   transition: transform 0.3s cubic-bezier(0.175,0.885,0.32,1.275);
 }
 .pt-modal.open .pt-modal-content{transform: scale(1);}
-
 .pt-modal-close{
   position: absolute; top: 1rem; right: 1rem;
   width: 36px; height: 36px; border-radius: 50%;
@@ -840,15 +804,12 @@ body{
   color: var(--ink-muted); cursor: pointer;
   display: flex; align-items: center; justify-content: center;
   font-size: 1.1rem; font-family: inherit;
-  transition: all var(--transition);
-  z-index: 2;
+  transition: all var(--transition); z-index: 2;
 }
 .pt-modal-close:hover{color: var(--accent-red); border-color: var(--accent-red); transform: rotate(90deg);}
-
 .pt-modal-head{
   display: flex; gap: 1.5rem; align-items: center;
-  margin-bottom: 1.5rem;
-  padding-bottom: 1.5rem;
+  margin-bottom: 1.5rem; padding-bottom: 1.5rem;
   border-bottom: 1px solid var(--line);
 }
 .pt-modal-symbol{
@@ -865,17 +826,13 @@ body{
 .pt-modal-symbol .n{position:absolute; top:6px; left:10px; font-size:0.75rem; opacity:0.85;}
 .pt-modal-symbol .s{font-size: 2.6rem; font-weight:800; line-height:1;}
 .pt-modal-symbol .m{font-size:0.75rem; opacity:0.9; margin-top:2px;}
-
 .pt-modal-title{flex:1; min-width:0;}
 .pt-modal-title h3{
   font-family:'Exo 2',sans-serif; font-size:1.7rem;
   font-weight:800; margin-bottom:0.3rem;
   color: var(--el-color, var(--accent-cyan));
 }
-.pt-modal-title .en{
-  color:var(--ink-muted); font-size:1rem;
-  font-style:italic; margin-bottom:0.6rem;
-}
+.pt-modal-title .en{color:var(--ink-muted); font-size:1rem; font-style:italic; margin-bottom:0.6rem;}
 .pt-modal-title .cat{
   display:inline-block; padding:0.3rem 0.85rem;
   background: color-mix(in srgb, var(--el-color, #22d3ee) 15%, transparent);
@@ -884,8 +841,6 @@ body{
   color: var(--el-color, #22d3ee);
   font-size:0.8rem; font-weight:700;
 }
-
-/* Анимированная орбита */
 .pt-orbital{
   position: relative;
   width: 100px; height: 100px;
@@ -916,12 +871,10 @@ body{
   transform: translateY(-50%);
 }
 @keyframes orbitSpin{ to { transform: rotate(360deg);} }
-
 .pt-modal-grid{
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 0.8rem;
-  margin-bottom: 1.5rem;
+  gap: 0.8rem; margin-bottom: 1.5rem;
 }
 .pt-modal-item{
   background: color-mix(in srgb, var(--bg-hover) 60%, transparent);
@@ -931,8 +884,7 @@ body{
 }
 .pt-modal-item .lbl{
   font-size: 0.7rem; color: var(--ink-muted);
-  text-transform: uppercase; letter-spacing: 1px;
-  font-weight: 700;
+  text-transform: uppercase; letter-spacing: 1px; font-weight: 700;
 }
 .pt-modal-item .val{
   font-family: 'Exo 2', sans-serif;
@@ -942,8 +894,7 @@ body{
 }
 .pt-modal-item .val.config{
   font-family: 'JetBrains Mono', monospace;
-  font-size: 0.85rem;
-  color: var(--accent-amber);
+  font-size: 0.85rem; color: var(--accent-amber);
 }
 .pt-modal-desc{
   font-size: 0.95rem; line-height: 1.6;
@@ -975,7 +926,6 @@ body{
   pointer-events:none; z-index:9999;
   animation:burst 0.9s ease-out forwards;
 }
-
 footer{
   text-align:center; padding:2.5rem 1.5rem;
   color:var(--ink-muted); font-size:0.85rem;
@@ -1142,7 +1092,6 @@ sub,sup{font-size:0.75em; line-height:0}
 
 <div id="content-pages"></div>
 
-<!-- Modal for periodic table element info -->
 <div class="pt-modal" id="ptModal" role="dialog" aria-modal="true" aria-labelledby="ptModalTitle">
   <div class="pt-modal-content" id="ptModalContent">
     <button class="pt-modal-close" id="ptModalClose" aria-label="Закрыть">✕</button>
@@ -1216,11 +1165,19 @@ const TABLES = {
   practiceFiles:[]
 };
 
-const RAW_BASES = [
+/* ============================================================
+   ★★★ ГЛАВНОЕ ИЗМЕНЕНИЕ — ОТНОСИТЕЛЬНЫЕ ПУТИ ★★★
+   Файлы .md лежат рядом с index.html в том же репозитории.
+   GitHub Pages отдаёт их как обычную статику — без лимитов.
+   Fallback на raw.githubusercontent — если что-то пойдёт не так.
+   ============================================================ */
+const LOCAL_BASE = './';
+const RAW_FALLBACKS = [
   'https://raw.githubusercontent.com/vdorlov/org_chem_2.0/main/',
   'https://raw.githubusercontent.com/vdorlov/org_chem_2.0/master/'
 ];
 const contentCache = new Map();
+const MD_STORAGE_PREFIX = 'orgchem-md:';
 
 /* ===================== THEME ===================== */
 (function initTheme(){
@@ -1333,7 +1290,7 @@ function buildModuleCard(num, m){
 })();
 
 /* ============================================================
-   NAVIGATION (с поддержкой истории браузера)
+   NAVIGATION
    ============================================================ */
 const homePage = document.getElementById('home-page');
 const contentPages = document.getElementById('content-pages');
@@ -1404,18 +1361,93 @@ function ensureBackButton(){
   navLinks.insertBefore(btn, navLinks.firstChild);
 }
 
+/* ============================================================
+   ★★★ ЗАГРУЗКА .MD — ОТНОСИТЕЛЬНЫЕ ПУТИ + LOCALSTORAGE-КЭШ ★★★
+   ============================================================ */
 async function fetchMarkdown(filename){
+  // 1. Проверяем localStorage-кэш — мгновенный ответ
+  try {
+    const cached = localStorage.getItem(MD_STORAGE_PREFIX + filename);
+    if (cached && cached.length > 50){
+      console.log('📦 [localStorage]', filename);
+      // Фоновая проверка свежести — не блокирует показ
+      refreshMarkdownInBackground(filename);
+      return cached;
+    }
+  } catch(e){ /* localStorage может быть отключён */ }
+
+  // 2. Сначала пробуем ЛОКАЛЬНЫЙ путь (относительно index.html)
+  try {
+    const url = LOCAL_BASE + filename;
+    console.log('📥 [local]', url);
+    const r = await fetch(url, {cache:'force-cache'});
+    if (r.ok){
+      const text = await r.text();
+      saveMdToStorage(filename, text);
+      console.log('✓ Загружено локально:', filename);
+      return text;
+    }
+    console.warn('⚠️ Локальный путь вернул', r.status, '— пробуем fallback');
+  } catch(e){
+    console.warn('⚠️ Локальный путь недоступен:', e.message);
+  }
+
+  // 3. Fallback на raw.githubusercontent (если локальный не сработал)
   let lastErr = null;
-  for (const base of RAW_BASES){
+  for (const base of RAW_FALLBACKS){
     try {
-      const r = await fetch(base + filename, {cache:'force-cache'});
-      if (r.ok) return await r.text();
-      lastErr = new Error('HTTP ' + r.status);
-    } catch(e){ lastErr = e; }
+      const url = base + filename;
+      console.log('📥 [fallback]', url);
+      const r = await fetch(url, {cache:'force-cache'});
+      if (r.ok){
+        const text = await r.text();
+        saveMdToStorage(filename, text);
+        console.log('✓ Загружено с fallback:', url);
+        return text;
+      }
+      lastErr = new Error(`HTTP ${r.status} на ${url}`);
+    } catch(e){
+      lastErr = e;
+    }
   }
   throw lastErr || new Error('Не удалось загрузить ' + filename);
 }
 
+function saveMdToStorage(filename, text){
+  try {
+    localStorage.setItem(MD_STORAGE_PREFIX + filename, text);
+  } catch(e){
+    // localStorage переполнен — пытаемся почистить старое
+    try {
+      const keys = Object.keys(localStorage).filter(k => k.startsWith(MD_STORAGE_PREFIX));
+      // Удаляем половину самых старых
+      keys.slice(0, Math.floor(keys.length / 2)).forEach(k => localStorage.removeItem(k));
+      localStorage.setItem(MD_STORAGE_PREFIX + filename, text);
+    } catch(e2){ /* не удалось — игнорируем */ }
+  }
+}
+
+function refreshMarkdownInBackground(filename){
+  // Асинхронно проверяем обновления, не блокируя UI
+  fetch(LOCAL_BASE + filename, {cache:'no-store'})
+    .then(r => r.ok ? r.text() : null)
+    .then(text => {
+      if (!text) return;
+      try {
+        const old = localStorage.getItem(MD_STORAGE_PREFIX + filename);
+        if (old !== text){
+          localStorage.setItem(MD_STORAGE_PREFIX + filename, text);
+          contentCache.delete(filename);
+          console.log('🔄 Обновлён .md:', filename);
+        }
+      } catch(e){}
+    })
+    .catch(() => {});
+}
+
+/* ============================================================
+   ПОКАЗ СТРАНИЦЫ МОДУЛЯ
+   ============================================================ */
 async function showContentPage(num, title, filename, type, practiceIdx, opts = {}){
   if (!opts.fromPop && !suppressHistory){
     pushView({view:'content', num, type, idx:practiceIdx, title, filename});
@@ -1517,10 +1549,18 @@ async function showContentPage(num, title, filename, type, practiceIdx, opts = {
     body.innerHTML = html;
     meta.innerHTML = metaHtml;
   } catch(e){
-    body.innerHTML = `<p style="color:var(--accent-red);text-align:center;padding:2rem;">
-      ⚠️ Не удалось загрузить контент.<br>
-      <small>Откройте сайт через локальный сервер или проверьте интернет.</small><br>
-      <small style="color:var(--ink-muted)">Файл: ${filename}</small></p>`;
+    const msg = e.message || 'Неизвестная ошибка';
+    const is404 = /404/.test(msg);
+    const hint = is404
+      ? 'Файл не найден. Проверьте, что он лежит рядом с index.html в репозитории.'
+      : 'Проверьте подключение к интернету или откройте сайт через локальный сервер.';
+    body.innerHTML = `<div style="text-align:center;padding:2rem;">
+      <p style="color:var(--accent-red);font-weight:700;font-size:1.1rem;">⚠️ Не удалось загрузить контент</p>
+      <p style="color:var(--ink-muted);margin-top:0.8rem;">${hint}</p>
+      <p style="color:var(--ink-soft);font-size:0.85rem;margin-top:1rem;font-family:monospace;background:var(--code-bg);padding:0.6rem 0.9rem;border-radius:8px;display:inline-block;">${filename}</p>
+      <p style="color:var(--ink-soft);font-size:0.8rem;margin-top:0.5rem;font-family:monospace;">${msg.slice(0, 200)}</p>
+      <button class="module-btn" style="margin-top:1.2rem;padding:0.6rem 1.5rem;" onclick="location.reload()">🔄 Обновить страницу</button>
+    </div>`;
   }
 }
 
@@ -1549,6 +1589,9 @@ window.addEventListener('popstate', (e) => {
 
 /* ============================================================
    MARKDOWN PARSER
+   Двухфазный: сначала режем на блоки заданий, потом внутри
+   блока отделяем тело от ответа regex-ом. Ответ физически
+   не может попасть в тело.
    ============================================================ */
 function parseMarkdown(md, isPractice){
   if (!md) return {html:'<p>Контент недоступен</p>', taskCount:0};
@@ -1557,45 +1600,102 @@ function parseMarkdown(md, isPractice){
     .replace(/\u00A0/g, ' ')
     .replace(/[\u200B\u200C\u200D\uFEFF]/g, '');
 
+  if (!isPractice){
+    return {html: parseSimpleMarkdown(md), taskCount:0};
+  }
+
+  // Фаза 1: разбить на блоки по "**Задание N.**"
+  const taskRegex = /^\*{0,2}\s*Задание\s+(\d+)\s*\.?\s*\*{0,2}/gmi;
+  const taskStarts = [];
+  let match;
+  while ((match = taskRegex.exec(md)) !== null){
+    taskStarts.push({ num: match[1], index: match.index });
+  }
+
+  if (taskStarts.length === 0){
+    return {html: parseSimpleMarkdown(md), taskCount:0};
+  }
+
+  const blocks = [];
+  if (taskStarts[0].index > 0){
+    blocks.push({type:'pre', text: md.slice(0, taskStarts[0].index)});
+  }
+
+  for (let i = 0; i < taskStarts.length; i++){
+    const start = taskStarts[i];
+    const end = (i + 1 < taskStarts.length) ? taskStarts[i + 1].index : md.length;
+    let text = md.slice(start.index, end);
+
+    // Отрезаем хвост после последнего "---" (это уже не это задание)
+    const dashTail = text.match(/\n---+\s*$/);
+    if (dashTail) text = text.slice(0, dashTail.index);
+
+    // Фаза 2: отделяем ответ от тела
+    // Жёсткий regex: "Ответ" должен быть в начале строки
+    const ansRx = /(^|\n)\s*\**\s*Ответ\s*\**\s*[:\-—–][ \t]*([\s\S]*)$/i;
+    const ansMatch = text.match(ansRx);
+
+    let headerText = text;
+    let answerText = '';
+
+    if (ansMatch && ansMatch.index !== undefined){
+      headerText = text.slice(0, ansMatch.index).trim();
+      answerText = ansMatch[2].trim();
+    }
+
+    const bodyHtml = parseSimpleMarkdown(headerText) ||
+      '<em style="color:var(--ink-muted)">Условие не распознано</em>';
+
+    let answerHtml;
+    if (answerText){
+      answerHtml = `<div class="answer-text">${parseSimpleMarkdown(answerText)}</div>`;
+    } else {
+      answerHtml = `<div class="answer-text" style="color:var(--ink-muted);font-weight:400;">Ответ не найден в файле</div>`;
+    }
+
+    blocks.push({type:'task', num: start.num, bodyHtml, answerHtml});
+  }
+
+  const out = [];
+  let taskCount = 0;
+  for (const b of blocks){
+    if (b.type === 'pre'){
+      out.push(parseSimpleMarkdown(b.text));
+    } else if (b.type === 'task'){
+      taskCount++;
+      out.push(`<div class="task">
+        <div class="task-header">
+          <span class="task-number">Задание ${b.num}</span>
+          <span class="task-type">ЕГЭ</span>
+        </div>
+        <div class="task-body">${b.bodyHtml}</div>
+        <button class="answer-toggle" type="button"><span>👁</span> Показать ответ</button>
+        <div class="answer-content">
+          <div class="answer-label">Ответ:</div>
+          ${b.answerHtml}
+        </div>
+      </div>`);
+    }
+  }
+  return {html: out.join('\n'), taskCount};
+}
+
+/* ============================================================
+   parseSimpleMarkdown — обычный markdown без логики заданий
+   ============================================================ */
+function parseSimpleMarkdown(md){
+  if (!md) return '';
   const lines = md.split('\n');
   const out = [];
   let inTable = false, tableRows = [];
   let inList = false, listType = null, listItems = [];
   let inBq = false, bqLines = [];
   let inCode = false, codeLines = [];
-  let currentTask = null, taskCounter = 0;
-
-  function getAnswerPrefix(line){
-    let s = line.trim().replace(/^[\*_>#]+\s*/, '');
-    const m = s.match(/^([A-Za-zА-Яа-яЁё0-9]+)\s*[:\-—–]?\s*(.*)$/);
-    if (!m) return null;
-    const canon = m[1].toLowerCase()
-      .replace(/[оo0]/g, 'o')
-      .replace(/[еeё]/g, 'e')
-      .replace(/[аa]/g, 'a')
-      .replace(/[тt]/g, 't')
-      .replace(/[вb]/g, 'v');
-    if (canon !== 'ответ' && canon !== 'otvet' && canon !== 'answer') return null;
-    return m[2].replace(/^[\*_\s:]+/, '').replace(/[\*_\s]+$/, '');
-  }
-
-  function matchTaskStart(line){
-    let m = line.match(/^\*{0,2}\s*Задание\s+(\d+)\s*\.?\s*\*{0,2}\s*(.*)$/i);
-    if (m) return {num: m[1], rest: m[2].replace(/\*+$/,'').trim()};
-    m = line.match(/^#{1,3}\s*Задание\s+(\d+)\s*\.?\s*$/i);
-    if (m) return {num: m[1], rest: ''};
-    m = line.match(/^#{1,3}\s*Задание\s+(\d+)\s*\.\s*(.*)$/i);
-    if (m) return {num: m[1], rest: m[2].trim()};
-    return null;
-  }
 
   const flushList = () => {
     if (!inList || !listItems.length) return;
     const tag = listType === 'ol' ? 'ol' : 'ul';
-    const html = `<${tag}>${listItems.map(i => `<li>${i}</li>`).join('')}</${tag}>`;
-    if (currentTask && currentTask.inAnswer) currentTask.ansHtml += html;
-    else if (currentTask) currentTask.body += html;
-    else out.push(html);
+    out.push(`<${tag}>${listItems.map(i => `<li>${i}</li>`).join('')}</${tag}>`);
     inList = false; listType = null; listItems = [];
   };
   const flushTable = () => {
@@ -1611,74 +1711,21 @@ function parseMarkdown(md, isPractice){
         const cells = clean[i].split('|').map(c => c.trim()).filter(Boolean);
         if (cells.length) tr += `<tr>${cells.map(c => `<td>${fmt(c)}</td>`).join('')}</tr>`;
       }
-      const html = `<table>${tr}</table>`;
-      if (currentTask && currentTask.inAnswer) currentTask.ansHtml += html;
-      else if (currentTask) currentTask.body += html;
-      else out.push(html);
+      out.push(`<table>${tr}</table>`);
     }
     inTable = false; tableRows = [];
   };
   const flushBq = () => {
     if (!inBq || !bqLines.length) return;
-    const html = `<blockquote><p>${bqLines.join('<br>')}</p></blockquote>`;
-    if (currentTask && currentTask.inAnswer) currentTask.ansHtml += html;
-    else if (currentTask) currentTask.body += html;
-    else out.push(html);
+    out.push(`<blockquote><p>${bqLines.join('<br>')}</p></blockquote>`);
     inBq = false; bqLines = [];
   };
   const flushCode = () => {
     if (!inCode) return;
     const content = codeLines.join('\n')
       .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-    const html = `<pre><code>${content}</code></pre>`;
-    if (currentTask && currentTask.inAnswer) currentTask.ansHtml += html;
-    else if (currentTask) currentTask.body += html;
-    else out.push(html);
+    out.push(`<pre><code>${content}</code></pre>`);
     inCode = false; codeLines = [];
-  };
-  const flushTask = () => {
-    if (!currentTask) return;
-
-    // Страховка: вырезаем "Ответ:" из тела, если он туда попал
-    let bodyClean = currentTask.body;
-    let inlineAns = currentTask.ansInline;
-    const ansRx = /Ответ\s*[:\-—–]\s*([\s\S]*?)$/i;
-    const am = bodyClean.match(ansRx);
-    if (am){
-      const tail = am[1].replace(/<\/p>\s*$/i, '').replace(/<[^>]+>/g, ' ').trim();
-      if (tail && !inlineAns) inlineAns = fmt(tail);
-      bodyClean = bodyClean.slice(0, am.index).trim();
-    }
-    bodyClean = bodyClean
-      .replace(/<p>\s*Ответ\s*[:\-—–][\s\S]*?<\/p>/gi, '')
-      .replace(/\s*Ответ\s*[:\-—–][^<]*$/gim, '')
-      .trim();
-
-    const bodyHtml = bodyClean || '<em style="color:var(--ink-muted)">Условие не распознано</em>';
-    const ansHtml = currentTask.ansHtml.trim()
-      ? currentTask.ansHtml
-      : (inlineAns
-          ? `<span class="answer-inline">${inlineAns}</span>`
-          : `<div style="color:var(--ink-muted);font-weight:400;">Ответ не найден в файле</div>`);
-
-    out.push(`<div class="task">
-      <div class="task-header">
-        <span class="task-number">Задание ${currentTask.num}</span>
-        <span class="task-type">${currentTask.ttype}</span>
-      </div>
-      <div class="task-body">${bodyHtml}</div>
-      <button class="answer-toggle" type="button"><span>👁</span> Показать ответ</button>
-      <div class="answer-content">
-        <div class="answer-label">Ответ:</div>
-        <div class="answer-text">${ansHtml}</div>
-      </div>
-    </div>`);
-    currentTask = null;
-  };
-
-  const finishAnswer = () => {
-    if (currentTask) currentTask.inAnswer = false;
-    flushList(); flushTable(); flushBq();
   };
 
   for (let raw of lines){
@@ -1691,99 +1738,45 @@ function parseMarkdown(md, isPractice){
     }
     if (inCode){ codeLines.push(raw); continue; }
 
-    if (isPractice){
-      const t = matchTaskStart(s);
-      if (t){
-        flushTask(); flushList(); flushTable(); flushBq();
-        taskCounter++;
-        currentTask = {num: t.num, body:'', ttype:'ЕГЭ', ansHtml:'', ansInline:'', inAnswer:false};
-        if (t.rest) currentTask.body = fmt(t.rest);
-        continue;
-      }
-    }
-
-    if (isPractice && currentTask && currentTask.inAnswer){
-      if (s === '---'){ finishAnswer(); flushTask(); out.push('<hr>'); continue; }
-      if (/^##\s+/.test(s) && !/^#{1,3}\s*Задание/i.test(s)){
-        finishAnswer(); flushTask();
-        out.push(`<h2 data-section>${fmt(s.replace(/^##\s+/, ''))}</h2>`);
-        continue;
-      }
-      if (/^#\s+/.test(s) && !/^#{1,3}\s*Задание/i.test(s)){
-        finishAnswer(); flushTask();
-        out.push(`<h3 data-section>${fmt(s.replace(/^#\s+/, ''))}</h3>`);
-        continue;
-      }
-      if (!s){ flushList(); flushTable(); flushBq(); continue; }
-      if (s.includes('|') && !s.startsWith('- ') && !/^\d+[.)]/.test(s)){
-        flushList(); inTable = true; tableRows.push(s); continue;
-      } else if (inTable){ flushTable(); }
-      const olMatch = s.match(/^(\d+)[.)]\s+(.*)/);
-      if (olMatch){
-        if (inList && listType !== 'ol') flushList();
-        inList = true; listType = 'ol'; listItems.push(fmt(olMatch[2])); continue;
-      }
-      if (s.startsWith('- ') || s.startsWith('* ')){
-        if (inList && listType !== 'ul') flushList();
-        inList = true; listType = 'ul'; listItems.push(fmt(s.slice(2))); continue;
-      } else if (inList){ flushList(); }
-      currentTask.ansHtml += `<p>${fmt(s)}</p>`;
-      continue;
-    }
-
-    if (isPractice && currentTask){
-      const afterMarker = getAnswerPrefix(s);
-      if (afterMarker !== null){
-        if (afterMarker.length > 0){
-          currentTask.ansInline = fmt(afterMarker);
-        } else {
-          currentTask.inAnswer = true;
-          currentTask.ansHtml = '';
-        }
-        continue;
-      }
-    }
-
-    if (isPractice && currentTask && /^#{2,3}\s+[^З]/i.test(s) && !currentTask.body){
-      currentTask.ttype = s.replace(/^#+\s*/, '');
-      continue;
-    }
     if (!s){ flushList(); flushTable(); flushBq(); continue; }
-    if (s === '---'){ flushList(); flushTable(); flushBq(); flushTask(); out.push('<hr>'); continue; }
+    if (s === '---'){ flushList(); flushTable(); flushBq(); out.push('<hr>'); continue; }
 
-    if (/^##\s+Часть\s+/i.test(s)){
-      flushList(); flushTable(); flushTask();
-      out.push(`<h2 data-section>${fmt(s.replace(/^##\s+/, ''))}</h2>`);
+    if (s.startsWith('### ')){ flushList(); flushTable(); out.push(`<h5>${fmt(s.slice(4))}</h5>`); continue; }
+    if (s.startsWith('## ')){
+      flushList(); flushTable();
+      const txt = s.slice(3);
+      const isPart = /^Часть\s/i.test(txt);
+      out.push(isPart ? `<h2 data-section>${fmt(txt)}</h2>` : `<h4>${fmt(txt)}</h4>`);
       continue;
     }
-    if (s.startsWith('### ')){ flushList(); flushTable(); flushTask(); out.push(`<h5>${fmt(s.slice(4))}</h5>`); continue; }
-    if (s.startsWith('## ')){ flushList(); flushTable(); flushTask(); out.push(`<h2 data-section>${fmt(s.slice(3))}</h2>`); continue; }
-    if (s.startsWith('# ')){ flushList(); flushTable(); flushTask(); out.push(`<h3 data-section>${fmt(s.slice(2))}</h3>`); continue; }
-    if (s.startsWith('>')){ flushList(); flushTable(); flushTask(); inBq = true; bqLines.push(s.slice(1).trim()); continue; }
+    if (s.startsWith('# ')){ flushList(); flushTable(); out.push(`<h3 data-section>${fmt(s.slice(2))}</h3>`); continue; }
+
+    if (s.startsWith('>')){ flushList(); flushTable(); inBq = true; bqLines.push(s.slice(1).trim()); continue; }
     else if (inBq){ flushBq(); }
+
     if (s.includes('|') && !s.startsWith('- ') && !/^\d+[.)]/.test(s)){
-      flushList(); flushTask(); inTable = true; tableRows.push(s); continue;
+      flushList(); inTable = true; tableRows.push(s); continue;
     } else if (inTable){ flushTable(); }
 
     const olMatch = s.match(/^(\d+)[.)]\s+(.*)/);
     if (olMatch){
       if (inList && listType !== 'ol') flushList();
-      flushTask(); inList = true; listType = 'ol'; listItems.push(fmt(olMatch[2])); continue;
+      inList = true; listType = 'ol'; listItems.push(fmt(olMatch[2]));
+      continue;
     }
     if (s.startsWith('- ') || s.startsWith('* ')){
       if (s.startsWith('**') && !s.startsWith('* ')) { /* не маркер */ }
       else {
         if (inList && listType !== 'ul') flushList();
-        flushTask(); inList = true; listType = 'ul'; listItems.push(fmt(s.slice(2))); continue;
+        inList = true; listType = 'ul'; listItems.push(fmt(s.slice(2)));
+        continue;
       }
     } else if (inList){ flushList(); }
 
-    const txt = fmt(s);
-    if (currentTask) currentTask.body += (currentTask.body ? ' ' : '') + txt;
-    else out.push(`<p>${txt}</p>`);
+    out.push(`<p>${fmt(s)}</p>`);
   }
-  flushList(); flushTable(); flushBq(); flushCode(); flushTask();
-  return {html: out.join('\n'), taskCount: taskCounter};
+  flushList(); flushTable(); flushBq(); flushCode();
+  return out.join('\n');
 }
 
 function fmt(t){
@@ -1834,8 +1827,6 @@ function burstConfetti(el){
 /* ============================================================
    PERIODIC TABLE
    ============================================================ */
-
-// Категории элементов с цветами
 const EL_CATEGORIES = {
   alkali:      { label:'Щелочные',          color:'#fb7185' },
   alkaline:    { label:'Щелочноземельные',  color:'#fb923c' },
@@ -1850,8 +1841,6 @@ const EL_CATEGORIES = {
   unknown:     { label:'Неизвестные',       color:'#94a3b8' }
 };
 
-// Полный список 118 элементов.
-// Формат: [Z, symbol, name_ru, name_en, mass, category, group, period, config, electroneg, melt, boil, discover, use]
 const ELEMENTS = [
   [1,'H','Водород','Hydrogen',1.008,'nonmetal',1,1,'1s¹',2.20,-259.16,-252.879,'1766','Топливо, производство аммиака, водородная энергетика'],
   [2,'He','Гелий','Helium',4.0026,'noble',18,1,'1s²',null,-272.2,-268.928,'1868','Криогеника, воздушные шары, охлаждение сверхпроводников'],
@@ -1973,7 +1962,6 @@ const ELEMENTS = [
   [118,'Og','Оганесон','Oganesson',294,'unknown',18,7,'[Rn]5f¹⁴6d¹⁰7s²7p⁶',null,null,null,'2002','Только наука']
 ];
 
-// Спецразмещение для лантаноидов и актиноидов (в таблице Менделеева они вне основной сетки)
 const LANTHANIDE_Z = new Set([57,58,59,60,61,62,63,64,65,66,67,68,69,70,71]);
 const ACTINIDE_Z   = new Set([89,90,91,92,93,94,95,96,97,98,99,100,101,102,103]);
 
@@ -2015,23 +2003,14 @@ function buildPeriodicHTML(){
     </div>`;
 }
 
-// Карта позиций элементов в CSS-grid: [col, row]
-// Сетка: 18 столбцов × 10 строк
-// Строки 1-7: периоды 1-7 (основная часть)
-// Строки 8-10: лантаноиды и актиноиды (вынесены)
 function getGridPosition(Z){
-  // Лантаноиды: La(57)..Lu(71) → строка 9, столбцы 3..17
-  // Актиноиды: Ac(89)..Lr(103) → строка 10, столбцы 3..17
   if (LANTHANIDE_Z.has(Z)) return { col: Z - 57 + 3, row: 9 };
   if (ACTINIDE_Z.has(Z))   return { col: Z - 89 + 3, row: 10 };
-
-  // Основная таблица: используем group и period
   const el = ELEMENTS.find(e => e[0] === Z);
   if (!el) return null;
   const group = el[6];
   const period = el[7];
   if (group && period) return { col: group, row: period };
-  // Fallback — He (Z=2) в группе 18, строка 1
   if (Z === 2) return { col: 18, row: 1 };
   return null;
 }
@@ -2042,10 +2021,9 @@ function buildPeriodicTable(){
   table.innerHTML = '';
 
   ELEMENTS.forEach(el => {
-    const [Z, sym, name, nameEn, mass, cat, group, period, config, electroneg, melt, boil, discovered, use] = el;
+    const [Z, sym, name, nameEn, mass, cat] = el;
     const pos = getGridPosition(Z);
     if (!pos) return;
-
     const color = EL_CATEGORIES[cat]?.color || EL_CATEGORIES.unknown.color;
 
     const div = document.createElement('button');
@@ -2068,8 +2046,6 @@ function buildPeriodicTable(){
     table.appendChild(div);
   });
 
-  // Добавляем "указатели" рядов лантаноидов/актиноидов
-  // Ячейка 3,7 — под La; ячейка 3,8 — под Ac
   const laPointer = document.createElement('div');
   laPointer.className = 'pt-el';
   laPointer.style.setProperty('--cat-color', EL_CATEGORIES.lanthanide.color);
@@ -2101,13 +2077,11 @@ function applyPtFilters(){
     if (ptFilter !== 'all' && cat && cat !== ptFilter) show = false;
     if (search && s && !s.includes(search)) show = false;
     c.classList.toggle('dimmed', !show);
-    c.classList.toggle('hidden', false);
   });
 }
 
 function attachPeriodicHandlers(){
   buildPeriodicTable();
-
   const searchInput = document.getElementById('ptSearchInput');
   if (searchInput){
     searchInput.addEventListener('input', e => {
@@ -2115,7 +2089,6 @@ function attachPeriodicHandlers(){
       applyPtFilters();
     });
   }
-
   document.getElementById('ptFilters')?.addEventListener('click', e => {
     const btn = e.target.closest('.pt-filter');
     if (!btn) return;
@@ -2124,7 +2097,6 @@ function attachPeriodicHandlers(){
     ptFilter = btn.dataset.filter;
     applyPtFilters();
   });
-
   document.getElementById('ptLegend')?.addEventListener('click', e => {
     const item = e.target.closest('.pt-legend-item');
     if (!item) return;
@@ -2136,20 +2108,17 @@ function attachPeriodicHandlers(){
   });
 }
 
-/* ===================== ELEMENT MODAL ===================== */
 function openElementModal(Z){
   const el = ELEMENTS.find(e => e[0] === Z);
   if (!el) return;
   const [zn, sym, name, nameEn, mass, cat, group, period, config, en, melt, boil, discovered, use] = el;
   const color = EL_CATEGORIES[cat]?.color || EL_CATEGORIES.unknown.color;
   const catLabel = EL_CATEGORIES[cat]?.label || 'Неизвестно';
-
   const fmtNum = (v, suffix='') => (v === null || v === undefined || v === '') ? '—' : v + suffix;
 
   const modalBody = document.getElementById('ptModalBody');
   const modalContent = document.getElementById('ptModalContent');
   modalContent.style.setProperty('--el-color', color);
-  modalContent.style.setProperty('--cat-color', color);
 
   modalBody.innerHTML = `
     <div class="pt-modal-head">
@@ -2164,68 +2133,36 @@ function openElementModal(Z){
         <div class="cat">${catLabel}</div>
       </div>
     </div>
-
     <div class="pt-orbital" style="--el-color: ${color}">
       <div class="orbit"></div>
       <div class="orbit"></div>
       <div class="orbit"></div>
       <div class="nucleus"></div>
     </div>
-
     <div class="pt-modal-grid">
-      <div class="pt-modal-item">
-        <div class="lbl">Атомный номер</div>
-        <div class="val">${zn}</div>
-      </div>
-      <div class="pt-modal-item">
-        <div class="lbl">Атомная масса</div>
-        <div class="val">${mass} а.е.м.</div>
-      </div>
-      <div class="pt-modal-item">
-        <div class="lbl">Период</div>
-        <div class="val">${period}</div>
-      </div>
-      <div class="pt-modal-item">
-        <div class="lbl">Группа</div>
-        <div class="val">${group || '—'}</div>
-      </div>
-      <div class="pt-modal-item">
-        <div class="lbl">Электроотрицательность</div>
-        <div class="val">${fmtNum(en)}</div>
-      </div>
-      <div class="pt-modal-item">
-        <div class="lbl">T плавления</div>
-        <div class="val">${fmtNum(melt, ' °C')}</div>
-      </div>
-      <div class="pt-modal-item">
-        <div class="lbl">T кипения</div>
-        <div class="val">${fmtNum(boil, ' °C')}</div>
-      </div>
-      <div class="pt-modal-item">
-        <div class="lbl">Открыт</div>
-        <div class="val">${discovered || '—'}</div>
-      </div>
+      <div class="pt-modal-item"><div class="lbl">Атомный номер</div><div class="val">${zn}</div></div>
+      <div class="pt-modal-item"><div class="lbl">Атомная масса</div><div class="val">${mass} а.е.м.</div></div>
+      <div class="pt-modal-item"><div class="lbl">Период</div><div class="val">${period}</div></div>
+      <div class="pt-modal-item"><div class="lbl">Группа</div><div class="val">${group || '—'}</div></div>
+      <div class="pt-modal-item"><div class="lbl">Электроотрицательность</div><div class="val">${fmtNum(en)}</div></div>
+      <div class="pt-modal-item"><div class="lbl">T плавления</div><div class="val">${fmtNum(melt, ' °C')}</div></div>
+      <div class="pt-modal-item"><div class="lbl">T кипения</div><div class="val">${fmtNum(boil, ' °C')}</div></div>
+      <div class="pt-modal-item"><div class="lbl">Открыт</div><div class="val">${discovered || '—'}</div></div>
       <div class="pt-modal-item" style="grid-column: 1 / -1;">
         <div class="lbl">Электронная конфигурация</div>
         <div class="val config">${config || '—'}</div>
       </div>
     </div>
+    <div class="pt-modal-desc"><strong>Применение.</strong> ${use}</div>`;
 
-    <div class="pt-modal-desc">
-      <strong>Применение.</strong> ${use}
-    </div>`;
-
-  const modal = document.getElementById('ptModal');
-  modal.classList.add('open');
+  document.getElementById('ptModal').classList.add('open');
   document.body.style.overflow = 'hidden';
 }
 
 function closeElementModal(){
-  const modal = document.getElementById('ptModal');
-  modal.classList.remove('open');
+  document.getElementById('ptModal').classList.remove('open');
   document.body.style.overflow = '';
 }
-
 document.getElementById('ptModalClose').addEventListener('click', closeElementModal);
 document.getElementById('ptModal').addEventListener('click', e => {
   if (e.target.id === 'ptModal') closeElementModal();
@@ -2496,11 +2433,15 @@ window.debugParseTask = function(){
   console.log(`\nВсего заданий: ${tasks.length}, проблем: ${issues}`);
 };
 
+window.clearOrgChemCache = function(){
+  Object.keys(localStorage).filter(k => k.startsWith(MD_STORAGE_PREFIX)).forEach(k => localStorage.removeItem(k));
+  console.log('✓ Кэш .md очищен');
+};
+
 /* ===================== INIT ===================== */
 window.addEventListener('DOMContentLoaded', () => {
   applyTheme(document.documentElement.getAttribute('data-theme'));
 
-  // Восстановление из hash
   const h = location.hash;
   if (h === '#periodic'){
     suppressHistory = true;
