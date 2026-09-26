@@ -1553,130 +1553,49 @@ window.addEventListener('popstate', (e) => {
 function parseMarkdown(md, isPractice){
   if (!md) return {html:'<p>Контент недоступен</p>', taskCount:0};
 
-  // Нормализация
   md = md
     .replace(/\u00A0/g, ' ')
     .replace(/[\u200B\u200C\u200D\uFEFF]/g, '');
 
-  // НЕ для тренировочных — обычный парсинг
-  if (!isPractice){
-    return {html: parseSimpleMarkdown(md), taskCount:0};
-  }
-
-  // ===== ПАРСИНГ ТРЕНИРОВОЧНЫХ ЗАДАНИЙ =====
-  // 1. Разбиваем весь файл на блоки "до заголовка" и "блок задания"
-  // Ищем все позиции начала заданий
-  const taskRegex = /^\*{0,2}\s*Задание\s+(\d+)\s*\.?\s*\*{0,2}/gmi;
-  const taskStarts = [];
-  let match;
-  while ((match = taskRegex.exec(md)) !== null){
-    taskStarts.push({
-      num: match[1],
-      index: match.index,
-      // захватываем строку целиком до \n
-      headerEnd: md.indexOf('\n', match.index)
-    });
-  }
-
-  if (taskStarts.length === 0){
-    // Заданий нет — парсим как обычный markdown
-    return {html: parseSimpleMarkdown(md), taskCount:0};
-  }
-
-  // 2. Собираем блоки
-  const blocks = [];
-  // Часть ДО первого задания (заголовок, инструкции и т.д.)
-  if (taskStarts[0].index > 0){
-    blocks.push({type:'pre', text: md.slice(0, taskStarts[0].index)});
-  }
-
-  for (let i = 0; i < taskStarts.length; i++){
-    const start = taskStarts[i];
-    const end = (i + 1 < taskStarts.length) ? taskStarts[i + 1].index : md.length;
-    let text = md.slice(start.index, end);
-
-    // 3. Отрезаем всё, что идёт после "---" в конце блока (если есть)
-    // --- это разделитель между заданиями и не относится к текущему
-    const dashMatch = text.match(/\n---+\s*\n/);
-    if (dashMatch && dashMatch.index !== undefined){
-      text = text.slice(0, dashMatch.index);
-    }
-
-    // 4. Ищем "Ответ:" (в любой форме)
-    // \b — граница слова, чтобы не поймать "ответственный"
-    const ansRx = /(^|\n)\s*\**\s*Ответ\s*\**\s*[:\-—–][ \t]*([\s\S]*)$/i;
-    const ansMatch = text.match(ansRx);
-
-    let headerText = text;
-    let answerText = '';
-
-    if (ansMatch && ansMatch.index !== undefined){
-      headerText = text.slice(0, ansMatch.index).trim();
-      answerText = ansMatch[2].trim();
-    }
-
-    // 5. Тело задания = парсим markdown как обычно
-    const bodyHtml = parseSimpleMarkdown(headerText, /*inline=*/ true);
-
-    // 6. Ответ — тоже парсим markdown, но оборачиваем в answer-text
-    let answerHtml = '';
-    if (answerText){
-      const insideHtml = parseSimpleMarkdown(answerText);
-      answerHtml = `<div class="answer-text">${insideHtml}</div>`;
-    } else {
-      answerHtml = `<div class="answer-text" style="color:var(--ink-muted);font-weight:400;">Ответ не найден в файле</div>`;
-    }
-
-    blocks.push({
-      type:'task',
-      num: start.num,
-      bodyHtml,
-      answerHtml
-    });
-  }
-
-  // 7. Собираем итоговый HTML
-  const out = [];
-  let taskCount = 0;
-  for (const b of blocks){
-    if (b.type === 'pre'){
-      out.push(parseSimpleMarkdown(b.text));
-    } else if (b.type === 'task'){
-      taskCount++;
-      out.push(`<div class="task">
-        <div class="task-header">
-          <span class="task-number">Задание ${b.num}</span>
-          <span class="task-type">ЕГЭ</span>
-        </div>
-        <div class="task-body">${b.bodyHtml}</div>
-        <button class="answer-toggle" type="button"><span>👁</span> Показать ответ</button>
-        <div class="answer-content">
-          <div class="answer-label">Ответ:</div>
-          ${b.answerHtml}
-        </div>
-      </div>`);
-    }
-  }
-  return {html: out.join('\n'), taskCount};
-}
-
-/* ============================================================
-   parseSimpleMarkdown — парсит обычный markdown
-   (без логики заданий) — используется для тела и ответа
-   ============================================================ */
-function parseSimpleMarkdown(md){
-  if (!md) return '';
   const lines = md.split('\n');
   const out = [];
   let inTable = false, tableRows = [];
   let inList = false, listType = null, listItems = [];
   let inBq = false, bqLines = [];
   let inCode = false, codeLines = [];
+  let currentTask = null, taskCounter = 0;
+
+  function getAnswerPrefix(line){
+    let s = line.trim().replace(/^[\*_>#]+\s*/, '');
+    const m = s.match(/^([A-Za-zА-Яа-яЁё0-9]+)\s*[:\-—–]?\s*(.*)$/);
+    if (!m) return null;
+    const canon = m[1].toLowerCase()
+      .replace(/[оo0]/g, 'o')
+      .replace(/[еeё]/g, 'e')
+      .replace(/[аa]/g, 'a')
+      .replace(/[тt]/g, 't')
+      .replace(/[вb]/g, 'v');
+    if (canon !== 'ответ' && canon !== 'otvet' && canon !== 'answer') return null;
+    return m[2].replace(/^[\*_\s:]+/, '').replace(/[\*_\s]+$/, '');
+  }
+
+  function matchTaskStart(line){
+    let m = line.match(/^\*{0,2}\s*Задание\s+(\d+)\s*\.?\s*\*{0,2}\s*(.*)$/i);
+    if (m) return {num: m[1], rest: m[2].replace(/\*+$/,'').trim()};
+    m = line.match(/^#{1,3}\s*Задание\s+(\d+)\s*\.?\s*$/i);
+    if (m) return {num: m[1], rest: ''};
+    m = line.match(/^#{1,3}\s*Задание\s+(\d+)\s*\.\s*(.*)$/i);
+    if (m) return {num: m[1], rest: m[2].trim()};
+    return null;
+  }
 
   const flushList = () => {
     if (!inList || !listItems.length) return;
     const tag = listType === 'ol' ? 'ol' : 'ul';
-    out.push(`<${tag}>${listItems.map(i => `<li>${i}</li>`).join('')}</${tag}>`);
+    const html = `<${tag}>${listItems.map(i => `<li>${i}</li>`).join('')}</${tag}>`;
+    if (currentTask && currentTask.inAnswer) currentTask.ansHtml += html;
+    else if (currentTask) currentTask.body += html;
+    else out.push(html);
     inList = false; listType = null; listItems = [];
   };
   const flushTable = () => {
@@ -1692,21 +1611,74 @@ function parseSimpleMarkdown(md){
         const cells = clean[i].split('|').map(c => c.trim()).filter(Boolean);
         if (cells.length) tr += `<tr>${cells.map(c => `<td>${fmt(c)}</td>`).join('')}</tr>`;
       }
-      out.push(`<table>${tr}</table>`);
+      const html = `<table>${tr}</table>`;
+      if (currentTask && currentTask.inAnswer) currentTask.ansHtml += html;
+      else if (currentTask) currentTask.body += html;
+      else out.push(html);
     }
     inTable = false; tableRows = [];
   };
   const flushBq = () => {
     if (!inBq || !bqLines.length) return;
-    out.push(`<blockquote><p>${bqLines.join('<br>')}</p></blockquote>`);
+    const html = `<blockquote><p>${bqLines.join('<br>')}</p></blockquote>`;
+    if (currentTask && currentTask.inAnswer) currentTask.ansHtml += html;
+    else if (currentTask) currentTask.body += html;
+    else out.push(html);
     inBq = false; bqLines = [];
   };
   const flushCode = () => {
     if (!inCode) return;
     const content = codeLines.join('\n')
       .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-    out.push(`<pre><code>${content}</code></pre>`);
+    const html = `<pre><code>${content}</code></pre>`;
+    if (currentTask && currentTask.inAnswer) currentTask.ansHtml += html;
+    else if (currentTask) currentTask.body += html;
+    else out.push(html);
     inCode = false; codeLines = [];
+  };
+  const flushTask = () => {
+    if (!currentTask) return;
+
+    // Страховка: вырезаем "Ответ:" из тела, если он туда попал
+    let bodyClean = currentTask.body;
+    let inlineAns = currentTask.ansInline;
+    const ansRx = /Ответ\s*[:\-—–]\s*([\s\S]*?)$/i;
+    const am = bodyClean.match(ansRx);
+    if (am){
+      const tail = am[1].replace(/<\/p>\s*$/i, '').replace(/<[^>]+>/g, ' ').trim();
+      if (tail && !inlineAns) inlineAns = fmt(tail);
+      bodyClean = bodyClean.slice(0, am.index).trim();
+    }
+    bodyClean = bodyClean
+      .replace(/<p>\s*Ответ\s*[:\-—–][\s\S]*?<\/p>/gi, '')
+      .replace(/\s*Ответ\s*[:\-—–][^<]*$/gim, '')
+      .trim();
+
+    const bodyHtml = bodyClean || '<em style="color:var(--ink-muted)">Условие не распознано</em>';
+    const ansHtml = currentTask.ansHtml.trim()
+      ? currentTask.ansHtml
+      : (inlineAns
+          ? `<span class="answer-inline">${inlineAns}</span>`
+          : `<div style="color:var(--ink-muted);font-weight:400;">Ответ не найден в файле</div>`);
+
+    out.push(`<div class="task">
+      <div class="task-header">
+        <span class="task-number">Задание ${currentTask.num}</span>
+        <span class="task-type">${currentTask.ttype}</span>
+      </div>
+      <div class="task-body">${bodyHtml}</div>
+      <button class="answer-toggle" type="button"><span>👁</span> Показать ответ</button>
+      <div class="answer-content">
+        <div class="answer-label">Ответ:</div>
+        <div class="answer-text">${ansHtml}</div>
+      </div>
+    </div>`);
+    currentTask = null;
+  };
+
+  const finishAnswer = () => {
+    if (currentTask) currentTask.inAnswer = false;
+    flushList(); flushTable(); flushBq();
   };
 
   for (let raw of lines){
@@ -1719,51 +1691,110 @@ function parseSimpleMarkdown(md){
     }
     if (inCode){ codeLines.push(raw); continue; }
 
-    if (!s){ flushList(); flushTable(); flushBq(); continue; }
-    if (s === '---'){ flushList(); flushTable(); flushBq(); out.push('<hr>'); continue; }
+    if (isPractice){
+      const t = matchTaskStart(s);
+      if (t){
+        flushTask(); flushList(); flushTable(); flushBq();
+        taskCounter++;
+        currentTask = {num: t.num, body:'', ttype:'ЕГЭ', ansHtml:'', ansInline:'', inAnswer:false};
+        if (t.rest) currentTask.body = fmt(t.rest);
+        continue;
+      }
+    }
 
-    // Заголовки
-    if (s.startsWith('### ')){ flushList(); flushTable(); out.push(`<h5>${fmt(s.slice(4))}</h5>`); continue; }
-    if (s.startsWith('## ')){
-      flushList(); flushTable();
-      const txt = s.slice(3);
-      const isPart = /^Часть\s/i.test(txt);
-      out.push(isPart ? `<h2 data-section>${fmt(txt)}</h2>` : `<h4>${fmt(txt)}</h4>`);
+    if (isPractice && currentTask && currentTask.inAnswer){
+      if (s === '---'){ finishAnswer(); flushTask(); out.push('<hr>'); continue; }
+      if (/^##\s+/.test(s) && !/^#{1,3}\s*Задание/i.test(s)){
+        finishAnswer(); flushTask();
+        out.push(`<h2 data-section>${fmt(s.replace(/^##\s+/, ''))}</h2>`);
+        continue;
+      }
+      if (/^#\s+/.test(s) && !/^#{1,3}\s*Задание/i.test(s)){
+        finishAnswer(); flushTask();
+        out.push(`<h3 data-section>${fmt(s.replace(/^#\s+/, ''))}</h3>`);
+        continue;
+      }
+      if (!s){ flushList(); flushTable(); flushBq(); continue; }
+      if (s.includes('|') && !s.startsWith('- ') && !/^\d+[.)]/.test(s)){
+        flushList(); inTable = true; tableRows.push(s); continue;
+      } else if (inTable){ flushTable(); }
+      const olMatch = s.match(/^(\d+)[.)]\s+(.*)/);
+      if (olMatch){
+        if (inList && listType !== 'ol') flushList();
+        inList = true; listType = 'ol'; listItems.push(fmt(olMatch[2])); continue;
+      }
+      if (s.startsWith('- ') || s.startsWith('* ')){
+        if (inList && listType !== 'ul') flushList();
+        inList = true; listType = 'ul'; listItems.push(fmt(s.slice(2))); continue;
+      } else if (inList){ flushList(); }
+      currentTask.ansHtml += `<p>${fmt(s)}</p>`;
       continue;
     }
-    if (s.startsWith('# ')){ flushList(); flushTable(); out.push(`<h3 data-section>${fmt(s.slice(2))}</h3>`); continue; }
 
-    // Цитаты
-    if (s.startsWith('>')){ flushList(); flushTable(); inBq = true; bqLines.push(s.slice(1).trim()); continue; }
+    if (isPractice && currentTask){
+      const afterMarker = getAnswerPrefix(s);
+      if (afterMarker !== null){
+        if (afterMarker.length > 0){
+          currentTask.ansInline = fmt(afterMarker);
+        } else {
+          currentTask.inAnswer = true;
+          currentTask.ansHtml = '';
+        }
+        continue;
+      }
+    }
+
+    if (isPractice && currentTask && /^#{2,3}\s+[^З]/i.test(s) && !currentTask.body){
+      currentTask.ttype = s.replace(/^#+\s*/, '');
+      continue;
+    }
+    if (!s){ flushList(); flushTable(); flushBq(); continue; }
+    if (s === '---'){ flushList(); flushTable(); flushBq(); flushTask(); out.push('<hr>'); continue; }
+
+    if (/^##\s+Часть\s+/i.test(s)){
+      flushList(); flushTable(); flushTask();
+      out.push(`<h2 data-section>${fmt(s.replace(/^##\s+/, ''))}</h2>`);
+      continue;
+    }
+    if (s.startsWith('### ')){ flushList(); flushTable(); flushTask(); out.push(`<h5>${fmt(s.slice(4))}</h5>`); continue; }
+    if (s.startsWith('## ')){ flushList(); flushTable(); flushTask(); out.push(`<h2 data-section>${fmt(s.slice(3))}</h2>`); continue; }
+    if (s.startsWith('# ')){ flushList(); flushTable(); flushTask(); out.push(`<h3 data-section>${fmt(s.slice(2))}</h3>`); continue; }
+    if (s.startsWith('>')){ flushList(); flushTable(); flushTask(); inBq = true; bqLines.push(s.slice(1).trim()); continue; }
     else if (inBq){ flushBq(); }
-
-    // Таблицы
     if (s.includes('|') && !s.startsWith('- ') && !/^\d+[.)]/.test(s)){
-      flushList(); inTable = true; tableRows.push(s); continue;
+      flushList(); flushTask(); inTable = true; tableRows.push(s); continue;
     } else if (inTable){ flushTable(); }
 
-    // Списки
     const olMatch = s.match(/^(\d+)[.)]\s+(.*)/);
     if (olMatch){
       if (inList && listType !== 'ol') flushList();
-      inList = true; listType = 'ol'; listItems.push(fmt(olMatch[2]));
-      continue;
+      flushTask(); inList = true; listType = 'ol'; listItems.push(fmt(olMatch[2])); continue;
     }
     if (s.startsWith('- ') || s.startsWith('* ')){
       if (s.startsWith('**') && !s.startsWith('* ')) { /* не маркер */ }
       else {
         if (inList && listType !== 'ul') flushList();
-        inList = true; listType = 'ul'; listItems.push(fmt(s.slice(2)));
-        continue;
+        flushTask(); inList = true; listType = 'ul'; listItems.push(fmt(s.slice(2))); continue;
       }
     } else if (inList){ flushList(); }
 
-    // Параграф
-    out.push(`<p>${fmt(s)}</p>`);
+    const txt = fmt(s);
+    if (currentTask) currentTask.body += (currentTask.body ? ' ' : '') + txt;
+    else out.push(`<p>${txt}</p>`);
   }
-  flushList(); flushTable(); flushBq(); flushCode();
-  return out.join('\n');
+  flushList(); flushTable(); flushBq(); flushCode(); flushTask();
+  return {html: out.join('\n'), taskCount: taskCounter};
 }
+
+function fmt(t){
+  t = t.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  t = t.replace(/(^|[^*])\*([^*\n]+?)\*(?!\*)/g, '$1<em>$2</em>');
+  t = t.replace(/`([^`]+?)`/g, '<code>$1</code>');
+  t = t.replace(/([A-Za-z)(])(\d+)(?![\dA-Za-z])/g, '$1<sub>$2</sub>');
+  t = t.replace(/°/g, '&deg;');
+  return t;
+}
+
 /* ============================================================
    ANSWER TOGGLE + CONFETTI
    ============================================================ */
