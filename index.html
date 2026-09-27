@@ -696,7 +696,6 @@ body{
   font-family: 'Exo 2', sans-serif; font-weight: 700;
   font-size: 0.88rem; cursor: pointer;
   transition: all var(--transition);
-  font-family: inherit;
 }
 .num-task-answer-toggle:hover{
   background: color-mix(in srgb, var(--num-color, var(--accent-pink)) 20%, transparent);
@@ -758,7 +757,7 @@ body{
   display: block;
 }
 
-/* ========== CONTENT PAGES (для модулей) ========== */
+/* ========== CONTENT PAGES ========== */
 .content-page{
   padding:6.5rem clamp(1rem,4vw,2rem) 3rem;
   max-width: min(1400px, 100%);
@@ -1409,10 +1408,10 @@ sub,sup{font-size:0.75em; line-height:0}
 
     <div class="numbers-banner" id="numbersBanner">
       <div class="numbers-nums-deco" aria-hidden="true">
-        <span>10</span>
-        <span>11</span>
-        <span>12</span>
-        <span>13</span>
+        <span>14</span>
+        <span>15</span>
+        <span>16</span>
+        <span>32</span>
       </div>
       <h3>🎯 Меню номеров ЕГЭ</h3>
       <p>Выберите номер задания — увидите все варианты с картинками. Ответы скрыты до клика.</p>
@@ -1548,6 +1547,51 @@ const NUMBER_TASKS = {
     color: '#f472b6',
     file: 'number_tasks/12_Zadanie_Svoistva_uglevodorodov_kislorodosoderzhaschih_veschestv.md',
     imagesDir: 'task_12/'
+  },
+  13: {
+    num: 13,
+    title: 'Азотсодержащие вещества, углеводы, жиры',
+    shortTitle: 'Азотсодержащие и углеводы',
+    icon: '🧪',
+    color: '#34d399',
+    file: 'number_tasks/13_Zadanie_Azotosoderzhaschie_veschesta_uglevody_zhiry.md',
+    imagesDir: 'task_13/'
+  },
+  14: {
+    num: 14,
+    title: 'Свойства углеводородов',
+    shortTitle: 'Свойства углеводородов',
+    icon: '🔥',
+    color: '#fbbf24',
+    file: 'number_tasks/14_Zadanie_Svoystva_uglevodorodov.md',
+    imagesDir: 'task_14/'
+  },
+  15: {
+    num: 15,
+    title: 'Свойства кислородсодержащих веществ',
+    shortTitle: 'Свойства кислородсодержащих',
+    icon: '💧',
+    color: '#fb7185',
+    file: 'number_tasks/15_Zadanie_Svoystva_kislorodosoderzhaschih_veschestv.md',
+    imagesDir: 'task_15/'
+  },
+  16: {
+    num: 16,
+    title: 'Цепочки превращений органических веществ',
+    shortTitle: 'Цепочки превращений',
+    icon: '🔗',
+    color: '#818cf8',
+    file: 'number_tasks/16_Zadanie_Cepochki_prevrascheniy_organicheskhih_veschestv.md',
+    imagesDir: 'task_16/'
+  },
+  32: {
+    num: 32,
+    title: 'Цепочки превращений органических веществ (задание 32)',
+    shortTitle: 'Цепочки превращений (32)',
+    icon: '🧩',
+    color: '#c084fc',
+    file: 'number_tasks/32_Zadanie_Cepochki_prevrascheniy_organicheskhih_veschestv.md',
+    imagesDir: 'task_32/'
   }
 };
 
@@ -1901,7 +1945,6 @@ function parseNumberTasks(md, imagesDir){
       const alt = (imgMatch[2] || name).trim();
       const src = name.includes('/') ? name : (imagesDir + name);
 
-      // Если ответ открыт и внутри — кладём картинку в ответ
       if (current.inAnswer){
         current.answer.push({ level: 1, isImage: true, src, text: '' });
       } else {
@@ -1930,24 +1973,21 @@ function parseNumberTasks(md, imagesDir){
       if (listMatch){
         if (indent > current.ansIndent){
           const text = listMatch[1].trim();
-          // Если внутри ответа картинка (типа ![[...]]) — она уже обработана выше
           if (!text) continue;
           const extra = indent - current.ansIndent;
           let level = 0;
-          if (extra >= 4) level = 2;      // очень глубоко
-          else if (extra >= 2) level = 1; // подпункт
+          if (extra >= 4) level = 2;
+          else if (extra >= 2) level = 1;
           current.answer.push({ level, isImage: false, text });
           continue;
         }
       }
-      // Строки без маркера, но с отступом — тоже в ответ
       if (indent > current.ansIndent && s){
         const extra = indent - current.ansIndent;
         const level = extra >= 2 ? 1 : 0;
         current.answer.push({ level, isImage: false, text: s });
         continue;
       }
-      // Отступ меньше — выходим из ответа
       current.inAnswer = false;
     }
   }
@@ -1961,7 +2001,6 @@ function renderNumberTasks(tasks, container, numColor){
     return;
   }
 
-  // ВАЖНО: очищаем контейнер СРАЗУ, потом добавляем карточки
   container.innerHTML = '';
 
   tasks.forEach(t => {
@@ -1969,7 +2008,6 @@ function renderNumberTasks(tasks, container, numColor){
     div.className = 'num-task';
     div.style.setProperty('--num-color', numColor);
 
-    // Картинки условия
     const imagesHtml = t.images.length
       ? `<div class="num-task-images">${t.images.map(img => `
           <img class="num-task-image"
@@ -1980,7 +2018,6 @@ function renderNumberTasks(tasks, container, numColor){
         `).join('')}</div>`
       : '<em style="color:var(--ink-muted)">Условие отсутствует</em>';
 
-    // Ответы (с картинками и вложенными пунктами)
     const answerItems = t.answer.length
       ? t.answer.map(a => {
           if (a.isImage){
@@ -2941,12 +2978,6 @@ document.addEventListener('keydown', e => {
 window.debugParseTask = function(){
   const tasks = document.querySelectorAll('.task, .num-task');
   console.log('Найдено задач:', tasks.length);
-  tasks.forEach(t => {
-    const num = t.querySelector('.task-number, .num-task-title')?.textContent || '?';
-    const body = t.querySelector('.task-body, .num-task-header')?.textContent || '';
-    const bodyHasAnswer = /Ответ\s*[:\-—–]/i.test(body);
-    console.log((bodyHasAnswer ? '⚠️ ' : '✓ ') + num);
-  });
 };
 window.debugNumberTasks = function(){
   const cards = document.querySelectorAll('.num-task');
