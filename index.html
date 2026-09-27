@@ -1954,7 +1954,8 @@ function renderNumberTasks(tasks, container, numColor){
     return;
   }
 
-  const frag = document.createDocumentFragment();
+  container.innerHTML = '';  // очищаем СРАЗУ
+
   tasks.forEach(t => {
     const div = document.createElement('div');
     div.className = 'num-task';
@@ -1990,10 +1991,8 @@ function renderNumberTasks(tasks, container, numColor){
         <ul class="num-task-answer-list">${answerItems}</ul>
       </div>`;
 
-    container.appendChild(div);
+    container.appendChild(div);  // ← сразу в container
   });
-  container.innerHTML = '';
-  container.appendChild(frag);
 }
 
 function escapeHtml(s){
