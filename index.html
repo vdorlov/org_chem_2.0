@@ -6,7 +6,6 @@
 <title>Органическая химия 2.0 — Подготовка к ЕГЭ</title>
 <meta name="description" content="Интерактивный курс подготовки к ЕГЭ по органической химии: теория, тренировочные задания, ЕГЭ по номерам и таблица Менделеева.">
 
-<!-- Favicon: SVG-атом, встроенный прямо в код -->
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%2322d3ee'/%3E%3Cstop offset='1' stop-color='%23b47cf0'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx='32' cy='32' r='6' fill='url(%23g)'/%3E%3Cellipse cx='32' cy='32' rx='24' ry='9' fill='none' stroke='url(%23g)' stroke-width='2.5' transform='rotate(30 32 32)'/%3E%3Cellipse cx='32' cy='32' rx='24' ry='9' fill='none' stroke='url(%23g)' stroke-width='2.5' transform='rotate(-30 32 32)'/%3E%3Cellipse cx='32' cy='32' rx='24' ry='9' fill='none' stroke='url(%23g)' stroke-width='2.5' transform='rotate(90 32 32)'/%3E%3C/svg%3E">
 <meta name="theme-color" content="#0a0e27">
 
@@ -414,7 +413,7 @@ body{
 .module-card[data-color="emerald"]{--card-color-1:#10b981;--card-color-2:#5b8def;--card-glow:0 0 28px rgba(16,185,129,0.13)}
 .module-card[data-color="rose"]   {--card-color-1:#fb7185;--card-color-2:#fbbf24;--card-glow:0 0 28px rgba(251,113,133,0.13)}
 
-/* ========== ЕГЭ ПО НОМЕРАМ — баннер на главной ========== */
+/* ========== ЕГЭ ПО НОМЕРАМ ========== */
 .numbers-banner{
   display: flex; flex-direction: column;
   align-items: center; justify-content: center;
@@ -489,15 +488,13 @@ body{
   50%    { transform: translateY(-15px) rotate(5deg); }
 }
 
-/* ========== СТРАНИЦА КАТАЛОГА НОМЕРОВ ========== */
+/* КАТАЛОГ НОМЕРОВ */
 .numbers-catalog-page{
   padding: 6.5rem clamp(1rem,4vw,2rem) 3rem;
   max-width: 1400px; margin: 0 auto; min-height: 100vh;
   animation: fadeIn 0.35s ease-out;
 }
-.numbers-catalog-header{
-  text-align: center; margin-bottom: 2.5rem;
-}
+.numbers-catalog-header{text-align: center; margin-bottom: 2.5rem;}
 .numbers-catalog-header h2{
   font-family:'Exo 2',sans-serif; font-size: var(--step-2);
   font-weight: 800; margin-bottom: 0.6rem;
@@ -513,7 +510,6 @@ body{
   gap: 1.3rem;
   perspective: 1200px;
 }
-
 .number-card{
   position: relative;
   border-radius: var(--radius);
@@ -546,14 +542,6 @@ body{
   opacity: 0; transition: opacity var(--transition);
 }
 .number-card:hover::before{opacity: 1}
-.number-card::after{
-  content:''; position: absolute; inset: -50%;
-  background: radial-gradient(circle at 50% 0%, color-mix(in srgb, var(--card-color) 25%, transparent) 0%, transparent 60%);
-  opacity: 0; transition: opacity var(--transition);
-  pointer-events: none;
-}
-.number-card:hover::after{opacity: 1}
-
 .number-card .big-num{
   font-family: 'Exo 2', sans-serif;
   font-size: 4.5rem; font-weight: 800; line-height: 1;
@@ -590,7 +578,7 @@ body{
   position: relative; z-index: 1;
 }
 
-/* ========== СТРАНИЦА ЗАДАНИЙ НОМЕРА ========== */
+/* СТРАНИЦА ЗАДАНИЙ НОМЕРА */
 .number-tasks-page{
   padding: 6.5rem clamp(1rem,4vw,2rem) 3rem;
   max-width: 1000px; margin: 0 auto; min-height: 100vh;
@@ -667,6 +655,10 @@ body{
 }
 
 /* Картинки заданий */
+.num-task-images{
+  display: flex; flex-direction: column; gap: 0.8rem;
+  margin: 0.8rem 0;
+}
 .num-task-image{
   display: block;
   width: 100%; max-width: 100%;
@@ -674,7 +666,6 @@ body{
   border-radius: var(--radius-sm);
   border: 1px solid var(--line);
   background: var(--img-bg);
-  margin: 0.8rem 0;
   opacity: 0;
   animation: imgFadeIn 0.5s ease-out forwards;
 }
@@ -682,25 +673,15 @@ body{
   from{ opacity: 0; transform: translateY(8px); }
   to  { opacity: 1; transform: translateY(0); }
 }
-.num-task-image.loading{
-  min-height: 120px;
-  background:
-    linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent),
-    var(--bg-hover);
-  background-size: 200% 100%;
-  animation: skeleton 1.2s infinite;
-}
-@keyframes skeleton{
-  0%   { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
-}
 .num-task-image.error{
   background: color-mix(in srgb, var(--accent-red) 10%, var(--bg-hover));
   border-color: var(--accent-red);
   min-height: 80px;
+  padding: 1rem;
+  text-align: center;
+  color: var(--accent-red);
+  font-style: italic;
   display: flex; align-items: center; justify-content: center;
-  color: var(--accent-red); font-style: italic;
-  padding: 1rem; text-align: center;
 }
 
 /* Кнопка ответа */
@@ -715,6 +696,7 @@ body{
   font-family: 'Exo 2', sans-serif; font-weight: 700;
   font-size: 0.88rem; cursor: pointer;
   transition: all var(--transition);
+  font-family: inherit;
 }
 .num-task-answer-toggle:hover{
   background: color-mix(in srgb, var(--num-color, var(--accent-pink)) 20%, transparent);
@@ -728,7 +710,7 @@ body{
   border-left: 3px solid var(--accent-green);
 }
 .num-task-answer.revealed{
-  max-height: 800px;
+  max-height: 4000px;
   padding: 1rem 1.2rem;
   margin-top: 0.9rem;
 }
@@ -740,8 +722,8 @@ body{
 .num-task-answer-list{
   list-style: none; padding: 0; margin: 0;
 }
-.num-task-answer-list li{
-  padding: 0.4rem 0.7rem;
+.num-task-answer-list > li{
+  padding: 0.5rem 0.75rem;
   margin-bottom: 0.4rem;
   background: color-mix(in srgb, var(--accent-green) 10%, transparent);
   border-radius: 8px;
@@ -750,13 +732,30 @@ body{
   color: var(--ink);
   font-family: 'Exo 2', sans-serif;
 }
-.num-task-answer-list li.sub{
+.num-task-answer-list > li.sub{
   margin-left: 1.4rem;
   background: transparent;
   border-left: 2px dashed var(--line);
-  font-weight: 400; font-size: 0.85rem;
+  font-weight: 400; font-size: 0.88rem;
   color: var(--ink-muted);
   font-family: 'Open Sans', sans-serif;
+}
+.num-task-answer-list > li.sub-sub{
+  margin-left: 2.8rem;
+  background: transparent;
+  border-left: none;
+  padding: 0.2rem 0;
+  font-weight: 400; font-size: 0.82rem;
+  color: var(--ink-soft);
+  font-family: 'Open Sans', sans-serif;
+}
+.num-task-answer-list img{
+  max-width: 100%;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--line);
+  background: var(--img-bg);
+  margin: 0.4rem 0;
+  display: block;
 }
 
 /* ========== CONTENT PAGES (для модулей) ========== */
@@ -982,7 +981,7 @@ body{
   border-radius:var(--radius-sm); margin-top:0;
   border-left:3px solid var(--accent-green);
 }
-.answer-content.revealed{max-height:2000px; padding:1rem 1.2rem; margin-top:0.9rem}
+.answer-content.revealed{max-height:3000px; padding:1rem 1.2rem; margin-top:0.9rem}
 .answer-label{
   font-size:0.75rem; color:var(--accent-green);
   font-weight:800; text-transform:uppercase;
@@ -1005,12 +1004,6 @@ body{
   max-width: 100%;
 }
 [data-theme="light"] .answer-content pre{background: rgba(0,0,0,0.04);}
-.answer-content .answer-inline{
-  font-weight: 700; font-size: 1.05rem;
-  color: var(--ink);
-  display: block;
-  padding: 0.2rem 0;
-}
 
 /* PERIODIC TABLE */
 .periodic-page{
@@ -1407,7 +1400,6 @@ sub,sup{font-size:0.75em; line-height:0}
     <div class="modules-grid" id="modulesGrid"></div>
   </section>
 
-  <!-- ================ ЕГЭ ПО НОМЕРАМ ================ -->
   <section class="section" id="numbers-section">
     <div class="section-header">
       <div class="section-tag pink">ЕГЭ по номерам</div>
@@ -1465,7 +1457,7 @@ sub,sup{font-size:0.75em; line-height:0}
 'use strict';
 
 /* ============================================================
-   MODULES META (модули теории/практики)
+   MODULES META
    ============================================================ */
 const MODULES = {
   1:{color:'cyan', icon:'⚛', title:'Теоретические основы',
@@ -1526,9 +1518,8 @@ const TABLES = {
 };
 
 /* ============================================================
-   ★★★ ЕГЭ ПО НОМЕРАМ — карта номеров заданий ★★★
-   Файлы .md лежат в КОРНЕ репозитория рядом с index.html,
-   картинки — в папках task_10/, task_11/, task_12/.
+   ЕГЭ ПО НОМЕРАМ — карта номеров
+   .md — в number_tasks/, картинки — в task_XX/ (в корне)
    ============================================================ */
 const NUMBER_TASKS = {
   10: {
@@ -1562,7 +1553,6 @@ const NUMBER_TASKS = {
 
 const LOCAL_BASE = './';
 const RAW_FALLBACKS = [
-  'https://raw.githubusercontent.com/vdorlov/org_chem_2.0/main/',
   'https://raw.githubusercontent.com/vdorlov/org_chem_2.0/master/'
 ];
 const contentCache = new Map();
@@ -1889,7 +1879,7 @@ function parseNumberTasks(md, imagesDir){
     const s = raw.trim();
     if (!s) continue;
 
-    // "N. M" — номер задания (в файле. номер ЕГЭ)
+    // "N. M" — номер задания в файле и номер ЕГЭ
     const numMatch = s.match(/^(\d+)[.)]\s+(\d+)\s*$/);
     if (numMatch){
       flushTask();
@@ -1910,37 +1900,54 @@ function parseNumberTasks(md, imagesDir){
       const name = imgMatch[1].trim();
       const alt = (imgMatch[2] || name).trim();
       const src = name.includes('/') ? name : (imagesDir + name);
-      current.images.push({ src, alt });
+
+      // Если ответ открыт и внутри — кладём картинку в ответ
+      if (current.inAnswer){
+        current.answer.push({ level: 1, isImage: true, src, text: '' });
+      } else {
+        current.images.push({ src, alt });
+      }
       continue;
     }
 
     // "- Ответ:" — открывает блок ответа
-    if (/^\s*-\s*Ответ\s*:?\s*$/i.test(raw) || /^\s*-\s*Ответ\s*:?\s*(.*)$/i.test(raw)){
+    if (/^\s*-\s*Ответ\s*:?\s*(.*)$/i.test(raw)){
       const inlineMatch = raw.match(/^\s*-\s*Ответ\s*:?\s*(.*)$/i);
       current.inAnswer = true;
       current.ansIndent = raw.match(/^(\s*)/)[1].length;
       if (inlineMatch && inlineMatch[1].trim()){
-        current.answer.push({ level: 0, text: inlineMatch[1].trim() });
+        current.answer.push({ level: 0, isImage: false, text: inlineMatch[1].trim() });
       }
       continue;
     }
 
     // Внутри блока ответа — забираем строки с большим отступом
     if (current.inAnswer){
-      const indent = raw.match(/^(\s*)/)[1].length;
-      const listMatch = raw.match(/^\s*-\s*(.*)$/);
+      const indentMatch = raw.match(/^(\s*)/);
+      const indent = indentMatch ? indentMatch[1].length : 0;
+      const listMatch = raw.match(/^\s*-\s+(.*)$/);
+
       if (listMatch){
-        if (indent >= current.ansIndent){
+        if (indent > current.ansIndent){
           const text = listMatch[1].trim();
-          const level = indent > current.ansIndent + 1 ? 1 : 0;
-          current.answer.push({ level, text });
+          // Если внутри ответа картинка (типа ![[...]]) — она уже обработана выше
+          if (!text) continue;
+          const extra = indent - current.ansIndent;
+          let level = 0;
+          if (extra >= 4) level = 2;      // очень глубоко
+          else if (extra >= 2) level = 1; // подпункт
+          current.answer.push({ level, isImage: false, text });
           continue;
         }
       }
-      if (indent >= current.ansIndent && !listMatch){
-        current.answer.push({ level: 0, text: s });
+      // Строки без маркера, но с отступом — тоже в ответ
+      if (indent > current.ansIndent && s){
+        const extra = indent - current.ansIndent;
+        const level = extra >= 2 ? 1 : 0;
+        current.answer.push({ level, isImage: false, text: s });
         continue;
       }
+      // Отступ меньше — выходим из ответа
       current.inAnswer = false;
     }
   }
@@ -1954,25 +1961,32 @@ function renderNumberTasks(tasks, container, numColor){
     return;
   }
 
-  container.innerHTML = '';  // очищаем СРАЗУ
+  // ВАЖНО: очищаем контейнер СРАЗУ, потом добавляем карточки
+  container.innerHTML = '';
 
   tasks.forEach(t => {
     const div = document.createElement('div');
     div.className = 'num-task';
     div.style.setProperty('--num-color', numColor);
 
-    const imagesHtml = t.images.map(img => `
-      <img class="num-task-image loading"
-           src="${img.src}"
-           alt="${img.alt}"
-           loading="lazy"
-           onload="this.classList.remove('loading');"
-           onerror="this.classList.remove('loading'); this.classList.add('error'); this.removeAttribute('src'); this.textContent='⚠️ Картинка не найдена: ${img.src}';">
-    `).join('');
+    // Картинки условия
+    const imagesHtml = t.images.length
+      ? `<div class="num-task-images">${t.images.map(img => `
+          <img class="num-task-image"
+               src="${img.src}"
+               alt="${img.alt}"
+               loading="lazy"
+               onerror="this.classList.add('error'); this.removeAttribute('src'); this.textContent='⚠️ Картинка не найдена: ${escapeHtml(img.src)}';">
+        `).join('')}</div>`
+      : '<em style="color:var(--ink-muted)">Условие отсутствует</em>';
 
+    // Ответы (с картинками и вложенными пунктами)
     const answerItems = t.answer.length
       ? t.answer.map(a => {
-          const cls = a.level === 0 ? '' : 'sub';
+          if (a.isImage){
+            return `<li class="${a.level === 0 ? '' : 'sub'}"><img src="${a.src}" alt="Пояснение" loading="lazy" onerror="this.style.display='none';"></li>`;
+          }
+          const cls = a.level === 0 ? '' : (a.level === 1 ? 'sub' : 'sub-sub');
           return `<li class="${cls}">${escapeHtml(a.text)}</li>`;
         }).join('')
       : '<li style="color:var(--ink-muted);font-weight:400;">Ответ не указан</li>';
@@ -1982,7 +1996,7 @@ function renderNumberTasks(tasks, container, numColor){
         <div class="num-task-badge">${t.egeNum}</div>
         <div class="num-task-title">Задание ${t.fileNum}</div>
       </div>
-      ${imagesHtml || '<em style="color:var(--ink-muted)">Условие отсутствует</em>'}
+      ${imagesHtml}
       <button class="num-task-answer-toggle" type="button">
         <span>👁</span> Показать ответ
       </button>
@@ -1991,7 +2005,7 @@ function renderNumberTasks(tasks, container, numColor){
         <ul class="num-task-answer-list">${answerItems}</ul>
       </div>`;
 
-    container.appendChild(div);  // ← сразу в container
+    container.appendChild(div);
   });
 }
 
@@ -1999,7 +2013,8 @@ function escapeHtml(s){
   return String(s)
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;');
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
 }
 
 /* ============================================================
@@ -2022,7 +2037,7 @@ async function fetchMarkdown(filename){
       saveMdToStorage(filename, text);
       return text;
     }
-  } catch(e){ /* пробуем fallback */ }
+  } catch(e){ /* fallback */ }
 
   let lastErr = null;
   for (const base of RAW_FALLBACKS){
@@ -2069,7 +2084,7 @@ function refreshMarkdownInBackground(filename){
 }
 
 /* ============================================================
-   ПОКАЗ .MD ДЛЯ МОДУЛЕЙ ТЕОРИИ/ПРАКТИКИ
+   ПОКАЗ .MD ДЛЯ МОДУЛЕЙ
    ============================================================ */
 async function showContentPage(num, title, filename, type, practiceIdx, opts = {}){
   if (!opts.fromPop && !suppressHistory){
@@ -2171,14 +2186,14 @@ async function showContentPage(num, title, filename, type, practiceIdx, opts = {
     const msg = e.message || '';
     body.innerHTML = `<div style="text-align:center;padding:2rem;">
       <p style="color:var(--accent-red);font-weight:700;">⚠️ Не удалось загрузить контент</p>
-      <p style="color:var(--ink-muted);margin-top:0.8rem;">Проверьте, что файл <code>${filename}</code> лежит рядом с index.html.</p>
+      <p style="color:var(--ink-muted);margin-top:0.8rem;">Проверьте, что файл <code>${filename}</code> есть в репозитории.</p>
       <p style="color:var(--ink-soft);font-size:0.8rem;margin-top:0.5rem;font-family:monospace;">${msg.slice(0,200)}</p>
     </div>`;
   }
 }
 
 /* ============================================================
-   MARKDOWN PARSER
+   MARKDOWN PARSER (для теории/практики)
    ============================================================ */
 function parseMarkdown(md, isPractice){
   if (!md) return {html:'<p>Контент недоступен</p>', taskCount:0};
@@ -2700,7 +2715,7 @@ window.addEventListener('popstate', (e) => {
 });
 
 /* ============================================================
-   NAV BUTTONS + SCROLL
+   NAV + SCROLL
    ============================================================ */
 document.querySelectorAll('[data-nav]').forEach(btn => {
   btn.addEventListener('click', () => {
@@ -2925,15 +2940,23 @@ document.addEventListener('keydown', e => {
 /* ===================== DEBUG ===================== */
 window.debugParseTask = function(){
   const tasks = document.querySelectorAll('.task, .num-task');
-  let issues = 0;
+  console.log('Найдено задач:', tasks.length);
   tasks.forEach(t => {
     const num = t.querySelector('.task-number, .num-task-title')?.textContent || '?';
     const body = t.querySelector('.task-body, .num-task-header')?.textContent || '';
     const bodyHasAnswer = /Ответ\s*[:\-—–]/i.test(body);
-    if (bodyHasAnswer) issues++;
     console.log((bodyHasAnswer ? '⚠️ ' : '✓ ') + num);
   });
-  console.log(`\nВсего заданий: ${tasks.length}, проблем: ${issues}`);
+};
+window.debugNumberTasks = function(){
+  const cards = document.querySelectorAll('.num-task');
+  console.log('Карточек заданий:', cards.length);
+  cards.forEach((c, i) => {
+    const num = c.querySelector('.num-task-badge')?.textContent || '?';
+    const imgs = c.querySelectorAll('.num-task-image').length;
+    const ans = c.querySelectorAll('.num-task-answer-list li').length;
+    console.log(`#${i+1} Задание ${num}: картинок ${imgs}, ответов ${ans}`);
+  });
 };
 window.clearOrgChemCache = function(){
   Object.keys(localStorage).filter(k => k.startsWith(MD_STORAGE_PREFIX)).forEach(k => localStorage.removeItem(k));
