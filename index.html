@@ -4,7 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Органическая химия 2.0 — Подготовка к ЕГЭ</title>
-<meta name="description" content="Интерактивный курс подготовки к ЕГЭ по органической химии: теория, тренировочные задания, письменные задачи и таблица Менделеева.">
+<meta name="description" content="Интерактивный курс подготовки к ЕГЭ по органической химии: теория, тренировочные задания, ЕГЭ по номерам и таблица Менделеева.">
+
+<!-- Favicon: SVG-атом, встроенный прямо в код -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%2322d3ee'/%3E%3Cstop offset='1' stop-color='%23b47cf0'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx='32' cy='32' r='6' fill='url(%23g)'/%3E%3Cellipse cx='32' cy='32' rx='24' ry='9' fill='none' stroke='url(%23g)' stroke-width='2.5' transform='rotate(30 32 32)'/%3E%3Cellipse cx='32' cy='32' rx='24' ry='9' fill='none' stroke='url(%23g)' stroke-width='2.5' transform='rotate(-30 32 32)'/%3E%3Cellipse cx='32' cy='32' rx='24' ry='9' fill='none' stroke='url(%23g)' stroke-width='2.5' transform='rotate(90 32 32)'/%3E%3C/svg%3E">
+<meta name="theme-color" content="#0a0e27">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;700;800&family=Open+Sans:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
@@ -30,6 +35,7 @@
   --canvas-opacity:0.45;
   --table-stripe:rgba(255,255,255,0.025);
   --table-hover:rgba(34,211,238,0.06);
+  --img-bg:#ffffff;
 }
 [data-theme="light"]{
   --bg-deep:#f6f7fb; --bg-surface:#ffffff; --bg-card:#ffffff; --bg-hover:#eef1fa;
@@ -43,6 +49,7 @@
   --canvas-opacity:0.25;
   --table-stripe:rgba(17,22,51,0.03);
   --table-hover:rgba(8,145,178,0.07);
+  --img-bg:#ffffff;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
@@ -121,6 +128,16 @@ body{
   background:color-mix(in srgb, var(--accent-amber) 12%, transparent);
   border-color:var(--accent-amber);
   box-shadow:0 0 14px color-mix(in srgb, var(--accent-amber) 35%, transparent);
+}
+.nav-btn.numbers{
+  border-color:color-mix(in srgb, var(--accent-pink) 45%, transparent);
+  color:var(--accent-pink);
+  display:inline-flex; align-items:center; gap:0.4rem;
+}
+.nav-btn.numbers:hover{
+  background:color-mix(in srgb, var(--accent-pink) 12%, transparent);
+  border-color:var(--accent-pink);
+  box-shadow:0 0 14px color-mix(in srgb, var(--accent-pink) 35%, transparent);
 }
 .theme-toggle{
   width:42px; height:42px; border-radius:50%;
@@ -280,6 +297,11 @@ body{
   font-size:0.78rem; font-weight:700;
   text-transform:uppercase; letter-spacing:1.2px;
 }
+.section-tag.pink{
+  background:color-mix(in srgb, var(--accent-pink) 12%, transparent);
+  border-color:color-mix(in srgb, var(--accent-pink) 35%, transparent);
+  color:var(--accent-pink);
+}
 .section-title{
   font-family:'Exo 2',sans-serif; font-size:var(--step-2);
   font-weight:700; margin-bottom:0.9rem;
@@ -392,7 +414,352 @@ body{
 .module-card[data-color="emerald"]{--card-color-1:#10b981;--card-color-2:#5b8def;--card-glow:0 0 28px rgba(16,185,129,0.13)}
 .module-card[data-color="rose"]   {--card-color-1:#fb7185;--card-color-2:#fbbf24;--card-glow:0 0 28px rgba(251,113,133,0.13)}
 
-/* CONTENT PAGES */
+/* ========== ЕГЭ ПО НОМЕРАМ — баннер на главной ========== */
+.numbers-banner{
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  text-align: center;
+  padding: clamp(2rem, 5vw, 3.5rem) clamp(1.5rem, 4vw, 3rem);
+  background: linear-gradient(135deg,
+    color-mix(in srgb, var(--accent-pink) 15%, var(--bg-card)),
+    color-mix(in srgb, var(--accent-purple) 15%, var(--bg-card)));
+  border-radius: var(--radius);
+  border: 1px solid color-mix(in srgb, var(--accent-pink) 30%, var(--line));
+  position: relative; overflow: hidden;
+  cursor: pointer;
+  transition: transform var(--transition), box-shadow var(--transition);
+  max-width: 900px; margin: 0 auto;
+}
+.numbers-banner:hover{
+  transform: translateY(-4px);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.35),
+              0 0 30px color-mix(in srgb, var(--accent-pink) 30%, transparent);
+}
+.numbers-banner::before{
+  content:''; position:absolute; inset:-50%;
+  background: conic-gradient(from 0deg,
+    transparent 0deg,
+    color-mix(in srgb, var(--accent-pink) 20%, transparent) 90deg,
+    transparent 180deg,
+    color-mix(in srgb, var(--accent-purple) 20%, transparent) 270deg,
+    transparent 360deg);
+  animation: rotateBg 20s linear infinite;
+  z-index: 0;
+}
+.numbers-banner > *{ position: relative; z-index: 1; }
+@keyframes rotateBg{ to{ transform: rotate(360deg); } }
+.numbers-banner h3{
+  font-family:'Exo 2',sans-serif; font-size: var(--step-1);
+  font-weight: 800; margin-bottom: 0.7rem;
+  background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
+  -webkit-background-clip:text; background-clip:text;
+  -webkit-text-fill-color:transparent; color: transparent;
+}
+.numbers-banner p{
+  color: var(--ink-muted); max-width: 500px;
+  margin-bottom: 1.5rem; line-height: 1.55;
+}
+.numbers-banner .btn{
+  padding: 0.85rem 2rem;
+  background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
+  color: #fff;
+  box-shadow: 0 0 20px color-mix(in srgb, var(--accent-pink) 45%, transparent);
+}
+[data-theme="dark"] .numbers-banner .btn{color: var(--bg-deep)}
+.numbers-banner .btn:hover{ transform: translateY(-3px); }
+
+.numbers-nums-deco{
+  position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 0;
+}
+.numbers-nums-deco span{
+  position: absolute;
+  font-family: 'Exo 2', sans-serif;
+  font-weight: 800;
+  color: color-mix(in srgb, var(--accent-pink) 50%, transparent);
+  opacity: 0.06;
+  font-size: 6rem; line-height: 1;
+  animation: numFloat 12s ease-in-out infinite;
+}
+.numbers-nums-deco span:nth-child(1){ top: 5%;  left: 5%;  animation-delay: 0s;   font-size: 5rem; }
+.numbers-nums-deco span:nth-child(2){ top: 65%; left: 12%; animation-delay: 1.5s; font-size: 7rem; }
+.numbers-nums-deco span:nth-child(3){ top: 10%; right: 8%; animation-delay: 3s;   font-size: 6rem; }
+.numbers-nums-deco span:nth-child(4){ top: 60%; right: 15%;animation-delay: 4.5s; font-size: 8rem; }
+@keyframes numFloat{
+  0%,100%{ transform: translateY(0) rotate(0deg); }
+  50%    { transform: translateY(-15px) rotate(5deg); }
+}
+
+/* ========== СТРАНИЦА КАТАЛОГА НОМЕРОВ ========== */
+.numbers-catalog-page{
+  padding: 6.5rem clamp(1rem,4vw,2rem) 3rem;
+  max-width: 1400px; margin: 0 auto; min-height: 100vh;
+  animation: fadeIn 0.35s ease-out;
+}
+.numbers-catalog-header{
+  text-align: center; margin-bottom: 2.5rem;
+}
+.numbers-catalog-header h2{
+  font-family:'Exo 2',sans-serif; font-size: var(--step-2);
+  font-weight: 800; margin-bottom: 0.6rem;
+  background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple), var(--accent-cyan));
+  -webkit-background-clip:text; background-clip:text;
+  -webkit-text-fill-color:transparent; color:transparent;
+}
+.numbers-catalog-header p{color:var(--ink-muted); max-width: 560px; margin: 0 auto;}
+
+.numbers-grid{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.3rem;
+  perspective: 1200px;
+}
+
+.number-card{
+  position: relative;
+  border-radius: var(--radius);
+  padding: 2rem 1.5rem 1.5rem;
+  text-align: center;
+  cursor: pointer;
+  border: 1px solid var(--line);
+  background: var(--bg-card);
+  overflow: hidden;
+  transition: transform 0.35s cubic-bezier(0.175,0.885,0.32,1.275),
+              border-color var(--transition),
+              box-shadow var(--transition);
+  opacity: 0; transform: translateY(24px);
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+.number-card.visible{
+  opacity: 1; transform: translateY(0);
+  transition: opacity 0.5s ease, transform 0.5s ease, border-color 0.3s, box-shadow 0.3s;
+}
+.number-card:hover{
+  transform: translateY(-8px) scale(1.02);
+  border-color: var(--card-color);
+  box-shadow: 0 15px 40px rgba(0,0,0,0.35),
+              0 0 30px color-mix(in srgb, var(--card-color) 40%, transparent);
+}
+.number-card::before{
+  content:''; position:absolute; top:0; left:0; right:0; height:4px;
+  background: linear-gradient(90deg, var(--card-color), transparent);
+  opacity: 0; transition: opacity var(--transition);
+}
+.number-card:hover::before{opacity: 1}
+.number-card::after{
+  content:''; position: absolute; inset: -50%;
+  background: radial-gradient(circle at 50% 0%, color-mix(in srgb, var(--card-color) 25%, transparent) 0%, transparent 60%);
+  opacity: 0; transition: opacity var(--transition);
+  pointer-events: none;
+}
+.number-card:hover::after{opacity: 1}
+
+.number-card .big-num{
+  font-family: 'Exo 2', sans-serif;
+  font-size: 4.5rem; font-weight: 800; line-height: 1;
+  background: linear-gradient(135deg, var(--card-color), color-mix(in srgb, var(--card-color) 40%, var(--accent-purple)));
+  -webkit-background-clip:text; background-clip:text;
+  -webkit-text-fill-color:transparent; color:transparent;
+  position: relative; z-index: 1;
+  transition: transform 0.35s ease;
+}
+.number-card:hover .big-num{ transform: scale(1.08); }
+.number-card .small-label{
+  font-family: 'Exo 2', sans-serif;
+  font-size: 0.75rem; text-transform: uppercase;
+  letter-spacing: 1.5px; font-weight: 700;
+  color: var(--ink-muted); margin-top: 0.4rem;
+  position: relative; z-index: 1;
+}
+.number-card .card-title{
+  font-family: 'Exo 2', sans-serif;
+  font-size: 0.95rem; font-weight: 700;
+  margin-top: 0.9rem; line-height: 1.35;
+  color: var(--ink);
+  position: relative; z-index: 1;
+  min-height: 2.7em;
+}
+.number-card .card-count{
+  display: inline-flex; align-items: center; gap: 0.35rem;
+  margin-top: 0.7rem; padding: 0.3rem 0.7rem;
+  border-radius: 50px;
+  background: color-mix(in srgb, var(--card-color) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--card-color) 30%, transparent);
+  color: var(--card-color);
+  font-size: 0.78rem; font-weight: 700;
+  position: relative; z-index: 1;
+}
+
+/* ========== СТРАНИЦА ЗАДАНИЙ НОМЕРА ========== */
+.number-tasks-page{
+  padding: 6.5rem clamp(1rem,4vw,2rem) 3rem;
+  max-width: 1000px; margin: 0 auto; min-height: 100vh;
+  animation: fadeIn 0.35s ease-out;
+}
+.number-tasks-header{
+  text-align: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1.8rem;
+  border-bottom: 1px solid var(--line);
+}
+.number-tasks-header .badge{
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  padding: 0.5rem 1.1rem; margin-bottom: 1.2rem;
+  background: color-mix(in srgb, var(--num-color, var(--accent-pink)) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--num-color, var(--accent-pink)) 40%, transparent);
+  border-radius: 50px;
+  color: var(--num-color, var(--accent-pink));
+  font-size: 0.85rem; font-weight: 700;
+}
+.number-tasks-header h2{
+  font-family: 'Exo 2', sans-serif;
+  font-size: var(--step-2); font-weight: 800;
+  margin-bottom: 0.6rem;
+  color: var(--num-color, var(--accent-pink));
+}
+.number-tasks-header .meta{
+  color: var(--ink-muted); font-size: 0.9rem;
+  display: flex; gap: 1.2rem; justify-content: center; flex-wrap: wrap;
+  margin-top: 0.5rem;
+}
+.number-tasks-header .meta span{ display: inline-flex; align-items: center; gap: 0.35rem; }
+
+.number-tasks-list{
+  display: flex; flex-direction: column; gap: 1.2rem;
+}
+
+.num-task{
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1.3rem 1.4rem;
+  transition: border-color var(--transition), box-shadow var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+.num-task:hover{
+  border-color: color-mix(in srgb, var(--num-color, var(--accent-pink)) 35%, var(--line));
+  box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+}
+.num-task-header{
+  display: flex; align-items: center; gap: 0.8rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+.num-task-badge{
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 42px; height: 42px;
+  padding: 0 0.7rem;
+  border-radius: 12px;
+  background: linear-gradient(135deg,
+    var(--num-color, var(--accent-pink)),
+    color-mix(in srgb, var(--num-color, var(--accent-pink)) 40%, var(--accent-purple)));
+  color: #fff;
+  font-family: 'Exo 2', sans-serif;
+  font-weight: 800; font-size: 1rem;
+  box-shadow: 0 0 14px color-mix(in srgb, var(--num-color, var(--accent-pink)) 35%, transparent);
+}
+[data-theme="dark"] .num-task-badge{color: var(--bg-deep)}
+.num-task-title{
+  font-family: 'Exo 2', sans-serif;
+  font-weight: 700; font-size: 1rem;
+  color: var(--ink);
+}
+
+/* Картинки заданий */
+.num-task-image{
+  display: block;
+  width: 100%; max-width: 100%;
+  height: auto;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--line);
+  background: var(--img-bg);
+  margin: 0.8rem 0;
+  opacity: 0;
+  animation: imgFadeIn 0.5s ease-out forwards;
+}
+@keyframes imgFadeIn{
+  from{ opacity: 0; transform: translateY(8px); }
+  to  { opacity: 1; transform: translateY(0); }
+}
+.num-task-image.loading{
+  min-height: 120px;
+  background:
+    linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent),
+    var(--bg-hover);
+  background-size: 200% 100%;
+  animation: skeleton 1.2s infinite;
+}
+@keyframes skeleton{
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+.num-task-image.error{
+  background: color-mix(in srgb, var(--accent-red) 10%, var(--bg-hover));
+  border-color: var(--accent-red);
+  min-height: 80px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--accent-red); font-style: italic;
+  padding: 1rem; text-align: center;
+}
+
+/* Кнопка ответа */
+.num-task-answer-toggle{
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  padding: 0.55rem 1.15rem;
+  margin-top: 0.5rem;
+  background: color-mix(in srgb, var(--num-color, var(--accent-pink)) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--num-color, var(--accent-pink)) 32%, transparent);
+  border-radius: 10px;
+  color: var(--num-color, var(--accent-pink));
+  font-family: 'Exo 2', sans-serif; font-weight: 700;
+  font-size: 0.88rem; cursor: pointer;
+  transition: all var(--transition);
+}
+.num-task-answer-toggle:hover{
+  background: color-mix(in srgb, var(--num-color, var(--accent-pink)) 20%, transparent);
+  transform: translateY(-1px);
+}
+.num-task-answer{
+  max-height: 0; overflow: hidden;
+  transition: max-height 0.4s ease-out, padding 0.3s, margin 0.3s;
+  background: color-mix(in srgb, var(--accent-green) 6%, transparent);
+  border-radius: var(--radius-sm); margin-top: 0;
+  border-left: 3px solid var(--accent-green);
+}
+.num-task-answer.revealed{
+  max-height: 800px;
+  padding: 1rem 1.2rem;
+  margin-top: 0.9rem;
+}
+.num-task-answer-label{
+  font-size: 0.72rem; color: var(--accent-green);
+  font-weight: 800; text-transform: uppercase;
+  letter-spacing: 1.2px; margin-bottom: 0.5rem;
+}
+.num-task-answer-list{
+  list-style: none; padding: 0; margin: 0;
+}
+.num-task-answer-list li{
+  padding: 0.4rem 0.7rem;
+  margin-bottom: 0.4rem;
+  background: color-mix(in srgb, var(--accent-green) 10%, transparent);
+  border-radius: 8px;
+  border-left: 3px solid var(--accent-green);
+  font-weight: 600; font-size: 1rem;
+  color: var(--ink);
+  font-family: 'Exo 2', sans-serif;
+}
+.num-task-answer-list li.sub{
+  margin-left: 1.4rem;
+  background: transparent;
+  border-left: 2px dashed var(--line);
+  font-weight: 400; font-size: 0.85rem;
+  color: var(--ink-muted);
+  font-family: 'Open Sans', sans-serif;
+}
+
+/* ========== CONTENT PAGES (для модулей) ========== */
 .content-page{
   padding:6.5rem clamp(1rem,4vw,2rem) 3rem;
   max-width: min(1400px, 100%);
@@ -523,7 +890,6 @@ body{
 }
 .content-body h2[data-section]:first-child{margin-top: 0;}
 
-/* SIDEBAR */
 .content-sidebar{
   display: none;
   flex-direction: column; gap: 0.5rem;
@@ -926,6 +1292,7 @@ body{
   pointer-events:none; z-index:9999;
   animation:burst 0.9s ease-out forwards;
 }
+
 footer{
   text-align:center; padding:2.5rem 1.5rem;
   color:var(--ink-muted); font-size:0.85rem;
@@ -953,18 +1320,24 @@ footer a:hover{text-decoration:underline}
   .periodic-page{padding:5.5rem 1rem 2rem}
   .pt-modal-head{flex-direction: column; text-align: center; gap:1rem;}
   .pt-modal-title h3{font-size:1.4rem;}
+  .numbers-catalog-page, .number-tasks-page{padding:5.5rem 1rem 2rem;}
+  .numbers-grid{grid-template-columns:repeat(auto-fit, minmax(160px, 1fr)); gap: 0.8rem;}
+  .number-card{padding: 1.3rem 1rem 1rem;}
+  .number-card .big-num{font-size: 3rem;}
+  .number-card .card-title{font-size: 0.85rem; min-height: 2.5em;}
 }
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:0.01ms!important;animation-iteration-count:1!important;transition-duration:0.01ms!important}
   html{scroll-behavior:auto}
-  .atom, .orbit{animation:none}
+  .atom, .orbit, .numbers-banner::before, .numbers-nums-deco span{animation:none}
 }
 @media print{
-  .navbar,.scroll-top,#molecule-canvas,.scroll-indicator,.scroll-progress,.answer-toggle,.theme-toggle,.content-sidebar,.module-hint,.pt-controls,.pt-legend{display:none!important}
+  .navbar,.scroll-top,#molecule-canvas,.scroll-indicator,.scroll-progress,.answer-toggle,.theme-toggle,.content-sidebar,.module-hint,.pt-controls,.pt-legend,.num-task-answer-toggle,.numbers-banner{display:none!important}
   body{background:#fff; color:#000}
   .content-body{box-shadow:none; border:none; padding:0; background:none}
   .content-page{display:block!important; padding:0}
   .answer-content{max-height:none!important; padding:0.5rem 0!important; margin:0.5rem 0!important; background:none; border-left:2px solid #333}
+  .num-task-answer{max-height:none!important; padding:0.5rem 0!important; margin:0.5rem 0!important; background:none; border-left:2px solid #333}
 }
 a:focus-visible,button:focus-visible{outline:2px solid var(--accent-cyan); outline-offset:2px; border-radius:6px}
 sub,sup{font-size:0.75em; line-height:0}
@@ -980,9 +1353,9 @@ sub,sup{font-size:0.75em; line-height:0}
     <div class="logo-text">OrgChem 2.0</div>
   </a>
   <div class="nav-links" id="navLinks">
+    <button class="nav-btn numbers" id="numbersBtn">🎯 ЕГЭ по номерам</button>
     <button class="nav-btn periodic" id="periodicBtn">🧪 Таблица Менделеева</button>
     <button class="nav-btn" data-nav="modules">Модули</button>
-    <button class="nav-btn" data-nav="features">Возможности</button>
     <button class="nav-btn" data-nav="about">О курсе</button>
     <button class="theme-toggle" id="themeToggle" title="Сменить тему" aria-label="Сменить тему">🌙</button>
   </div>
@@ -1010,7 +1383,7 @@ sub,sup{font-size:0.75em; line-height:0}
     </div>
     <div class="hero-badge">Подготовка к ЕГЭ по химии</div>
     <h1>Органическая химия<br><span class="gradient-text">2.0</span></h1>
-    <p class="hero-subtitle">Интерактивный курс для подготовки к ЕГЭ. Теория, тренировочные задания, письменные задачи и таблица Менделеева — всё в одном месте.</p>
+    <p class="hero-subtitle">Интерактивный курс для подготовки к ЕГЭ. Теория, тренировочные задания, ЕГЭ по номерам и таблица Менделеева — всё в одном месте.</p>
     <div class="hero-stats">
       <div class="stat-item"><div class="stat-number" data-count="11">0</div><div class="stat-label">модулей</div></div>
       <div class="stat-item"><div class="stat-number" data-count="500" data-suffix="+">0</div><div class="stat-label">заданий</div></div>
@@ -1018,7 +1391,7 @@ sub,sup{font-size:0.75em; line-height:0}
     </div>
     <div class="hero-cta">
       <a href="#modules" class="btn btn-primary">🚀 Начать обучение</a>
-      <button class="btn btn-secondary" id="heroPeriodicBtn">🧪 Таблица Менделеева</button>
+      <button class="btn btn-secondary" id="heroNumbersBtn">🎯 ЕГЭ по номерам</button>
     </div>
     <button class="scroll-indicator" onclick="document.getElementById('modules').scrollIntoView({behavior:'smooth'})" aria-label="Вниз">
       <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
@@ -1034,37 +1407,24 @@ sub,sup{font-size:0.75em; line-height:0}
     <div class="modules-grid" id="modulesGrid"></div>
   </section>
 
-  <section class="section" id="features" style="background:color-mix(in srgb, var(--bg-surface) 60%, transparent); border-radius:40px 40px 0 0; margin-top:2rem;">
+  <!-- ================ ЕГЭ ПО НОМЕРАМ ================ -->
+  <section class="section" id="numbers-section">
     <div class="section-header">
-      <div class="section-tag">Возможности</div>
-      <h2 class="section-title">Почему наш курс эффективен</h2>
+      <div class="section-tag pink">ЕГЭ по номерам</div>
+      <h2 class="section-title">Отработка по номерам заданий</h2>
+      <p class="section-desc">Реальные задания ЕГЭ, сгруппированные по номерам — с картинками и скрытыми ответами</p>
     </div>
-    <div class="modules-grid" style="grid-template-columns:repeat(auto-fit,minmax(240px,1fr));">
-      <div class="module-card visible" data-color="cyan" style="--card-color-1:#22d3ee;--card-color-2:#5b8def;--card-glow:0 0 28px rgba(34,211,238,0.13);">
-        <div class="module-icon">💡</div>
-        <div class="module-title">Скрытые ответы</div>
-        <div class="module-desc">Проверяйте себя: сначала решите задание, затем нажмите, чтобы увидеть ответ</div>
+
+    <div class="numbers-banner" id="numbersBanner">
+      <div class="numbers-nums-deco" aria-hidden="true">
+        <span>10</span>
+        <span>11</span>
+        <span>12</span>
+        <span>13</span>
       </div>
-      <div class="module-card visible" data-color="purple" style="--card-color-1:#b47cf0;--card-color-2:#7c6bf5;--card-glow:0 0 28px rgba(180,124,240,0.13);">
-        <div class="module-icon">🎯</div>
-        <div class="module-title">Цельная структура</div>
-        <div class="module-desc">Теория и практика рядом: изучили тему — сразу закрепили заданиями</div>
-      </div>
-      <div class="module-card visible" data-color="green" style="--card-color-1:#34d399;--card-color-2:#22d3ee;--card-glow:0 0 28px rgba(52,211,153,0.13);">
-        <div class="module-icon">⏱️</div>
-        <div class="module-title">Удобная навигация</div>
-        <div class="module-desc">Быстрый переход между модулями, прогресс прокрутки и кнопка «наверх»</div>
-      </div>
-      <div class="module-card visible" data-color="amber" style="--card-color-1:#fbbf24;--card-color-2:#f97316;--card-glow:0 0 28px rgba(251,191,36,0.13);">
-        <div class="module-icon">🧪</div>
-        <div class="module-title">Интерактивная таблица</div>
-        <div class="module-desc">118 элементов с анимациями, инфографикой и подробным описанием</div>
-      </div>
-      <div class="module-card visible" data-color="rose" style="--card-color-1:#fb7185;--card-color-2:#fbbf24;--card-glow:0 0 28px rgba(251,113,133,0.13);">
-        <div class="module-icon">🌗</div>
-        <div class="module-title">Тёмная и светлая тема</div>
-        <div class="module-desc">Переключайте оформление одной кнопкой — глаза скажут спасибо</div>
-      </div>
+      <h3>🎯 Меню номеров ЕГЭ</h3>
+      <p>Выберите номер задания — увидите все варианты с картинками. Ответы скрыты до клика.</p>
+      <button class="btn" id="openNumbersBtn">Открыть меню →</button>
     </div>
   </section>
 
@@ -1076,7 +1436,7 @@ sub,sup{font-size:0.75em; line-height:0}
     <div class="content-body">
       <p><strong>1. Изучайте теорию последовательно.</strong> Каждый блок построен на знаниях предыдущего. Не пропускайте темы — органическая химия является единой системой.</p>
       <p><strong>2. Решайте задания сразу после теории.</strong> Так вы лучше запомните материал и поймёте, как применять знания на практике.</p>
-      <p><strong>3. Проверяйте ответы самостоятельно.</strong> Не спешите смотреть правильный ответ — сначала попробуйте решить задание самостоятельно. Нажмите на плашку, чтобы проверить себя.</p>
+      <p><strong>3. Тренируйтесь по номерам ЕГЭ.</strong> Откройте раздел «ЕГЭ по номерам» — там задания как на реальном экзамене.</p>
       <p><strong>4. Используйте таблицу Менделеева.</strong> Откройте её в любой момент через кнопку в шапке — каждый элемент кликабельный.</p>
       <p><strong>5. Возвращайтесь к сложным темам.</strong> Если что-то непонятно — перечитайте теорию, посмотрите таблицы, решите задания ещё раз.</p>
       <hr>
@@ -1092,7 +1452,7 @@ sub,sup{font-size:0.75em; line-height:0}
 
 <div id="content-pages"></div>
 
-<div class="pt-modal" id="ptModal" role="dialog" aria-modal="true" aria-labelledby="ptModalTitle">
+<div class="pt-modal" id="ptModal" role="dialog" aria-modal="true">
   <div class="pt-modal-content" id="ptModalContent">
     <button class="pt-modal-close" id="ptModalClose" aria-label="Закрыть">✕</button>
     <div id="ptModalBody"></div>
@@ -1105,7 +1465,7 @@ sub,sup{font-size:0.75em; line-height:0}
 'use strict';
 
 /* ============================================================
-   MODULES META
+   MODULES META (модули теории/практики)
    ============================================================ */
 const MODULES = {
   1:{color:'cyan', icon:'⚛', title:'Теоретические основы',
@@ -1166,11 +1526,40 @@ const TABLES = {
 };
 
 /* ============================================================
-   ★★★ ГЛАВНОЕ ИЗМЕНЕНИЕ — ОТНОСИТЕЛЬНЫЕ ПУТИ ★★★
-   Файлы .md лежат рядом с index.html в том же репозитории.
-   GitHub Pages отдаёт их как обычную статику — без лимитов.
-   Fallback на raw.githubusercontent — если что-то пойдёт не так.
+   ★★★ ЕГЭ ПО НОМЕРАМ — карта номеров заданий ★★★
+   Файлы .md лежат в КОРНЕ репозитория рядом с index.html,
+   картинки — в папках task_10/, task_11/, task_12/.
    ============================================================ */
+const NUMBER_TASKS = {
+  10: {
+    num: 10,
+    title: 'Номенклатура и классификация органических веществ',
+    shortTitle: 'Номенклатура и классификация',
+    icon: '🏷️',
+    color: '#22d3ee',
+    file: '10_Zadanie_Nomenklatura_klassifikacia_organicheskish_vechsestv.md',
+    imagesDir: 'task_10/'
+  },
+  11: {
+    num: 11,
+    title: 'Изомеры и гомологи',
+    shortTitle: 'Изомеры и гомологи',
+    icon: '🧬',
+    color: '#b47cf0',
+    file: '11_Zadanie_Izomery_gomology.md',
+    imagesDir: 'task_11/'
+  },
+  12: {
+    num: 12,
+    title: 'Свойства углеводородов и кислородсодержащих веществ',
+    shortTitle: 'Свойства веществ',
+    icon: '⚗️',
+    color: '#f472b6',
+    file: '12_Zadanie_Svoistva_uglevodorodov_kislorodosoderzhaschih_veschestv.md',
+    imagesDir: 'task_12/'
+  }
+};
+
 const LOCAL_BASE = './';
 const RAW_FALLBACKS = [
   'https://raw.githubusercontent.com/vdorlov/org_chem_2.0/main/',
@@ -1200,7 +1589,7 @@ document.getElementById('themeToggle').addEventListener('click', () => {
 applyTheme(document.documentElement.getAttribute('data-theme'));
 
 /* ============================================================
-   RENDER MODULE CARDS
+   РЕНДЕР КАРТОЧЕК МОДУЛЕЙ
    ============================================================ */
 const cardClickGuard = new WeakMap();
 
@@ -1290,7 +1679,7 @@ function buildModuleCard(num, m){
 })();
 
 /* ============================================================
-   NAVIGATION
+   НАВИГАЦИЯ
    ============================================================ */
 const homePage = document.getElementById('home-page');
 const contentPages = document.getElementById('content-pages');
@@ -1304,6 +1693,8 @@ if (!history.state || !history.state.orgchem){
 function buildHashFor(state){
   if (!state || state.view === 'home') return location.pathname + location.search;
   if (state.view === 'periodic') return '#periodic';
+  if (state.view === 'numbers-catalog') return '#numbers';
+  if (state.view === 'numbers-tasks') return '#numbers-' + state.num;
   const t = state.type === 'theory' ? 'theory' : 'practice';
   const idx = state.type === 'practice' ? '-' + (state.idx || 0) : '';
   return `#m${state.num}-${t}${idx}`;
@@ -1356,59 +1747,296 @@ function ensureBackButton(){
   const btn = document.createElement('button');
   btn.className = 'nav-btn back';
   btn.id = 'backToModules';
-  btn.textContent = '← Все модули';
-  btn.addEventListener('click', () => showHome());
+  btn.textContent = '← Назад';
+  btn.addEventListener('click', () => {
+    const st = history.state;
+    if (st && st.view === 'numbers-tasks') showNumbersCatalog();
+    else if (st && st.view === 'numbers-catalog') showHome();
+    else showHome();
+  });
   navLinks.insertBefore(btn, navLinks.firstChild);
 }
 
 /* ============================================================
-   ★★★ ЗАГРУЗКА .MD — ОТНОСИТЕЛЬНЫЕ ПУТИ + LOCALSTORAGE-КЭШ ★★★
+   ЕГЭ ПО НОМЕРАМ — каталог
+   ============================================================ */
+function showNumbersCatalog(opts = {}){
+  if (!opts.fromPop && !suppressHistory) pushView({view:'numbers-catalog'});
+  homePage.style.display = 'none';
+  document.getElementById('backToModules')?.remove();
+
+  const cards = Object.values(NUMBER_TASKS).map(t => `
+    <div class="number-card" data-num="${t.num}" style="--card-color: ${t.color};">
+      <div class="big-num">${t.num}</div>
+      <div class="small-label">задание ЕГЭ</div>
+      <div class="card-title">${t.shortTitle}</div>
+      <div class="card-count">📚 материалы</div>
+    </div>
+  `).join('');
+
+  contentPages.innerHTML = `
+    <div class="numbers-catalog-page">
+      <div class="numbers-catalog-header">
+        <div class="section-tag pink">ЕГЭ по номерам</div>
+        <h2>Выберите номер задания</h2>
+        <p>Реальные задания ЕГЭ, сгруппированные по номерам. Кликните на карточку — увидите все варианты с картинками.</p>
+      </div>
+      <div class="numbers-grid" id="numbersGrid">
+        ${cards}
+      </div>
+      <div style="text-align:center; margin-top:2rem;">
+        <button class="module-btn" style="max-width:300px; margin:0 auto; padding:0.8rem 1.5rem;" data-goto="home">← На главную</button>
+      </div>
+    </div>`;
+
+  contentPages.querySelector('[data-goto="home"]')?.addEventListener('click', () => showHome());
+
+  contentPages.querySelectorAll('.number-card').forEach(card => {
+    const num = parseInt(card.dataset.num, 10);
+    card.addEventListener('click', () => showNumberTasks(num));
+    requestAnimationFrame(() => card.classList.add('visible'));
+    card.addEventListener('mousemove', e => {
+      const r = card.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width  - 0.5;
+      const y = (e.clientY - r.top)  / r.height - 0.5;
+      card.style.transform = `translateY(-8px) scale(1.02) rotateX(${y * -5}deg) rotateY(${x * 5}deg)`;
+    });
+    card.addEventListener('mouseleave', () => { card.style.transform = ''; });
+  });
+
+  ensureBackButton();
+  if (!opts.fromPop) window.scrollTo({top:0, behavior:'auto'});
+}
+
+/* ============================================================
+   ЕГЭ ПО НОМЕРАМ — страница заданий номера
+   ============================================================ */
+async function showNumberTasks(num, opts = {}){
+  const meta = NUMBER_TASKS[num];
+  if (!meta) return;
+
+  if (!opts.fromPop && !suppressHistory) pushView({view:'numbers-tasks', num});
+  homePage.style.display = 'none';
+  document.getElementById('backToModules')?.remove();
+
+  contentPages.innerHTML = `
+    <div class="number-tasks-page" style="--num-color: ${meta.color};">
+      <div class="number-tasks-header">
+        <div class="badge">${meta.icon} Задание ${num} ЕГЭ</div>
+        <h2>${meta.title}</h2>
+        <div class="meta" id="numMeta">
+          <span>🔄 Загрузка…</span>
+        </div>
+        <div class="header-actions" style="justify-content:center; display:flex; gap:0.7rem; margin-top:1.2rem; flex-wrap:wrap;">
+          <button class="module-btn" data-goto="catalog">← Все номера</button>
+          <button class="module-btn" data-goto="home">← На главную</button>
+        </div>
+      </div>
+      <div class="number-tasks-list" id="numTasksList">
+        <p style="text-align:center; color:var(--ink-muted); padding:2rem;">🔄 Загрузка заданий…</p>
+      </div>
+    </div>`;
+
+  contentPages.querySelector('[data-goto="catalog"]')?.addEventListener('click', () => showNumbersCatalog());
+  contentPages.querySelector('[data-goto="home"]')?.addEventListener('click', () => showHome());
+
+  ensureBackButton();
+  if (!opts.fromPop) window.scrollTo({top:0, behavior:'auto'});
+
+  const list = document.getElementById('numTasksList');
+  const metaBlock = document.getElementById('numMeta');
+
+  try {
+    const md = await fetchMarkdown(meta.file);
+    const tasks = parseNumberTasks(md, meta.imagesDir);
+    metaBlock.innerHTML = `
+      <span>📋 Заданий: <strong>${tasks.length}</strong></span>
+      <span>👁 Ответы скрыты</span>
+      <span>💡 Нажмите «Показать ответ»</span>`;
+    renderNumberTasks(tasks, list, meta.color);
+  } catch(e){
+    list.innerHTML = `<div style="text-align:center;padding:2rem;">
+      <p style="color:var(--accent-red);font-weight:700;font-size:1.1rem;">⚠️ Не удалось загрузить задания</p>
+      <p style="color:var(--ink-muted);margin-top:0.8rem;">Проверьте, что файл <code>${meta.file}</code> есть в репозитории.</p>
+      <p style="color:var(--ink-soft);font-size:0.85rem;margin-top:0.5rem;font-family:monospace;">${(e.message||'').slice(0,200)}</p>
+      <button class="module-btn" style="margin-top:1rem;padding:0.6rem 1.5rem;" onclick="location.reload()">🔄 Обновить</button>
+    </div>`;
+  }
+}
+
+/* ============================================================
+   ПАРСЕР ФАЙЛОВ "N. M" + ![[картинка]] + вложенный ответ
+   ============================================================ */
+function parseNumberTasks(md, imagesDir){
+  if (!md) return [];
+
+  md = md
+    .replace(/\u00A0/g, ' ')
+    .replace(/[\u200B\u200C\u200D\uFEFF]/g, '');
+
+  const lines = md.split('\n');
+  const tasks = [];
+  let current = null;
+
+  function flushTask(){
+    if (!current) return;
+    tasks.push(current);
+    current = null;
+  }
+
+  for (let i = 0; i < lines.length; i++){
+    const raw = lines[i];
+    const s = raw.trim();
+    if (!s) continue;
+
+    // "N. M" — номер задания (в файле. номер ЕГЭ)
+    const numMatch = s.match(/^(\d+)[.)]\s+(\d+)\s*$/);
+    if (numMatch){
+      flushTask();
+      current = {
+        fileNum: parseInt(numMatch[1], 10),
+        egeNum: parseInt(numMatch[2], 10),
+        images: [],
+        answer: []
+      };
+      continue;
+    }
+
+    if (!current) continue;
+
+    // Картинка Obsidian: ![[filename]] или ![[filename|alt]]
+    const imgMatch = s.match(/^!\[\[([^\]\|]+)(?:\|([^\]]+))?\]\]$/);
+    if (imgMatch){
+      const name = imgMatch[1].trim();
+      const alt = (imgMatch[2] || name).trim();
+      const src = name.includes('/') ? name : (imagesDir + name);
+      current.images.push({ src, alt });
+      continue;
+    }
+
+    // "- Ответ:" — открывает блок ответа
+    if (/^\s*-\s*Ответ\s*:?\s*$/i.test(raw) || /^\s*-\s*Ответ\s*:?\s*(.*)$/i.test(raw)){
+      const inlineMatch = raw.match(/^\s*-\s*Ответ\s*:?\s*(.*)$/i);
+      current.inAnswer = true;
+      current.ansIndent = raw.match(/^(\s*)/)[1].length;
+      if (inlineMatch && inlineMatch[1].trim()){
+        current.answer.push({ level: 0, text: inlineMatch[1].trim() });
+      }
+      continue;
+    }
+
+    // Внутри блока ответа — забираем строки с большим отступом
+    if (current.inAnswer){
+      const indent = raw.match(/^(\s*)/)[1].length;
+      const listMatch = raw.match(/^\s*-\s*(.*)$/);
+      if (listMatch){
+        if (indent >= current.ansIndent){
+          const text = listMatch[1].trim();
+          const level = indent > current.ansIndent + 1 ? 1 : 0;
+          current.answer.push({ level, text });
+          continue;
+        }
+      }
+      if (indent >= current.ansIndent && !listMatch){
+        current.answer.push({ level: 0, text: s });
+        continue;
+      }
+      current.inAnswer = false;
+    }
+  }
+  flushTask();
+  return tasks;
+}
+
+function renderNumberTasks(tasks, container, numColor){
+  if (!tasks.length){
+    container.innerHTML = '<p style="text-align:center;color:var(--ink-muted);padding:2rem;">Задания не найдены</p>';
+    return;
+  }
+
+  const frag = document.createDocumentFragment();
+  tasks.forEach(t => {
+    const div = document.createElement('div');
+    div.className = 'num-task';
+    div.style.setProperty('--num-color', numColor);
+
+    const imagesHtml = t.images.map(img => `
+      <img class="num-task-image loading"
+           src="${img.src}"
+           alt="${img.alt}"
+           loading="lazy"
+           onload="this.classList.remove('loading');"
+           onerror="this.classList.remove('loading'); this.classList.add('error'); this.removeAttribute('src'); this.textContent='⚠️ Картинка не найдена: ${img.src}';">
+    `).join('');
+
+    const answerItems = t.answer.length
+      ? t.answer.map(a => {
+          const cls = a.level === 0 ? '' : 'sub';
+          return `<li class="${cls}">${escapeHtml(a.text)}</li>`;
+        }).join('')
+      : '<li style="color:var(--ink-muted);font-weight:400;">Ответ не указан</li>';
+
+    div.innerHTML = `
+      <div class="num-task-header">
+        <div class="num-task-badge">${t.egeNum}</div>
+        <div class="num-task-title">Задание ${t.fileNum}</div>
+      </div>
+      ${imagesHtml || '<em style="color:var(--ink-muted)">Условие отсутствует</em>'}
+      <button class="num-task-answer-toggle" type="button">
+        <span>👁</span> Показать ответ
+      </button>
+      <div class="num-task-answer">
+        <div class="num-task-answer-label">Ответ:</div>
+        <ul class="num-task-answer-list">${answerItems}</ul>
+      </div>`;
+
+    container.appendChild(div);
+  });
+  container.innerHTML = '';
+  container.appendChild(frag);
+}
+
+function escapeHtml(s){
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
+/* ============================================================
+   fetchMarkdown — относительные пути + localStorage
    ============================================================ */
 async function fetchMarkdown(filename){
-  // 1. Проверяем localStorage-кэш — мгновенный ответ
   try {
     const cached = localStorage.getItem(MD_STORAGE_PREFIX + filename);
     if (cached && cached.length > 50){
-      console.log('📦 [localStorage]', filename);
-      // Фоновая проверка свежести — не блокирует показ
       refreshMarkdownInBackground(filename);
       return cached;
     }
-  } catch(e){ /* localStorage может быть отключён */ }
+  } catch(e) {}
 
-  // 2. Сначала пробуем ЛОКАЛЬНЫЙ путь (относительно index.html)
   try {
     const url = LOCAL_BASE + filename;
-    console.log('📥 [local]', url);
     const r = await fetch(url, {cache:'force-cache'});
     if (r.ok){
       const text = await r.text();
       saveMdToStorage(filename, text);
-      console.log('✓ Загружено локально:', filename);
       return text;
     }
-    console.warn('⚠️ Локальный путь вернул', r.status, '— пробуем fallback');
-  } catch(e){
-    console.warn('⚠️ Локальный путь недоступен:', e.message);
-  }
+  } catch(e){ /* пробуем fallback */ }
 
-  // 3. Fallback на raw.githubusercontent (если локальный не сработал)
   let lastErr = null;
   for (const base of RAW_FALLBACKS){
     try {
       const url = base + filename;
-      console.log('📥 [fallback]', url);
       const r = await fetch(url, {cache:'force-cache'});
       if (r.ok){
         const text = await r.text();
         saveMdToStorage(filename, text);
-        console.log('✓ Загружено с fallback:', url);
         return text;
       }
       lastErr = new Error(`HTTP ${r.status} на ${url}`);
-    } catch(e){
-      lastErr = e;
-    }
+    } catch(e){ lastErr = e; }
   }
   throw lastErr || new Error('Не удалось загрузить ' + filename);
 }
@@ -1417,18 +2045,15 @@ function saveMdToStorage(filename, text){
   try {
     localStorage.setItem(MD_STORAGE_PREFIX + filename, text);
   } catch(e){
-    // localStorage переполнен — пытаемся почистить старое
     try {
       const keys = Object.keys(localStorage).filter(k => k.startsWith(MD_STORAGE_PREFIX));
-      // Удаляем половину самых старых
       keys.slice(0, Math.floor(keys.length / 2)).forEach(k => localStorage.removeItem(k));
       localStorage.setItem(MD_STORAGE_PREFIX + filename, text);
-    } catch(e2){ /* не удалось — игнорируем */ }
+    } catch(e2){ /* ignore */ }
   }
 }
 
 function refreshMarkdownInBackground(filename){
-  // Асинхронно проверяем обновления, не блокируя UI
   fetch(LOCAL_BASE + filename, {cache:'no-store'})
     .then(r => r.ok ? r.text() : null)
     .then(text => {
@@ -1438,7 +2063,6 @@ function refreshMarkdownInBackground(filename){
         if (old !== text){
           localStorage.setItem(MD_STORAGE_PREFIX + filename, text);
           contentCache.delete(filename);
-          console.log('🔄 Обновлён .md:', filename);
         }
       } catch(e){}
     })
@@ -1446,7 +2070,7 @@ function refreshMarkdownInBackground(filename){
 }
 
 /* ============================================================
-   ПОКАЗ СТРАНИЦЫ МОДУЛЯ
+   ПОКАЗ .MD ДЛЯ МОДУЛЕЙ ТЕОРИИ/ПРАКТИКИ
    ============================================================ */
 async function showContentPage(num, title, filename, type, practiceIdx, opts = {}){
   if (!opts.fromPop && !suppressHistory){
@@ -1539,135 +2163,70 @@ async function showContentPage(num, title, filename, type, practiceIdx, opts = {
     const md = await fetchMarkdown(filename);
     const isPractice = type === 'practice';
     const parsed = parseMarkdown(md, isPractice);
-    const html = parsed.html;
-    const metaHtml = parsed.taskCount
-      ? `<span>📋 Заданий: <strong>${parsed.taskCount}</strong></span>
-         <span>👁 Ответы скрыты</span>
-         <span>💡 Нажмите «Показать ответ»</span>`
-      : `<span>📖 Теоретический материал</span>`;
-    contentCache.set(filename, {html, meta: metaHtml});
-    body.innerHTML = html;
-    meta.innerHTML = metaHtml;
+    contentCache.set(filename, {html: parsed.html, meta: parsed.taskCount
+      ? `<span>📋 Заданий: <strong>${parsed.taskCount}</strong></span><span>👁 Ответы скрыты</span>`
+      : `<span>📖 Теоретический материал</span>`});
+    body.innerHTML = parsed.html;
+    meta.innerHTML = contentCache.get(filename).meta;
   } catch(e){
-    const msg = e.message || 'Неизвестная ошибка';
-    const is404 = /404/.test(msg);
-    const hint = is404
-      ? 'Файл не найден. Проверьте, что он лежит рядом с index.html в репозитории.'
-      : 'Проверьте подключение к интернету или откройте сайт через локальный сервер.';
+    const msg = e.message || '';
     body.innerHTML = `<div style="text-align:center;padding:2rem;">
-      <p style="color:var(--accent-red);font-weight:700;font-size:1.1rem;">⚠️ Не удалось загрузить контент</p>
-      <p style="color:var(--ink-muted);margin-top:0.8rem;">${hint}</p>
-      <p style="color:var(--ink-soft);font-size:0.85rem;margin-top:1rem;font-family:monospace;background:var(--code-bg);padding:0.6rem 0.9rem;border-radius:8px;display:inline-block;">${filename}</p>
-      <p style="color:var(--ink-soft);font-size:0.8rem;margin-top:0.5rem;font-family:monospace;">${msg.slice(0, 200)}</p>
-      <button class="module-btn" style="margin-top:1.2rem;padding:0.6rem 1.5rem;" onclick="location.reload()">🔄 Обновить страницу</button>
+      <p style="color:var(--accent-red);font-weight:700;">⚠️ Не удалось загрузить контент</p>
+      <p style="color:var(--ink-muted);margin-top:0.8rem;">Проверьте, что файл <code>${filename}</code> лежит рядом с index.html.</p>
+      <p style="color:var(--ink-soft);font-size:0.8rem;margin-top:0.5rem;font-family:monospace;">${msg.slice(0,200)}</p>
     </div>`;
   }
 }
 
 /* ============================================================
-   HISTORY / POPSTATE
-   ============================================================ */
-window.addEventListener('popstate', (e) => {
-  const st = e.state;
-  suppressHistory = true;
-  try {
-    if (!st || st.view === 'home' || !st.view){
-      showHome({fromPop:true});
-    } else if (st.view === 'periodic'){
-      showPeriodic({fromPop:true});
-    } else if (st.view === 'content'){
-      if (st.type === 'theory'){
-        showTheory(st.num, {fromPop:true});
-      } else {
-        showPractice(st.num, st.idx || 0, {fromPop:true});
-      }
-    }
-  } finally {
-    setTimeout(() => { suppressHistory = false; }, 0);
-  }
-});
-
-/* ============================================================
    MARKDOWN PARSER
-   Двухфазный: сначала режем на блоки заданий, потом внутри
-   блока отделяем тело от ответа regex-ом. Ответ физически
-   не может попасть в тело.
    ============================================================ */
 function parseMarkdown(md, isPractice){
   if (!md) return {html:'<p>Контент недоступен</p>', taskCount:0};
+  md = md.replace(/\u00A0/g, ' ').replace(/[\u200B\u200C\u200D\uFEFF]/g, '');
 
-  md = md
-    .replace(/\u00A0/g, ' ')
-    .replace(/[\u200B\u200C\u200D\uFEFF]/g, '');
+  if (!isPractice) return {html: parseSimpleMarkdown(md), taskCount:0};
 
-  if (!isPractice){
-    return {html: parseSimpleMarkdown(md), taskCount:0};
-  }
-
-  // Фаза 1: разбить на блоки по "**Задание N.**"
   const taskRegex = /^\*{0,2}\s*Задание\s+(\d+)\s*\.?\s*\*{0,2}/gmi;
   const taskStarts = [];
   let match;
   while ((match = taskRegex.exec(md)) !== null){
     taskStarts.push({ num: match[1], index: match.index });
   }
-
-  if (taskStarts.length === 0){
-    return {html: parseSimpleMarkdown(md), taskCount:0};
-  }
+  if (taskStarts.length === 0) return {html: parseSimpleMarkdown(md), taskCount:0};
 
   const blocks = [];
-  if (taskStarts[0].index > 0){
-    blocks.push({type:'pre', text: md.slice(0, taskStarts[0].index)});
-  }
+  if (taskStarts[0].index > 0) blocks.push({type:'pre', text: md.slice(0, taskStarts[0].index)});
 
   for (let i = 0; i < taskStarts.length; i++){
     const start = taskStarts[i];
     const end = (i + 1 < taskStarts.length) ? taskStarts[i + 1].index : md.length;
     let text = md.slice(start.index, end);
-
-    // Отрезаем хвост после последнего "---" (это уже не это задание)
     const dashTail = text.match(/\n---+\s*$/);
     if (dashTail) text = text.slice(0, dashTail.index);
 
-    // Фаза 2: отделяем ответ от тела
-    // Жёсткий regex: "Ответ" должен быть в начале строки
     const ansRx = /(^|\n)\s*\**\s*Ответ\s*\**\s*[:\-—–][ \t]*([\s\S]*)$/i;
     const ansMatch = text.match(ansRx);
-
-    let headerText = text;
-    let answerText = '';
-
+    let headerText = text, answerText = '';
     if (ansMatch && ansMatch.index !== undefined){
       headerText = text.slice(0, ansMatch.index).trim();
       answerText = ansMatch[2].trim();
     }
-
-    const bodyHtml = parseSimpleMarkdown(headerText) ||
-      '<em style="color:var(--ink-muted)">Условие не распознано</em>';
-
-    let answerHtml;
-    if (answerText){
-      answerHtml = `<div class="answer-text">${parseSimpleMarkdown(answerText)}</div>`;
-    } else {
-      answerHtml = `<div class="answer-text" style="color:var(--ink-muted);font-weight:400;">Ответ не найден в файле</div>`;
-    }
-
+    const bodyHtml = parseSimpleMarkdown(headerText) || '<em style="color:var(--ink-muted)">Условие не распознано</em>';
+    const answerHtml = answerText
+      ? `<div class="answer-text">${parseSimpleMarkdown(answerText)}</div>`
+      : `<div class="answer-text" style="color:var(--ink-muted);font-weight:400;">Ответ не найден</div>`;
     blocks.push({type:'task', num: start.num, bodyHtml, answerHtml});
   }
 
   const out = [];
   let taskCount = 0;
   for (const b of blocks){
-    if (b.type === 'pre'){
-      out.push(parseSimpleMarkdown(b.text));
-    } else if (b.type === 'task'){
+    if (b.type === 'pre') out.push(parseSimpleMarkdown(b.text));
+    else if (b.type === 'task'){
       taskCount++;
       out.push(`<div class="task">
-        <div class="task-header">
-          <span class="task-number">Задание ${b.num}</span>
-          <span class="task-type">ЕГЭ</span>
-        </div>
+        <div class="task-header"><span class="task-number">Задание ${b.num}</span><span class="task-type">ЕГЭ</span></div>
         <div class="task-body">${b.bodyHtml}</div>
         <button class="answer-toggle" type="button"><span>👁</span> Показать ответ</button>
         <div class="answer-content">
@@ -1680,9 +2239,6 @@ function parseMarkdown(md, isPractice){
   return {html: out.join('\n'), taskCount};
 }
 
-/* ============================================================
-   parseSimpleMarkdown — обычный markdown без логики заданий
-   ============================================================ */
 function parseSimpleMarkdown(md){
   if (!md) return '';
   const lines = md.split('\n');
@@ -1722,25 +2278,21 @@ function parseSimpleMarkdown(md){
   };
   const flushCode = () => {
     if (!inCode) return;
-    const content = codeLines.join('\n')
-      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    const content = codeLines.join('\n').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
     out.push(`<pre><code>${content}</code></pre>`);
     inCode = false; codeLines = [];
   };
 
   for (let raw of lines){
     const s = raw.trim();
-
     if (s.startsWith('```')){
-      if (inCode){ flushCode(); }
+      if (inCode) flushCode();
       else { flushList(); flushTable(); flushBq(); inCode = true; codeLines = []; }
       continue;
     }
     if (inCode){ codeLines.push(raw); continue; }
-
     if (!s){ flushList(); flushTable(); flushBq(); continue; }
     if (s === '---'){ flushList(); flushTable(); flushBq(); out.push('<hr>'); continue; }
-
     if (s.startsWith('### ')){ flushList(); flushTable(); out.push(`<h5>${fmt(s.slice(4))}</h5>`); continue; }
     if (s.startsWith('## ')){
       flushList(); flushTable();
@@ -1750,29 +2302,24 @@ function parseSimpleMarkdown(md){
       continue;
     }
     if (s.startsWith('# ')){ flushList(); flushTable(); out.push(`<h3 data-section>${fmt(s.slice(2))}</h3>`); continue; }
-
     if (s.startsWith('>')){ flushList(); flushTable(); inBq = true; bqLines.push(s.slice(1).trim()); continue; }
     else if (inBq){ flushBq(); }
-
     if (s.includes('|') && !s.startsWith('- ') && !/^\d+[.)]/.test(s)){
       flushList(); inTable = true; tableRows.push(s); continue;
     } else if (inTable){ flushTable(); }
-
     const olMatch = s.match(/^(\d+)[.)]\s+(.*)/);
     if (olMatch){
       if (inList && listType !== 'ol') flushList();
-      inList = true; listType = 'ol'; listItems.push(fmt(olMatch[2]));
-      continue;
+      inList = true; listType = 'ol'; listItems.push(fmt(olMatch[2])); continue;
     }
     if (s.startsWith('- ') || s.startsWith('* ')){
-      if (s.startsWith('**') && !s.startsWith('* ')) { /* не маркер */ }
+      if (s.startsWith('**') && !s.startsWith('* ')) { /* not list */ }
       else {
         if (inList && listType !== 'ul') flushList();
         inList = true; listType = 'ul'; listItems.push(fmt(s.slice(2)));
         continue;
       }
     } else if (inList){ flushList(); }
-
     out.push(`<p>${fmt(s)}</p>`);
   }
   flushList(); flushTable(); flushBq(); flushCode();
@@ -1789,16 +2336,26 @@ function fmt(t){
 }
 
 /* ============================================================
-   ANSWER TOGGLE + CONFETTI
+   ANSWER TOGGLE
    ============================================================ */
 document.addEventListener('click', e => {
-  const btn = e.target.closest('.answer-toggle');
-  if (!btn) return;
-  const ans = btn.nextElementSibling;
-  const willShow = !ans.classList.contains('revealed');
-  ans.classList.toggle('revealed', willShow);
-  btn.innerHTML = willShow ? '<span>👁</span> Скрыть ответ' : '<span>👁</span> Показать ответ';
-  if (willShow) burstConfetti(btn);
+  const btn1 = e.target.closest('.answer-toggle');
+  if (btn1){
+    const ans = btn1.nextElementSibling;
+    const willShow = !ans.classList.contains('revealed');
+    ans.classList.toggle('revealed', willShow);
+    btn1.innerHTML = willShow ? '<span>👁</span> Скрыть ответ' : '<span>👁</span> Показать ответ';
+    if (willShow) burstConfetti(btn1);
+    return;
+  }
+  const btn2 = e.target.closest('.num-task-answer-toggle');
+  if (btn2){
+    const ans = btn2.nextElementSibling;
+    const willShow = !ans.classList.contains('revealed');
+    ans.classList.toggle('revealed', willShow);
+    btn2.innerHTML = willShow ? '<span>👁</span> Скрыть ответ' : '<span>👁</span> Показать ответ';
+    if (willShow) burstConfetti(btn2);
+  }
 });
 
 function burstConfetti(el){
@@ -1828,17 +2385,12 @@ function burstConfetti(el){
    PERIODIC TABLE
    ============================================================ */
 const EL_CATEGORIES = {
-  alkali:      { label:'Щелочные',          color:'#fb7185' },
-  alkaline:    { label:'Щелочноземельные',  color:'#fb923c' },
-  transition:  { label:'Переходные',        color:'#fbbf24' },
-  posttrans:   { label:'Постпереходные',    color:'#a3e635' },
-  metalloid:   { label:'Полуметаллы',       color:'#34d399' },
-  nonmetal:    { label:'Неметаллы',         color:'#22d3ee' },
-  halogen:     { label:'Галогены',          color:'#5b8def' },
-  noble:       { label:'Благородные газы',  color:'#b47cf0' },
-  lanthanide:  { label:'Лантаноиды',        color:'#f472b6' },
-  actinide:    { label:'Актиноиды',         color:'#c084fc' },
-  unknown:     { label:'Неизвестные',       color:'#94a3b8' }
+  alkali:{label:'Щелочные',color:'#fb7185'}, alkaline:{label:'Щелочноземельные',color:'#fb923c'},
+  transition:{label:'Переходные',color:'#fbbf24'}, posttrans:{label:'Постпереходные',color:'#a3e635'},
+  metalloid:{label:'Полуметаллы',color:'#34d399'}, nonmetal:{label:'Неметаллы',color:'#22d3ee'},
+  halogen:{label:'Галогены',color:'#5b8def'}, noble:{label:'Благородные газы',color:'#b47cf0'},
+  lanthanide:{label:'Лантаноиды',color:'#f472b6'}, actinide:{label:'Актиноиды',color:'#c084fc'},
+  unknown:{label:'Неизвестные',color:'#94a3b8'}
 };
 
 const ELEMENTS = [
@@ -1964,9 +2516,7 @@ const ELEMENTS = [
 
 const LANTHANIDE_Z = new Set([57,58,59,60,61,62,63,64,65,66,67,68,69,70,71]);
 const ACTINIDE_Z   = new Set([89,90,91,92,93,94,95,96,97,98,99,100,101,102,103]);
-
-let ptFilter = 'all';
-let ptSearch = '';
+let ptFilter = 'all', ptSearch = '';
 
 function buildPeriodicHTML(){
   const cats = Object.entries(EL_CATEGORIES);
@@ -1977,22 +2527,17 @@ function buildPeriodicHTML(){
         <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${v.color};margin-right:6px;vertical-align:middle;"></span>
         ${v.label}
       </button>`).join('')}`;
-
   return `
     <div class="periodic-page" id="periodicPage">
       <div class="periodic-header">
         <h2>Периодическая таблица Менделеева</h2>
-        <p>Кликните на любой элемент, чтобы увидеть подробную информацию: электронную конфигурацию, свойства и применение</p>
+        <p>Кликните на любой элемент, чтобы увидеть подробную информацию</p>
       </div>
       <div class="pt-controls">
-        <div class="pt-search">
-          <input type="text" id="ptSearchInput" placeholder="Найти элемент (Au, золото...)" autocomplete="off">
-        </div>
+        <div class="pt-search"><input type="text" id="ptSearchInput" placeholder="Найти элемент (Au, золото...)" autocomplete="off"></div>
         <div class="pt-filters" id="ptFilters">${filtersHTML}</div>
       </div>
-      <div class="pt-wrap">
-        <div class="periodic-table" id="ptTable"></div>
-      </div>
+      <div class="pt-wrap"><div class="periodic-table" id="ptTable"></div></div>
       <div class="pt-legend" id="ptLegend">
         ${cats.map(([key, v]) => `
           <div class="pt-legend-item" data-filter="${key}">
@@ -2008,8 +2553,7 @@ function getGridPosition(Z){
   if (ACTINIDE_Z.has(Z))   return { col: Z - 89 + 3, row: 10 };
   const el = ELEMENTS.find(e => e[0] === Z);
   if (!el) return null;
-  const group = el[6];
-  const period = el[7];
+  const group = el[6], period = el[7];
   if (group && period) return { col: group, row: period };
   if (Z === 2) return { col: 18, row: 1 };
   return null;
@@ -2019,51 +2563,35 @@ function buildPeriodicTable(){
   const table = document.getElementById('ptTable');
   if (!table) return;
   table.innerHTML = '';
-
   ELEMENTS.forEach(el => {
     const [Z, sym, name, nameEn, mass, cat] = el;
     const pos = getGridPosition(Z);
     if (!pos) return;
     const color = EL_CATEGORIES[cat]?.color || EL_CATEGORIES.unknown.color;
-
     const div = document.createElement('button');
-    div.className = 'pt-el';
-    div.type = 'button';
-    div.dataset.z = Z;
-    div.dataset.cat = cat;
+    div.className = 'pt-el'; div.type = 'button';
+    div.dataset.z = Z; div.dataset.cat = cat;
     div.dataset.search = (sym + ' ' + name + ' ' + nameEn + ' ' + Z).toLowerCase();
     div.style.setProperty('--cat-color', color);
-    div.style.gridColumn = pos.col;
-    div.style.gridRow = pos.row;
-    div.setAttribute('aria-label', `${name} (${sym}), №${Z}`);
-    div.innerHTML = `
-      <span class="num">${Z}</span>
-      <span class="sym">${sym}</span>
-      <span class="name">${name}</span>
-      <span class="mass">${mass}</span>`;
-
+    div.style.gridColumn = pos.col; div.style.gridRow = pos.row;
+    div.innerHTML = `<span class="num">${Z}</span><span class="sym">${sym}</span><span class="name">${name}</span><span class="mass">${mass}</span>`;
     div.addEventListener('click', () => openElementModal(Z));
     table.appendChild(div);
   });
-
   const laPointer = document.createElement('div');
   laPointer.className = 'pt-el';
   laPointer.style.setProperty('--cat-color', EL_CATEGORIES.lanthanide.color);
   laPointer.style.gridColumn = 3; laPointer.style.gridRow = 7;
-  laPointer.style.cursor = 'default';
-  laPointer.style.opacity = 0.6;
+  laPointer.style.cursor = 'default'; laPointer.style.opacity = 0.6;
   laPointer.innerHTML = `<span class="num">57-71</span><span class="sym" style="font-size:0.9rem;">La-Lu</span>`;
   table.appendChild(laPointer);
-
   const acPointer = document.createElement('div');
   acPointer.className = 'pt-el';
   acPointer.style.setProperty('--cat-color', EL_CATEGORIES.actinide.color);
   acPointer.style.gridColumn = 3; acPointer.style.gridRow = 8;
-  acPointer.style.cursor = 'default';
-  acPointer.style.opacity = 0.6;
+  acPointer.style.cursor = 'default'; acPointer.style.opacity = 0.6;
   acPointer.innerHTML = `<span class="num">89-103</span><span class="sym" style="font-size:0.9rem;">Ac-Lr</span>`;
   table.appendChild(acPointer);
-
   applyPtFilters();
 }
 
@@ -2071,8 +2599,7 @@ function applyPtFilters(){
   const cells = document.querySelectorAll('#ptTable .pt-el');
   const search = ptSearch.trim().toLowerCase();
   cells.forEach(c => {
-    const cat = c.dataset.cat;
-    const s = c.dataset.search || '';
+    const cat = c.dataset.cat, s = c.dataset.search || '';
     let show = true;
     if (ptFilter !== 'all' && cat && cat !== ptFilter) show = false;
     if (search && s && !s.includes(search)) show = false;
@@ -2082,24 +2609,16 @@ function applyPtFilters(){
 
 function attachPeriodicHandlers(){
   buildPeriodicTable();
-  const searchInput = document.getElementById('ptSearchInput');
-  if (searchInput){
-    searchInput.addEventListener('input', e => {
-      ptSearch = e.target.value;
-      applyPtFilters();
-    });
-  }
+  document.getElementById('ptSearchInput')?.addEventListener('input', e => {
+    ptSearch = e.target.value; applyPtFilters();
+  });
   document.getElementById('ptFilters')?.addEventListener('click', e => {
-    const btn = e.target.closest('.pt-filter');
-    if (!btn) return;
+    const btn = e.target.closest('.pt-filter'); if (!btn) return;
     document.querySelectorAll('#ptFilters .pt-filter').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    ptFilter = btn.dataset.filter;
-    applyPtFilters();
+    btn.classList.add('active'); ptFilter = btn.dataset.filter; applyPtFilters();
   });
   document.getElementById('ptLegend')?.addEventListener('click', e => {
-    const item = e.target.closest('.pt-legend-item');
-    if (!item) return;
+    const item = e.target.closest('.pt-legend-item'); if (!item) return;
     ptFilter = item.dataset.filter;
     document.querySelectorAll('#ptFilters .pt-filter').forEach(b => {
       b.classList.toggle('active', b.dataset.filter === ptFilter);
@@ -2109,35 +2628,27 @@ function attachPeriodicHandlers(){
 }
 
 function openElementModal(Z){
-  const el = ELEMENTS.find(e => e[0] === Z);
-  if (!el) return;
+  const el = ELEMENTS.find(e => e[0] === Z); if (!el) return;
   const [zn, sym, name, nameEn, mass, cat, group, period, config, en, melt, boil, discovered, use] = el;
   const color = EL_CATEGORIES[cat]?.color || EL_CATEGORIES.unknown.color;
   const catLabel = EL_CATEGORIES[cat]?.label || 'Неизвестно';
-  const fmtNum = (v, suffix='') => (v === null || v === undefined || v === '') ? '—' : v + suffix;
-
-  const modalBody = document.getElementById('ptModalBody');
-  const modalContent = document.getElementById('ptModalContent');
-  modalContent.style.setProperty('--el-color', color);
-
-  modalBody.innerHTML = `
+  const fmtNum = (v, s='') => (v === null || v === undefined || v === '') ? '—' : v + s;
+  const body = document.getElementById('ptModalBody');
+  const content = document.getElementById('ptModalContent');
+  content.style.setProperty('--el-color', color);
+  body.innerHTML = `
     <div class="pt-modal-head">
       <div class="pt-modal-symbol" style="--el-color: ${color}">
-        <span class="n">${zn}</span>
-        <span class="s">${sym}</span>
-        <span class="m">${mass}</span>
+        <span class="n">${zn}</span><span class="s">${sym}</span><span class="m">${mass}</span>
       </div>
       <div class="pt-modal-title">
-        <h3 id="ptModalTitle" style="color:${color}">${name}</h3>
+        <h3 style="color:${color}">${name}</h3>
         <div class="en">${nameEn}</div>
         <div class="cat">${catLabel}</div>
       </div>
     </div>
     <div class="pt-orbital" style="--el-color: ${color}">
-      <div class="orbit"></div>
-      <div class="orbit"></div>
-      <div class="orbit"></div>
-      <div class="nucleus"></div>
+      <div class="orbit"></div><div class="orbit"></div><div class="orbit"></div><div class="nucleus"></div>
     </div>
     <div class="pt-modal-grid">
       <div class="pt-modal-item"><div class="lbl">Атомный номер</div><div class="val">${zn}</div></div>
@@ -2154,11 +2665,9 @@ function openElementModal(Z){
       </div>
     </div>
     <div class="pt-modal-desc"><strong>Применение.</strong> ${use}</div>`;
-
   document.getElementById('ptModal').classList.add('open');
   document.body.style.overflow = 'hidden';
 }
-
 function closeElementModal(){
   document.getElementById('ptModal').classList.remove('open');
   document.body.style.overflow = '';
@@ -2172,7 +2681,27 @@ document.addEventListener('keydown', e => {
 });
 
 /* ============================================================
-   GLOBAL BUTTONS + SCROLL
+   HISTORY
+   ============================================================ */
+window.addEventListener('popstate', (e) => {
+  const st = e.state;
+  suppressHistory = true;
+  try {
+    if (!st || st.view === 'home' || !st.view) showHome({fromPop:true});
+    else if (st.view === 'periodic') showPeriodic({fromPop:true});
+    else if (st.view === 'numbers-catalog') showNumbersCatalog({fromPop:true});
+    else if (st.view === 'numbers-tasks') showNumberTasks(st.num, {fromPop:true});
+    else if (st.view === 'content'){
+      if (st.type === 'theory') showTheory(st.num, {fromPop:true});
+      else showPractice(st.num, st.idx || 0, {fromPop:true});
+    }
+  } finally {
+    setTimeout(() => { suppressHistory = false; }, 0);
+  }
+});
+
+/* ============================================================
+   NAV BUTTONS + SCROLL
    ============================================================ */
 document.querySelectorAll('[data-nav]').forEach(btn => {
   btn.addEventListener('click', () => {
@@ -2192,7 +2721,13 @@ document.querySelectorAll('[data-nav]').forEach(btn => {
 });
 
 document.getElementById('periodicBtn')?.addEventListener('click', () => showPeriodic());
-document.getElementById('heroPeriodicBtn')?.addEventListener('click', () => showPeriodic());
+document.getElementById('numbersBtn')?.addEventListener('click', () => showNumbersCatalog());
+document.getElementById('heroNumbersBtn')?.addEventListener('click', () => showNumbersCatalog());
+document.getElementById('openNumbersBtn')?.addEventListener('click', () => showNumbersCatalog());
+document.getElementById('numbersBanner')?.addEventListener('click', (e) => {
+  if (e.target.closest('#openNumbersBtn')) return;
+  showNumbersCatalog();
+});
 
 const scrollProgress = document.getElementById('scrollProgress');
 const navbar = document.getElementById('navbar');
@@ -2213,7 +2748,6 @@ function onScroll(){
 window.addEventListener('scroll', onScroll, {passive:true});
 function scrollToTop(){ window.scrollTo({top:0, behavior:'smooth'}); }
 
-/* ===================== OBSERVERS ===================== */
 const cardObserver = new IntersectionObserver((entries, obs) => {
   entries.forEach(entry => {
     if (entry.isIntersecting){
@@ -2224,7 +2758,6 @@ const cardObserver = new IntersectionObserver((entries, obs) => {
 }, {threshold:0.12, rootMargin:'0px 0px -50px 0px'});
 document.querySelectorAll('.module-card:not(.visible)').forEach(c => cardObserver.observe(c));
 
-/* ===================== KEYBOARD ===================== */
 document.addEventListener('keydown', e => {
   if (e.target.matches('input, textarea')) return;
   if (e.key === 'h' || e.key === 'H') showHome();
@@ -2233,7 +2766,6 @@ document.addEventListener('keydown', e => {
   }
 });
 
-/* ===================== NUMBER COUNTER ===================== */
 (function animateCounters(){
   const els = document.querySelectorAll('.stat-number[data-count]');
   const obs = new IntersectionObserver((entries, o) => {
@@ -2242,8 +2774,7 @@ document.addEventListener('keydown', e => {
       const el = en.target;
       const target = parseInt(el.dataset.count, 10);
       const suffix = el.dataset.suffix || '';
-      const dur = 1400;
-      const start = performance.now();
+      const dur = 1400, start = performance.now();
       function tick(ts){
         const p = Math.min(1, (ts - start) / dur);
         const eased = 1 - Math.pow(1 - p, 3);
@@ -2262,27 +2793,18 @@ document.addEventListener('keydown', e => {
   const canvas = document.getElementById('molecule-canvas');
   if (!canvas) return;
   const ctx = canvas.getContext('2d', {alpha:true});
-  let W = 0, H = 0, DPR = 1;
-  let particles = [];
-  let running = true;
-  let lastFrame = 0;
-  const FRAME_INTERVAL = 1000 / 30;
-  const LINK_DIST = 110;
-  const LINK_DIST_SQ = LINK_DIST * LINK_DIST;
-
+  let W = 0, H = 0, DPR = 1, particles = [], running = true, lastFrame = 0;
+  const FRAME_INTERVAL = 1000 / 30, LINK_DIST = 110, LINK_DIST_SQ = LINK_DIST * LINK_DIST;
   function resize(){
     DPR = Math.min(window.devicePixelRatio || 1, 2);
     W = canvas.width = Math.floor(innerWidth * DPR);
     H = canvas.height = Math.floor(innerHeight * DPR);
-    canvas.style.width = innerWidth + 'px';
-    canvas.style.height = innerHeight + 'px';
+    canvas.style.width = innerWidth + 'px'; canvas.style.height = innerHeight + 'px';
     initParticles();
   }
   function themeColors(){
     const dark = document.documentElement.getAttribute('data-theme') === 'dark';
-    return dark
-      ? ['#22d3ee','#b47cf0','#f472b6','#5b8def']
-      : ['#0891b2','#7c3aed','#db2777','#2563eb'];
+    return dark ? ['#22d3ee','#b47cf0','#f472b6','#5b8def'] : ['#0891b2','#7c3aed','#db2777','#2563eb'];
   }
   function initParticles(){
     const count = Math.min(50, Math.max(15, Math.floor(innerWidth / 28)));
@@ -2310,26 +2832,22 @@ document.addEventListener('keydown', e => {
   const CELL = LINK_DIST;
   function draw(){
     ctx.clearRect(0, 0, W, H);
-    const cols = Math.ceil(W / CELL);
-    const rows = Math.ceil(H / CELL);
+    const cols = Math.ceil(W / CELL), rows = Math.ceil(H / CELL);
     const grid = new Array(cols * rows);
     for (let i = 0; i < particles.length; i++){
       const p = particles[i];
       const gx = Math.min(cols - 1, Math.max(0, (p.x / CELL) | 0));
       const gy = Math.min(rows - 1, Math.max(0, (p.y / CELL) | 0));
-      const idx = gy * cols + gx;
-      (grid[idx] || (grid[idx] = [])).push(i);
+      (grid[gy * cols + gx] || (grid[gy * cols + gx] = [])).push(i);
     }
     for (let gy = 0; gy < rows; gy++){
       for (let gx = 0; gx < cols; gx++){
-        const cell = grid[gy * cols + gx];
-        if (!cell) continue;
+        const cell = grid[gy * cols + gx]; if (!cell) continue;
         for (let dx = 0; dx <= 1; dx++){
           for (let dy = (dx === 0 ? 0 : -1); dy <= 1; dy++){
             const nx = gx + dx, ny = gy + dy;
             if (nx >= cols || ny < 0 || ny >= rows) continue;
-            const ncell = grid[ny * cols + nx];
-            if (!ncell) continue;
+            const ncell = grid[ny * cols + nx]; if (!ncell) continue;
             for (const i of cell){
               const p = particles[i];
               for (const j of ncell){
@@ -2338,13 +2856,9 @@ document.addEventListener('keydown', e => {
                 const ddx = p.x - q.x, ddy = p.y - q.y;
                 const d2 = ddx * ddx + ddy * ddy;
                 if (d2 < LINK_DIST_SQ){
-                  const a = 0.12 * (1 - d2 / LINK_DIST_SQ);
                   ctx.strokeStyle = p.color;
-                  ctx.globalAlpha = a;
-                  ctx.beginPath();
-                  ctx.moveTo(p.x, p.y);
-                  ctx.lineTo(q.x, q.y);
-                  ctx.stroke();
+                  ctx.globalAlpha = 0.12 * (1 - d2 / LINK_DIST_SQ);
+                  ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(q.x, q.y); ctx.stroke();
                 }
               }
             }
@@ -2355,9 +2869,7 @@ document.addEventListener('keydown', e => {
     for (const p of particles){
       ctx.fillStyle = p.color;
       ctx.globalAlpha = 0.5 + Math.sin(p.twinkle) * 0.18;
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-      ctx.fill();
+      ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); ctx.fill();
     }
     ctx.globalAlpha = 1;
   }
@@ -2365,9 +2877,7 @@ document.addEventListener('keydown', e => {
     if (!running) return;
     requestAnimationFrame(loop);
     if (ts - lastFrame < FRAME_INTERVAL) return;
-    lastFrame = ts;
-    step();
-    draw();
+    lastFrame = ts; step(); draw();
   }
   document.addEventListener('visibilitychange', () => {
     running = !document.hidden;
@@ -2379,8 +2889,7 @@ document.addEventListener('keydown', e => {
     clearTimeout(window.__canvasResizeTO);
     window.__canvasResizeTO = setTimeout(resize, 150);
   }, {passive:true});
-  resize();
-  requestAnimationFrame(loop);
+  resize(); requestAnimationFrame(loop);
 })();
 
 /* ===================== LOGO EASTER EGG ===================== */
@@ -2416,23 +2925,17 @@ document.addEventListener('keydown', e => {
 
 /* ===================== DEBUG ===================== */
 window.debugParseTask = function(){
-  const tasks = document.querySelectorAll('.task');
+  const tasks = document.querySelectorAll('.task, .num-task');
   let issues = 0;
   tasks.forEach(t => {
-    const num = t.querySelector('.task-number')?.textContent || '?';
-    const body = t.querySelector('.task-body')?.textContent || '';
-    const ans = t.querySelector('.answer-text')?.textContent || '';
+    const num = t.querySelector('.task-number, .num-task-title')?.textContent || '?';
+    const body = t.querySelector('.task-body, .num-task-header')?.textContent || '';
     const bodyHasAnswer = /Ответ\s*[:\-—–]/i.test(body);
     if (bodyHasAnswer) issues++;
-    console.log(
-      (bodyHasAnswer ? '⚠️ ' : '✓ ') + num,
-      '| Ответ:', JSON.stringify(ans.slice(0, 80)),
-      bodyHasAnswer ? '| ❌ Ответ просочился в тело!' : ''
-    );
+    console.log((bodyHasAnswer ? '⚠️ ' : '✓ ') + num);
   });
   console.log(`\nВсего заданий: ${tasks.length}, проблем: ${issues}`);
 };
-
 window.clearOrgChemCache = function(){
   Object.keys(localStorage).filter(k => k.startsWith(MD_STORAGE_PREFIX)).forEach(k => localStorage.removeItem(k));
   console.log('✓ Кэш .md очищен');
@@ -2441,19 +2944,14 @@ window.clearOrgChemCache = function(){
 /* ===================== INIT ===================== */
 window.addEventListener('DOMContentLoaded', () => {
   applyTheme(document.documentElement.getAttribute('data-theme'));
-
   const h = location.hash;
-  if (h === '#periodic'){
-    suppressHistory = true;
-    showPeriodic({fromPop:true});
-    setTimeout(() => { suppressHistory = false; }, 100);
-    return;
-  }
+  if (h === '#periodic'){ suppressHistory = true; showPeriodic({fromPop:true}); setTimeout(()=>{suppressHistory=false;},100); return; }
+  if (h === '#numbers'){ suppressHistory = true; showNumbersCatalog({fromPop:true}); setTimeout(()=>{suppressHistory=false;},100); return; }
+  const nm = h.match(/^#numbers-(\d+)$/);
+  if (nm){ suppressHistory = true; showNumberTasks(parseInt(nm[1],10), {fromPop:true}); setTimeout(()=>{suppressHistory=false;},100); return; }
   const m = h.match(/^#m([\w]+)-(theory|practice)(?:-(\d+))?$/);
   if (m){
-    const num = m[1];
-    const type = m[2];
-    const idx = parseInt(m[3] || '0', 10);
+    const num = m[1], type = m[2], idx = parseInt(m[3] || '0', 10);
     suppressHistory = true;
     if (type === 'theory') showTheory(num, {fromPop:true});
     else showPractice(num, idx, {fromPop:true});
