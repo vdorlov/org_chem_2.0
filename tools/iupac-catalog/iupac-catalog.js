@@ -3,7 +3,8 @@
    Экспортирует window.__renderIupacCatalog(containerEl)
 
    Лицензия 3Dmol.js: BSD (свободное использование)
-   Данные: NCI Cactus (NIH, Public Domain)
+   Источник SDF: NCI Cactus (NIH, Public Domain)
+   CDN 3Dmol.js: jsDelivr → unpkg → 3dmol.org (fallback)
    ============================================================ */
 (function(){
   'use strict';
@@ -239,24 +240,77 @@
   ];
 
   /* ============================================================
-     ЗАГРУЗКА 3DMOL.JS (ленивая)
+     ЗАГРУЗКА 3DMOL.JS С НЕСКОЛЬКИХ CDN
+     Пробуем по очереди, пока один не сработает.
      ============================================================ */
+  const THREEDMOL_SOURCES = [
+    // 1. jsDelivr — публичный CDN, обычно доступен из РФ
+    'https://cdn.jsdelivr.net/npm/3dmol@2/build/3Dmol-min.js',
+    // 2. unpkg — альтернативный CDN
+    'https://unpkg.com/3dmol@2/build/3Dmol-min.js',
+    // 3. Оригинальный домен — если вдруг он снова доступен
+    'https://3dmol.org/build/3Dmol-min.js'
+  ];
+
   let threeDMolLoaded = false;
   let threeDMolPromise = null;
 
-  function load3Dmol(){
-    if (threeDMolLoaded) return Promise.resolve();
-    if (threeDMolPromise) return threeDMolPromise;
-    threeDMolPromise = new Promise((resolve, reject) => {
+  function loadScriptFromUrl(url, timeoutMs = 15000){
+    return new Promise((resolve, reject) => {
       const s = document.createElement('script');
-      s.src = 'https://3dmol.org/build/3Dmol-min.js';
+      s.src = url;
+      let done = false;
+
+      const timer = setTimeout(() => {
+        if (done) return;
+        done = true;
+        s.remove();
+        reject(new Error('Таймаут ' + timeoutMs + ' мс: ' + url));
+      }, timeoutMs);
+
       s.onload = () => {
-        threeDMolLoaded = true;
+        if (done) return;
+        done = true;
+        clearTimeout(timer);
         resolve();
       };
-      s.onerror = () => reject(new Error('Не удалось загрузить 3Dmol.js'));
+      s.onerror = () => {
+        if (done) return;
+        done = true;
+        clearTimeout(timer);
+        s.remove();
+        reject(new Error('Не загрузился: ' + url));
+      };
+
       document.head.appendChild(s);
     });
+  }
+
+  async function load3Dmol(){
+    if (threeDMolLoaded && window.$3Dmol) return;
+    if (threeDMolPromise) return threeDMolPromise;
+
+    threeDMolPromise = (async () => {
+      let lastError = null;
+      for (const url of THREEDMOL_SOURCES){
+        try {
+          console.log('📦 Пробую загрузить 3Dmol.js:', url);
+          await loadScriptFromUrl(url);
+          if (window.$3Dmol && typeof window.$3Dmol.createViewer === 'function'){
+            threeDMolLoaded = true;
+            console.log('✅ 3Dmol.js загружен из', url);
+            return;
+          }
+          throw new Error('Скрипт загрузился, но $3Dmol не определён');
+        } catch(e){
+          console.warn('⚠️ Не сработал:', url, e.message);
+          lastError = e;
+        }
+      }
+      threeDMolPromise = null; // сброс — чтобы можно было попробовать снова
+      throw new Error('Не удалось загрузить 3Dmol.js ни с одного CDN. Последняя ошибка: ' + (lastError ? lastError.message : 'неизвестно'));
+    })();
+
     return threeDMolPromise;
   }
 
@@ -281,7 +335,6 @@
   /* ============================================================
      ЗАПРОС SDF ИЗ NCI CACTUS
      Cactus отдаёт SDF как text/plain — читается без проблем
-     (в отличие от PubChem, где Content-Disposition: attachment)
      ============================================================ */
   async function fetchSDF(iupacName){
     const key = iupacName.toLowerCase();
@@ -294,7 +347,7 @@
     }
 
     // 2. Запрос к NCI Cactus
-    const url = `https://cactus.nci.nih.gov/chemical/structure/${encodeURIComponent(iupacName)}/sdf`;
+    const url = 'https://cactus.nci.nih.gov/chemical/structure/' + encodeURIComponent(iupacName) + '/sdf';
     console.log('🔍 NCI Cactus:', url);
 
     const controller = new AbortController();
@@ -306,7 +359,7 @@
       console.log('📥 Cactus статус:', r.status);
 
       if (!r.ok){
-        throw new Error(`HTTP ${r.status}`);
+        throw new Error('HTTP ' + r.status);
       }
 
       const sdf = await r.text();
@@ -388,7 +441,7 @@
 
   /* ============================================================
      ОТКРЫТИЕ МОДАЛКИ С 3D
-     Каждый шаг выводится прямо в модалку — чтобы видеть, где стоп
+     Каждый шаг пишется в модалку — чтобы видеть, где стоп
      ============================================================ */
   async function openMoleculeModal(item, groupColor){
     ensureModal();
@@ -396,11 +449,10 @@
     const modalContent = document.getElementById('iupacModalContent');
     const viewerEl = document.getElementById('iupac-3d-viewer');
 
-    // Отладочный статус прямо в модалке
     const log = (html) => {
       console.log('[IUPAC]', html.replace(/<[^>]+>/g, ' '));
       if (viewerEl){
-        viewerEl.innerHTML = `<div class="iupac-3d-status" style="padding:2rem 1rem;text-align:center;font-family:monospace;font-size:0.85rem;line-height:2;">${html}</div>`;
+        viewerEl.innerHTML = '<div class="iupac-3d-status" style="padding:2rem 1rem;text-align:center;font-family:monospace;font-size:0.85rem;line-height:2;">' + html + '</div>';
       }
     };
 
@@ -413,17 +465,17 @@
 
     try {
       // ШАГ 1 — 3Dmol.js
-      log('📦 Шаг 1/6: загрузка 3Dmol.js…');
+      log('📦 Шаг 1/6: загрузка 3Dmol.js…<br><span style="font-size:0.7rem;color:var(--ink-muted)">jsDelivr → unpkg → 3dmol.org</span>');
       await load3Dmol();
       if (!window.$3Dmol || typeof window.$3Dmol.createViewer !== 'function'){
         throw new Error('3Dmol.js загрузился, но createViewer недоступен');
       }
       log('✅ Шаг 1: 3Dmol.js загружен');
 
-      // ШАГ 2 — SDF из Cactus
-      log('📦 Шаг 2/6: запрос SDF из NCI Cactus…<br><span style="font-size:0.75rem;color:var(--ink-muted)">' + item.iupac + '</span>');
+      // ШАГ 2 — SDF
+      log('📦 Шаг 2/6: запрос SDF из NCI Cactus…<br><span style="font-size:0.7rem;color:var(--ink-muted)">' + item.iupac + '</span>');
       const sdf = await fetchSDF(item.iupac);
-      log('✅ Шаг 2: SDF получен<br><span style="font-size:0.75rem;color:var(--ink-muted)">Размер: ' + sdf.length + ' байт</span>');
+      log('✅ Шаг 2: SDF получен<br><span style="font-size:0.7rem;color:var(--ink-muted)">Размер: ' + sdf.length + ' байт</span>');
 
       // ШАГ 3 — контейнер
       log('📦 Шаг 3/6: создание контейнера…');
@@ -473,7 +525,7 @@
       viewer.render();
       viewer.spin('y', 0.5);
 
-      // Прячем статус — теперь canvas должен быть виден
+      // Убираем статус-заглушку
       await new Promise(r => setTimeout(r, 200));
       const statusEl = viewerEl.querySelector('.iupac-3d-status');
       if (statusEl) statusEl.remove();
@@ -481,17 +533,17 @@
     } catch(e){
       console.error('❌ ОШИБКА 3D:', e);
       if (viewerEl){
-        viewerEl.innerHTML = `<div class="iupac-3d-error" style="padding:2rem 1rem;text-align:center;">
-          <div style="font-weight:700;margin-bottom:0.5rem;color:var(--accent-red);">⚠️ Ошибка</div>
-          <div style="font-size:0.88rem;color:var(--ink);margin-bottom:0.5rem;font-family:monospace;word-break:break-all;line-height:1.5;">
-            ${escapeHtml(e.message || 'Неизвестная ошибка')}
-          </div>
-          <div style="font-size:0.75rem;color:var(--ink-muted);margin-top:1rem;">
-            Проверьте интернет и попробуйте снова.
-          </div>
-          <button class="module-btn" style="margin-top:1.2rem;padding:0.5rem 1.2rem;font-size:0.85rem;"
-            onclick="event.stopPropagation(); document.getElementById('iupacModal').classList.remove('open'); document.body.style.overflow='';">Закрыть</button>
-        </div>`;
+        viewerEl.innerHTML = '<div class="iupac-3d-error" style="padding:2rem 1rem;text-align:center;">' +
+          '<div style="font-weight:700;margin-bottom:0.5rem;color:var(--accent-red);">⚠️ Ошибка</div>' +
+          '<div style="font-size:0.88rem;color:var(--ink);margin-bottom:0.5rem;font-family:monospace;word-break:break-all;line-height:1.5;">' +
+            escapeHtml(e.message || 'Неизвестная ошибка') +
+          '</div>' +
+          '<div style="font-size:0.75rem;color:var(--ink-muted);margin-top:1rem;">' +
+            'Проверьте интернет и попробуйте снова.' +
+          '</div>' +
+          '<button class="module-btn" style="margin-top:1.2rem;padding:0.5rem 1.2rem;font-size:0.85rem;" ' +
+            'onclick="event.stopPropagation(); document.getElementById(\'iupacModal\').classList.remove(\'open\'); document.body.style.overflow=\'\';">Закрыть</button>' +
+        '</div>';
       }
     }
   }
@@ -499,46 +551,45 @@
   /* ============================================================
      РЕНДЕР КАТАЛОГА
      ============================================================ */
-  function renderCatalog(container, groups, searchQuery = ''){
-    const query = searchQuery.trim().toLowerCase();
+  function renderCatalog(container, groups, searchQuery){
+    const query = (searchQuery || '').trim().toLowerCase();
 
     const html = groups.map(group => {
       const filtered = query
         ? group.items.filter(it =>
-            it.name.toLowerCase().includes(query) ||
-            (it.iupac || '').toLowerCase().includes(query) ||
-            (it.formula || '').toLowerCase().includes(query)
+            it.name.toLowerCase().indexOf(query) !== -1 ||
+            (it.iupac || '').toLowerCase().indexOf(query) !== -1 ||
+            (it.formula || '').toLowerCase().indexOf(query) !== -1
           )
         : group.items;
 
       if (query && !filtered.length) return '';
 
-      const itemsHtml = filtered.map(item => `
-        <div class="iupac-item">
-          <div class="iupac-item-name">
-            ${escapeHtml(item.name)}
-            ${item.formula ? `<span class="formula">${escapeHtml(item.formula)}</span>` : ''}
-          </div>
-          <button class="iupac-3d-btn" data-group="${group.id}" data-iupac="${escapeHtml(item.iupac)}">3D</button>
-        </div>
-      `).join('');
+      const itemsHtml = filtered.map(item =>
+        '<div class="iupac-item">' +
+          '<div class="iupac-item-name">' +
+            escapeHtml(item.name) +
+            (item.formula ? '<span class="formula">' + escapeHtml(item.formula) + '</span>' : '') +
+          '</div>' +
+          '<button class="iupac-3d-btn" data-group="' + group.id + '" data-iupac="' + escapeHtml(item.iupac) + '">3D</button>' +
+        '</div>'
+      ).join('');
 
-      return `
-        <div class="iupac-group" data-group-id="${group.id}" style="--group-color: ${group.color};">
-          <div class="iupac-group-header">
-            <div class="iupac-group-title">
-              <span>${group.icon}</span>
-              <span>${group.title}</span>
-            </div>
-            <div style="display:flex;align-items:center;gap:0.8rem;">
-              <span class="iupac-group-count">${filtered.length} шт.</span>
-              <span class="iupac-group-toggle">▾</span>
-            </div>
-          </div>
-          <div class="iupac-group-body">
-            ${itemsHtml || '<div class="iupac-empty">Ничего не найдено</div>'}
-          </div>
-        </div>`;
+      return '<div class="iupac-group" data-group-id="' + group.id + '" style="--group-color: ' + group.color + ';">' +
+        '<div class="iupac-group-header">' +
+          '<div class="iupac-group-title">' +
+            '<span>' + group.icon + '</span>' +
+            '<span>' + group.title + '</span>' +
+          '</div>' +
+          '<div style="display:flex;align-items:center;gap:0.8rem;">' +
+            '<span class="iupac-group-count">' + filtered.length + ' шт.</span>' +
+            '<span class="iupac-group-toggle">▾</span>' +
+          '</div>' +
+        '</div>' +
+        '<div class="iupac-group-body">' +
+          (itemsHtml || '<div class="iupac-empty">Ничего не найдено</div>') +
+        '</div>' +
+      '</div>';
     }).filter(Boolean).join('');
 
     container.innerHTML = html || '<div class="iupac-empty">По вашему запросу ничего не найдено</div>';
@@ -554,7 +605,7 @@
         const groupId = btn.dataset.group;
         const iupac = btn.dataset.iupac;
         const group = CATALOG.find(g => g.id === groupId);
-        const item = group?.items.find(it => it.iupac === iupac);
+        const item = group && group.items.find(it => it.iupac === iupac);
         if (!item || !group) return;
 
         btn.disabled = true;
@@ -570,7 +621,7 @@
   }
 
   function escapeHtml(s){
-    return String(s ?? '')
+    return String(s == null ? '' : s)
       .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;')
@@ -583,23 +634,23 @@
   window.__renderIupacCatalog = function(containerEl){
     const totalCount = CATALOG.reduce((sum, g) => sum + g.items.length, 0);
 
-    containerEl.innerHTML = `
-      <div class="iupac-page">
-        <div class="iupac-header">
-          <div class="iupac-badge">📖 Справочник названий</div>
-          <h2>ИЮПАК и тривиальные названия</h2>
-          <p>${totalCount} соединений по классам. Нажмите <b>3D</b>, чтобы увидеть пространственное строение молекулы.</p>
-        </div>
-        <div class="iupac-search">
-          <input type="text" id="iupacSearchInput" placeholder="Поиск: этанол, benzene, C2H5OH…" autocomplete="off">
-        </div>
-        <div class="iupac-groups" id="iupacGroups"></div>
-      </div>`;
+    containerEl.innerHTML =
+      '<div class="iupac-page">' +
+        '<div class="iupac-header">' +
+          '<div class="iupac-badge">📖 Справочник названий</div>' +
+          '<h2>ИЮПАК и тривиальные названия</h2>' +
+          '<p>' + totalCount + ' соединений по классам. Нажмите <b>3D</b>, чтобы увидеть пространственное строение молекулы.</p>' +
+        '</div>' +
+        '<div class="iupac-search">' +
+          '<input type="text" id="iupacSearchInput" placeholder="Поиск: этанол, benzene, C2H5OH…" autocomplete="off">' +
+        '</div>' +
+        '<div class="iupac-groups" id="iupacGroups"></div>' +
+      '</div>';
 
     const groupsEl = document.getElementById('iupacGroups');
     const searchInput = document.getElementById('iupacSearchInput');
 
-    renderCatalog(groupsEl, CATALOG);
+    renderCatalog(groupsEl, CATALOG, '');
 
     let debounce;
     searchInput.addEventListener('input', e => {
