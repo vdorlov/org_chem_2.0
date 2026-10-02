@@ -3,7 +3,7 @@
    Экспортирует window.__renderIupacCatalog(containerEl)
 
    Лицензия 3Dmol.js: BSD (свободное использование)
-   Данные: PubChem PUG REST API (NIH, публичный)
+   Данные: PubChem PUG REST API (NIH, публичный, Public Domain)
    ============================================================ */
 (function(){
   'use strict';
@@ -108,7 +108,7 @@
         { name: '2-Метилпропанол-2', iupac: '2-methylpropan-2-ol', formula: '(CH₃)₃COH' },
         { name: 'Пентанол-1', iupac: 'pentan-1-ol', formula: 'C₅H₁₁OH' },
         { name: 'Этиленгликоль', iupac: 'ethane-1,2-diol', formula: 'HOCH₂CH₂OH' },
-        { name: 'Глицерин', iupac: 'propane-1,2,3-triol', formula: 'C₃H₅(OH)₃' },
+        { name: 'Глицерин', iupac: 'glycerol', formula: 'C₃H₅(OH)₃' },
         { name: 'Циклогексанол', iupac: 'cyclohexanol', formula: 'C₆H₁₁OH' },
         { name: 'Бензиловый спирт', iupac: 'benzyl alcohol', formula: 'C₆H₅CH₂OH' }
       ]
@@ -262,41 +262,74 @@
 
   /* ============================================================
      ЗАПРОС SMILES ИЗ PUBCHEM
+     Кэш: localStorage (переживает закрытие браузера)
      ============================================================ */
-  const smilesCache = new Map();
+  const SMILES_STORAGE_PREFIX = 'orgchem-pubchem-smiles:';
+
+  function smilesCacheGet(key){
+    try {
+      return localStorage.getItem(SMILES_STORAGE_PREFIX + key);
+    } catch(e){
+      return null;
+    }
+  }
+  function smilesCacheSet(key, value){
+    try {
+      localStorage.setItem(SMILES_STORAGE_PREFIX + key, value);
+    } catch(e){ /* переполнение — игнорируем */ }
+  }
 
   async function fetchSmiles(iupacName){
     const key = iupacName.toLowerCase();
-    if (smilesCache.has(key)) return smilesCache.get(key);
 
-    // PubChem PUG REST: имя → Canonical SMILES
+    // 1. Проверяем localStorage
+    const cached = smilesCacheGet(key);
+    if (cached){
+      console.log('📦 SMILES из кэша:', iupacName, '→', cached);
+      return cached;
+    }
+
+    // 2. Запрашиваем PubChem
     const url = `https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/${encodeURIComponent(iupacName)}/property/CanonicalSMILES/JSON`;
+    console.log('🔍 PubChem:', url);
 
     try {
       const r = await fetch(url, {cache: 'force-cache'});
+      console.log('📥 Ответ PubChem:', r.status, iupacName);
+
       if (!r.ok){
-        if (r.status === 404) throw new Error('Вещество не найдено в PubChem');
-        if (r.status === 503) throw new Error('PubChem временно недоступен, попробуйте позже');
+        if (r.status === 404) throw new Error('PubChem не знает такое название: ' + iupacName);
+        if (r.status === 503) throw new Error('PubChem перегружен, подождите 10 секунд и попробуйте снова');
+        if (r.status === 429) throw new Error('PubChem временно ограничил запросы, подождите минуту');
         throw new Error(`PubChem вернул ошибку ${r.status}`);
       }
+
       const data = await r.json();
       const props = data?.PropertyTable?.Properties;
+
       if (!props || !props[0]){
         throw new Error('PubChem вернул пустой ответ для ' + iupacName);
       }
-      // PubChem может вернуть под разными ключами в зависимости от эндпоинта и версии API
+
+      // PubChem возвращает разные ключи в зависимости от эндпоинта и версии API.
+      // Принимаем любой доступный.
       const smiles = props[0].CanonicalSMILES
                   || props[0].ConnectivitySMILES
-                  || props[0].SMILES
-                  || props[0].IsomericSMILES;
+                  || props[0].IsomericSMILES
+                  || props[0].SMILES;
+
       if (!smiles){
-        console.warn('Ответ PubChem не содержит SMILES:', props[0]);
+        console.warn('⚠️ Ответ PubChem без SMILES:', props[0]);
         throw new Error('SMILES не найден в ответе PubChem');
       }
-      smilesCache.set(key, smiles);
+
+      console.log('✅ SMILES получен:', iupacName, '→', smiles);
+      smilesCacheSet(key, smiles);
       return smiles;
+
     } catch(e){
-      throw new Error(e.message || 'Ошибка загрузки данных');
+      console.error('❌ fetchSmiles error:', iupacName, e);
+      throw e;
     }
   }
 
@@ -369,43 +402,48 @@
     document.body.style.overflow = 'hidden';
 
     try {
-      // Параллельно грузим 3Dmol и SMILES
-      const [_, smiles] = await Promise.all([
+      // Параллельно грузим 3Dmol.js и SMILES
+      const [, smiles] = await Promise.all([
         load3Dmol(),
         fetchSmiles(item.iupac)
       ]);
 
-      // Готовим контейнер
+      if (!window.$3Dmol){
+        throw new Error('3Dmol.js не загрузился — проверьте интернет');
+      }
+
+      // Готовим контейнер с ЯВНОЙ высотой (иначе WebGL framebuffer нулевой)
       viewerEl.innerHTML = '';
       const container = document.createElement('div');
       container.style.width = '100%';
-      container.style.height = '100%';
+      container.style.height = '480px';
+      container.style.position = 'relative';
       viewerEl.appendChild(container);
 
-      // Инициализируем viewer
+      // Ждём, пока контейнер получит размеры в layout
+      await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
+
+      // Создаём viewer
       const viewer = window.$3Dmol.createViewer(container, {
         backgroundColor: 'rgba(0,0,0,0)'
       });
       currentViewer = viewer;
 
-      // Загружаем SMILES через PubChem
-      const pubchemUrl = `https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/${encodeURIComponent(item.iupac)}/SDF?record_type=3d`;
-      // Используем 3Dmol.download с CID не всегда работает с iupac, поэтому идём через SMILES
-      const molData = `smiles:${smiles}`;
-
-      // Пробуем разные стили, чтобы молекула смотрелась хорошо
-      window.$3Dmol.download(molData, viewer, {}, () => {
-        viewer.setStyle({}, {
-          stick: { radius: 0.15, colorscheme: 'Jmol' },
-          sphere: { scale: 0.25, colorscheme: 'Jmol' }
-        });
-        viewer.zoomTo();
-        viewer.render();
-        viewer.spin('y', 0.5);
+      // Правильный способ загрузки SMILES в 3Dmol:
+      // addModel(строка, формат). Формат 'smi' — сокращение для SMILES.
+      viewer.addModel(smiles, 'smi');
+      viewer.setStyle({}, {
+        stick: { radius: 0.15, colorscheme: 'Jmol' },
+        sphere: { scale: 0.25, colorscheme: 'Jmol' }
       });
+      viewer.zoomTo();
+      viewer.render();
+      viewer.spin('y', 0.5);
+
     } catch(e){
+      console.error('Ошибка 3D-просмотра:', e);
       viewerEl.innerHTML = `<div class="iupac-3d-error">
-        ⚠️ ${e.message || 'Не удалось загрузить молекулу'}<br>
+        ⚠️ ${escapeHtml(e.message || 'Не удалось загрузить молекулу')}<br>
         <small style="color:var(--ink-muted);margin-top:0.5rem;display:block;">
           Попробуйте ещё раз или проверьте подключение к интернету.
         </small>
