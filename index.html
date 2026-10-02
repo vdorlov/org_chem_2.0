@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Органическая химия 2.0 — Подготовка к ЕГЭ</title>
-<meta name="description" content="Интерактивный курс подготовки к ЕГЭ по органической химии: теория, классы соединений, ЕГЭ по номерам, таблица Менделеева и таблица растворимости.">
+<meta name="description" content="Интерактивный курс подготовки к ЕГЭ по органической химии: теория, классы соединений, ЕГЭ по номерам, таблица Менделеева, таблица растворимости и инструменты.">
 
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%2322d3ee'/%3E%3Cstop offset='1' stop-color='%23b47cf0'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx='32' cy='32' r='6' fill='url(%23g)'/%3E%3Cellipse cx='32' cy='32' rx='24' ry='9' fill='none' stroke='url(%23g)' stroke-width='2.5' transform='rotate(30 32 32)'/%3E%3Cellipse cx='32' cy='32' rx='24' ry='9' fill='none' stroke='url(%23g)' stroke-width='2.5' transform='rotate(-30 32 32)'/%3E%3Cellipse cx='32' cy='32' rx='24' ry='9' fill='none' stroke='url(%23g)' stroke-width='2.5' transform='rotate(90 32 32)'/%3E%3C/svg%3E">
 <meta name="theme-color" content="#0a0e27">
@@ -12,6 +12,28 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;700;800&family=Open+Sans:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./tools/tools-common.css">
+
+<!-- MathJax: подключаем, но не запускаем автозапуск — рендерим вручную после парсинга .md -->
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$', '$$'], ['\\[', '\\]']],
+      processEscapes: true,
+      processEnvironments: true
+    },
+    options: {
+      skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+      ignoreHtmlClass: 'tex2jax_ignore',
+      processHtmlClass: 'tex2jax_process'
+    },
+    svg: { fontCache: 'global' },
+    startup: { typeset: false }
+  };
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
 <style>
 :root{
   --radius:20px; --radius-sm:12px;
@@ -158,6 +180,24 @@ body{
   border-color:var(--accent-blue);
   box-shadow:0 0 14px color-mix(in srgb, var(--accent-blue) 35%, transparent);
 }
+.nav-btn.tools{
+  border-color:color-mix(in srgb, var(--accent-purple) 45%, transparent);
+  color:var(--accent-purple);
+  display:inline-flex; align-items:center; gap:0.35rem;
+}
+.nav-btn.tools:hover,
+.tools-dropdown.open .nav-btn.tools{
+  background:color-mix(in srgb, var(--accent-purple) 12%, transparent);
+  border-color:var(--accent-purple);
+  box-shadow:0 0 14px color-mix(in srgb, var(--accent-purple) 35%, transparent);
+}
+.nav-btn.tools .caret{
+  font-size:0.75rem;
+  transition: transform var(--transition);
+}
+.tools-dropdown.open .nav-btn.tools .caret{
+  transform: rotate(180deg);
+}
 .theme-toggle{
   width:42px; height:42px; border-radius:50%;
   border:1px solid var(--line); background:var(--bg-card);
@@ -166,6 +206,99 @@ body{
   transition:all var(--transition);
 }
 .theme-toggle:hover{border-color:var(--accent-amber); transform:rotate(20deg) scale(1.08)}
+
+/* ========== Инструменты — выпадающее меню ========== */
+.tools-dropdown{
+  position: relative;
+  display: inline-block;
+}
+.tools-menu{
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 320px;
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 0.5rem;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.35),
+              0 0 0 1px color-mix(in srgb, var(--accent-purple) 20%, transparent);
+  opacity: 0;
+  transform: translateY(-8px) scale(0.96);
+  pointer-events: none;
+  transition: opacity var(--transition), transform var(--transition);
+  z-index: 1001;
+}
+.tools-dropdown.open .tools-menu{
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+.tools-menu::before{
+  content:'';
+  position:absolute;
+  top: -6px; right: 20px;
+  width: 12px; height: 12px;
+  background: var(--bg-card);
+  border-left: 1px solid var(--line);
+  border-top: 1px solid var(--line);
+  transform: rotate(45deg);
+}
+.tools-menu-item{
+  display: flex;
+  align-items: flex-start;
+  gap: 0.8rem;
+  width: 100%;
+  padding: 0.7rem 0.85rem;
+  background: transparent;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+  color: var(--ink);
+  transition: background var(--transition);
+}
+.tools-menu-item:hover{
+  background: color-mix(in srgb, var(--accent-purple) 10%, transparent);
+}
+.tools-menu-item .tool-icon{
+  font-size: 1.4rem;
+  line-height: 1;
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+}
+.tools-menu-item .tool-text{
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+.tools-menu-item .tool-title{
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--ink);
+}
+.tools-menu-item .tool-desc{
+  font-size: 0.78rem;
+  color: var(--ink-muted);
+  line-height: 1.3;
+}
+@media (max-width: 768px){
+  .tools-menu{
+    position: fixed;
+    top: auto;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    min-width: 100%;
+    border-radius: 20px 20px 0 0;
+    transform: translateY(100%);
+  }
+  .tools-dropdown.open .tools-menu{
+    transform: translateY(0);
+  }
+  .tools-menu::before{display:none;}
+}
 
 /* HERO */
 .hero{
@@ -331,6 +464,11 @@ body{
   border-color:color-mix(in srgb, var(--accent-blue) 35%, transparent);
   color:var(--accent-blue);
 }
+.section-tag.purple{
+  background:color-mix(in srgb, var(--accent-purple) 12%, transparent);
+  border-color:color-mix(in srgb, var(--accent-purple) 35%, transparent);
+  color:var(--accent-purple);
+}
 .section-title{
   font-family:'Exo 2',sans-serif; font-size:var(--step-2);
   font-weight:700; margin-bottom:0.9rem;
@@ -443,7 +581,7 @@ body{
 .module-card[data-color="emerald"]{--card-color-1:#10b981;--card-color-2:#5b8def;--card-glow:0 0 28px rgba(16,185,129,0.13)}
 .module-card[data-color="rose"]   {--card-color-1:#fb7185;--card-color-2:#fbbf24;--card-glow:0 0 28px rgba(251,113,133,0.13)}
 
-/* ========== ЕГЭ ПО НОМЕРАМ (banner) ========== */
+/* ========== ЕГЭ ПО НОМЕРАМ ========== */
 .numbers-banner{
   display: flex; flex-direction: column;
   align-items: center; justify-content: center;
@@ -658,7 +796,7 @@ body{
 .solvability-deco span:nth-child(3){ top: 12%; right: 12%;animation-delay: 3s;   font-size: 5.5rem; }
 .solvability-deco span:nth-child(4){ top: 62%; right: 10%;animation-delay: 4.5s; font-size: 6.5rem; }
 
-/* КАТАЛОГ НОМЕРОВ */
+/* ========== КАТАЛОГ НОМЕРОВ ========== */
 .numbers-catalog-page{
   padding: 6.5rem clamp(1rem,4vw,2rem) 3rem;
   max-width: 1400px; margin: 0 auto; min-height: 100vh;
@@ -916,7 +1054,6 @@ body{
   color: var(--ink);
 }
 
-/* Картинки заданий */
 .num-task-images{
   display: flex; flex-direction: column; gap: 0.8rem;
   margin: 0.8rem 0;
@@ -946,7 +1083,6 @@ body{
   display: flex; align-items: center; justify-content: center;
 }
 
-/* Кнопка ответа */
 .num-task-answer-toggle{
   display: inline-flex; align-items: center; gap: 0.5rem;
   padding: 0.55rem 1.15rem;
@@ -1335,6 +1471,16 @@ footer a:hover{text-decoration:underline}
 }
 a:focus-visible,button:focus-visible{outline:2px solid var(--accent-cyan); outline-offset:2px; border-radius:6px}
 sub,sup{font-size:0.75em; line-height:0}
+
+/* MathJax — чтобы SVG-формулы не ломали вёрстку */
+mjx-container{
+  font-size: 1.02em !important;
+  line-height: 1.4 !important;
+}
+mjx-container[display="true"]{
+  margin: 0.8rem 0 !important;
+  text-align: center !important;
+}
 </style>
 </head>
 <body>
@@ -1352,6 +1498,37 @@ sub,sup{font-size:0.75em; line-height:0}
     <button class="nav-btn solvability" id="solvabilityBtn">🧪 Растворимость</button>
     <button class="nav-btn periodic" id="periodicBtn">⚛ Таблица Менделеева</button>
     <button class="nav-btn" data-nav="modules">Модули</button>
+
+    <!-- Выпадающее меню Инструменты -->
+    <div class="tools-dropdown" id="toolsDropdown">
+      <button class="nav-btn tools" id="toolsBtn" aria-haspopup="true" aria-expanded="false">
+        🛠 Инструменты <span class="caret">▾</span>
+      </button>
+      <div class="tools-menu" role="menu">
+        <button class="tools-menu-item" data-tool="molar-mass">
+          <span class="tool-icon">⚖️</span>
+          <span class="tool-text">
+            <span class="tool-title">Калькулятор молярных масс</span>
+            <span class="tool-desc">H₂SO₄ → 98 г/моль</span>
+          </span>
+        </button>
+        <button class="tools-menu-item" data-tool="equation-balancer">
+          <span class="tool-icon">⚗️</span>
+          <span class="tool-text">
+            <span class="tool-title">Ввод уравнений реакций</span>
+            <span class="tool-desc">Расстановка коэффициентов</span>
+          </span>
+        </button>
+        <button class="tools-menu-item" data-tool="formula-builder">
+          <span class="tool-icon">🧬</span>
+          <span class="tool-text">
+            <span class="tool-title">Конструктор формул</span>
+            <span class="tool-desc">Соберите молекулу из атомов</span>
+          </span>
+        </button>
+      </div>
+    </div>
+
     <button class="nav-btn" data-nav="about">О курсе</button>
     <button class="theme-toggle" id="themeToggle" title="Сменить тему" aria-label="Сменить тему">🌙</button>
   </div>
@@ -1379,7 +1556,7 @@ sub,sup{font-size:0.75em; line-height:0}
     </div>
     <div class="hero-badge">Подготовка к ЕГЭ по химии</div>
     <h1>Органическая химия<br><span class="gradient-text">2.0</span></h1>
-    <p class="hero-subtitle">Интерактивный курс для подготовки к ЕГЭ. Классы соединений, теория, ЕГЭ по номерам, таблица Менделеева и таблица растворимости.</p>
+    <p class="hero-subtitle">Интерактивный курс для подготовки к ЕГЭ. Классы соединений, теория, ЕГЭ по номерам, справочники и инструменты — всё в одном месте.</p>
     <div class="hero-stats">
       <div class="stat-item"><div class="stat-number" data-count="11">0</div><div class="stat-label">модулей</div></div>
       <div class="stat-item"><div class="stat-number" data-count="13">0</div><div class="stat-label">классов</div></div>
@@ -1472,7 +1649,7 @@ sub,sup{font-size:0.75em; line-height:0}
       <p><strong>1. Изучайте теорию последовательно.</strong> Каждый блок построен на знаниях предыдущего. Не пропускайте темы — органическая химия является единой системой.</p>
       <p><strong>2. Используйте справочник по классам.</strong> Откройте раздел «Классы соединений» — там вся теория по каждому классу в удобном виде.</p>
       <p><strong>3. Тренируйтесь по номерам ЕГЭ.</strong> Откройте раздел «ЕГЭ по номерам» — там задания как на реальном экзамене.</p>
-      <p><strong>4. Работайте со справочниками.</strong> Таблица Менделеева и таблица растворимости всегда доступны в шапке сайта.</p>
+      <p><strong>4. Работайте со справочниками и инструментами.</strong> Таблица Менделеева, таблица растворимости и инструменты (калькулятор масс, балансировщик уравнений, конструктор формул) — всегда в шапке сайта.</p>
       <p><strong>5. Проверяйте себя.</strong> Ответы скрыты до клика — сначала попробуйте решить самостоятельно.</p>
       <hr>
       <p style="text-align:center;color:var(--ink-muted);margin-bottom:0;">Удачи в подготовке к ЕГЭ! 🎓</p>
@@ -1678,6 +1855,26 @@ document.getElementById('themeToggle').addEventListener('click', () => {
 applyTheme(document.documentElement.getAttribute('data-theme'));
 
 /* ============================================================
+   MathJax — рендер формул LaTeX после вставки контента
+   ============================================================ */
+function renderMathJax(container){
+  if (!container) return;
+  if (!window.MathJax || !window.MathJax.typesetPromise){
+    if (window.MathJax && window.MathJax.startup && window.MathJax.startup.promise){
+      window.MathJax.startup.promise
+        .then(() => {
+          try { window.MathJax.typesetPromise([container]); } catch(e){}
+        })
+        .catch(() => {});
+    }
+    return;
+  }
+  try {
+    window.MathJax.typesetPromise([container]).catch(() => {});
+  } catch(e){ /* ignore */ }
+}
+
+/* ============================================================
    РЕНДЕР КАРТОЧЕК МОДУЛЕЙ
    ============================================================ */
 const cardClickGuard = new WeakMap();
@@ -1783,6 +1980,7 @@ function buildHashFor(state){
   if (!state || state.view === 'home') return location.pathname + location.search;
   if (state.view === 'periodic') return '#periodic';
   if (state.view === 'solvability') return '#solvability';
+  if (state.view === 'tool') return '#tool-' + state.tool;
   if (state.view === 'numbers-catalog') return '#numbers';
   if (state.view === 'numbers-tasks') return '#numbers-' + state.num;
   if (state.view === 'klass-catalog') return '#klass';
@@ -1837,7 +2035,7 @@ function ensureBackButton(onBack){
 }
 
 /* ============================================================
-   ЛЕНИВАЯ ЗАГРУЗКА ВНЕШНИХ МОДУЛЕЙ (Менделеев + Растворимость)
+   ЛЕНИВАЯ ЗАГРУЗКА ВНЕШНИХ МОДУЛЕЙ
    ============================================================ */
 function loadScript(src){
   return new Promise((resolve, reject) => {
@@ -1958,6 +2156,102 @@ async function showSolvability(opts = {}){
 }
 
 /* ============================================================
+   ИНСТРУМЕНТЫ — ленивая загрузка модулей
+   ============================================================ */
+const TOOLS = {
+  'molar-mass': {
+    title: 'Калькулятор молярных масс',
+    icon: '⚖️',
+    color: '#22d3ee',
+    css: './tools/molar-mass/molar-mass.css',
+    js: './tools/molar-mass/molar-mass.js',
+    renderFn: '__renderMolarMass'
+  },
+  'equation-balancer': {
+    title: 'Ввод уравнений реакций',
+    icon: '⚗️',
+    color: '#b47cf0',
+    css: './tools/equation-balancer/equation-balancer.css',
+    js: './tools/equation-balancer/equation-balancer.js',
+    renderFn: '__renderEquationBalancer'
+  },
+  'formula-builder': {
+    title: 'Конструктор формул',
+    icon: '🧬',
+    color: '#34d399',
+    css: './tools/formula-builder/formula-builder.css',
+    js: './tools/formula-builder/formula-builder.js',
+    renderFn: '__renderFormulaBuilder'
+  }
+};
+
+const toolAssets = {}; // { toolId: Promise }
+
+async function loadToolAssets(toolId){
+  if (toolAssets[toolId]) return toolAssets[toolId];
+  const t = TOOLS[toolId];
+  if (!t) throw new Error('Неизвестный инструмент: ' + toolId);
+  toolAssets[toolId] = (async () => {
+    await Promise.all([
+      loadStyle(t.css),
+      loadScript(t.js)
+    ]);
+  })();
+  return toolAssets[toolId];
+}
+
+async function showTool(toolId, opts = {}){
+  const t = TOOLS[toolId];
+  if (!t) return;
+
+  if (!opts.fromPop && !suppressHistory) pushView({view:'tool', tool: toolId});
+  homePage.style.display = 'none';
+  document.getElementById('backToModules')?.remove();
+
+  contentPages.innerHTML = `
+    <div class="tool-page" id="tool-root" style="--num-color: ${t.color};">
+      <div class="tool-header">
+        <div class="tool-badge">🛠 Инструмент</div>
+        <h2>${t.icon} ${t.title}</h2>
+        <div class="tool-actions">
+          <button class="module-btn" data-goto="home">← На главную</button>
+        </div>
+      </div>
+      <div id="tool-body">
+        <p style="text-align:center;color:var(--ink-muted);padding:3rem;">
+          🔄 Загрузка инструмента…
+        </p>
+      </div>
+    </div>`;
+
+  contentPages.querySelector('[data-goto="home"]')?.addEventListener('click', () => showHome());
+
+  ensureBackButton(() => showHome());
+  if (!opts.fromPop) window.scrollTo({top:0, behavior:'auto'});
+
+  try {
+    await loadToolAssets(toolId);
+    const body = document.getElementById('tool-body');
+    if (!body) return;
+    if (typeof window[t.renderFn] === 'function'){
+      await window[t.renderFn](body);
+    } else {
+      body.innerHTML = `<p style="text-align:center;color:var(--accent-red);padding:3rem;">
+        ⚠️ Инструмент не загрузился корректно
+      </p>`;
+    }
+  } catch(e){
+    const body = document.getElementById('tool-body');
+    if (body){
+      body.innerHTML = `<div style="text-align:center;padding:3rem;">
+        <p style="color:var(--accent-red);font-weight:700;">⚠️ Не удалось загрузить инструмент</p>
+        <p style="color:var(--ink-muted);margin-top:0.6rem;">${e.message || ''}</p>
+      </div>`;
+    }
+  }
+}
+
+/* ============================================================
    КЛАССЫ — каталог
    ============================================================ */
 function showKlassCatalog(opts = {}){
@@ -2051,6 +2345,7 @@ async function showKlassDetail(id, opts = {}){
     const html = parseSimpleMarkdown(md);
     body.innerHTML = html;
     metaBlock.innerHTML = `<span>📖 Конспект по классу</span><span>💡 Теория + примеры</span>`;
+    renderMathJax(body);
   } catch(e){
     body.innerHTML = `<div style="text-align:center;padding:2rem;">
       <p style="color:var(--accent-red);font-weight:700;font-size:1.1rem;">⚠️ Не удалось загрузить конспект</p>
@@ -2157,6 +2452,7 @@ async function showNumberTasks(num, opts = {}){
       <span>👁 Ответы скрыты</span>
       <span>💡 Нажмите «Показать ответ»</span>`;
     renderNumberTasks(tasks, list, meta.color);
+    renderMathJax(list);
   } catch(e){
     list.innerHTML = `<div style="text-align:center;padding:2rem;">
       <p style="color:var(--accent-red);font-weight:700;font-size:1.1rem;">⚠️ Не удалось загрузить задания</p>
@@ -2472,6 +2768,7 @@ async function showContentPage(num, title, filename, type, practiceIdx, opts = {
     const cached = contentCache.get(filename);
     body.innerHTML = cached.html;
     meta.innerHTML = cached.meta;
+    renderMathJax(body);
     return;
   }
 
@@ -2484,6 +2781,7 @@ async function showContentPage(num, title, filename, type, practiceIdx, opts = {
       : `<span>📖 Теоретический материал</span>`});
     body.innerHTML = parsed.html;
     meta.innerHTML = contentCache.get(filename).meta;
+    renderMathJax(body);
   } catch(e){
     const msg = e.message || '';
     body.innerHTML = `<div style="text-align:center;padding:2rem;">
@@ -2707,6 +3005,7 @@ window.addEventListener('popstate', (e) => {
     if (!st || st.view === 'home' || !st.view) showHome({fromPop:true});
     else if (st.view === 'periodic') showPeriodic({fromPop:true});
     else if (st.view === 'solvability') showSolvability({fromPop:true});
+    else if (st.view === 'tool') showTool(st.tool, {fromPop:true});
     else if (st.view === 'numbers-catalog') showNumbersCatalog({fromPop:true});
     else if (st.view === 'numbers-tasks') showNumberTasks(st.num, {fromPop:true});
     else if (st.view === 'klass-catalog') showKlassCatalog({fromPop:true});
@@ -2719,6 +3018,45 @@ window.addEventListener('popstate', (e) => {
     setTimeout(() => { suppressHistory = false; }, 0);
   }
 });
+
+/* ============================================================
+   ВЫПАДАЮЩЕЕ МЕНЮ ИНСТРУМЕНТОВ
+   ============================================================ */
+(function initToolsDropdown(){
+  const dropdown = document.getElementById('toolsDropdown');
+  const btn = document.getElementById('toolsBtn');
+  if (!dropdown || !btn) return;
+
+  function closeMenu(){
+    dropdown.classList.remove('open');
+    btn.setAttribute('aria-expanded', 'false');
+  }
+  function toggleMenu(){
+    const isOpen = dropdown.classList.toggle('open');
+    btn.setAttribute('aria-expanded', String(isOpen));
+  }
+
+  btn.addEventListener('click', e => {
+    e.stopPropagation();
+    toggleMenu();
+  });
+
+  document.addEventListener('click', e => {
+    if (!dropdown.contains(e.target)) closeMenu();
+  });
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeMenu();
+  });
+
+  dropdown.querySelectorAll('.tools-menu-item').forEach(item => {
+    item.addEventListener('click', () => {
+      const tool = item.dataset.tool;
+      closeMenu();
+      showTool(tool);
+    });
+  });
+})();
 
 /* ============================================================
    NAV + SCROLL
@@ -2967,6 +3305,8 @@ window.addEventListener('DOMContentLoaded', () => {
   const h = location.hash;
   if (h === '#periodic'){ suppressHistory = true; showPeriodic({fromPop:true}); setTimeout(()=>{suppressHistory=false;},100); return; }
   if (h === '#solvability'){ suppressHistory = true; showSolvability({fromPop:true}); setTimeout(()=>{suppressHistory=false;},100); return; }
+  const tm = h.match(/^#tool-([a-z-]+)$/);
+  if (tm){ suppressHistory = true; showTool(tm[1], {fromPop:true}); setTimeout(()=>{suppressHistory=false;},100); return; }
   if (h === '#numbers'){ suppressHistory = true; showNumbersCatalog({fromPop:true}); setTimeout(()=>{suppressHistory=false;},100); return; }
   const nm = h.match(/^#numbers-(\d+)$/);
   if (nm){ suppressHistory = true; showNumberTasks(parseInt(nm[1],10), {fromPop:true}); setTimeout(()=>{suppressHistory=false;},100); return; }
