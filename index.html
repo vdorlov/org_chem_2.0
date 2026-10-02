@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Органическая химия 2.0 — Подготовка к ЕГЭ</title>
-<meta name="description" content="Интерактивный курс подготовки к ЕГЭ по органической химии: теория, классы соединений, ЕГЭ по номерам, таблица Менделеева, таблица растворимости и инструменты.">
+<meta name="description" content="Интерактивный курс подготовки к ЕГЭ по органической химии: теория, классы соединений, ЕГЭ по номерам, справочники, таблицы и инструменты.">
 
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%2322d3ee'/%3E%3Cstop offset='1' stop-color='%23b47cf0'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx='32' cy='32' r='6' fill='url(%23g)'/%3E%3Cellipse cx='32' cy='32' rx='24' ry='9' fill='none' stroke='url(%23g)' stroke-width='2.5' transform='rotate(30 32 32)'/%3E%3Cellipse cx='32' cy='32' rx='24' ry='9' fill='none' stroke='url(%23g)' stroke-width='2.5' transform='rotate(-30 32 32)'/%3E%3Cellipse cx='32' cy='32' rx='24' ry='9' fill='none' stroke='url(%23g)' stroke-width='2.5' transform='rotate(90 32 32)'/%3E%3C/svg%3E">
 <meta name="theme-color" content="#0a0e27">
@@ -14,7 +14,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;700;800&family=Open+Sans:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="./tools/tools-common.css">
 
-<!-- MathJax: подключаем, но не запускаем автозапуск — рендерим вручную после парсинга .md -->
+<!-- MathJax: подключён, но не запускаем автозапуск — рендерим вручную после парсинга .md -->
 <script>
   window.MathJax = {
     tex: {
@@ -197,6 +197,16 @@ body{
 }
 .tools-dropdown.open .nav-btn.tools .caret{
   transform: rotate(180deg);
+}
+.nav-btn.iupac{
+  border-color:color-mix(in srgb, var(--accent-cyan) 45%, transparent);
+  color:var(--accent-cyan);
+  display:inline-flex; align-items:center; gap:0.4rem;
+}
+.nav-btn.iupac:hover{
+  background:color-mix(in srgb, var(--accent-cyan) 12%, transparent);
+  border-color:var(--accent-cyan);
+  box-shadow:0 0 14px color-mix(in srgb, var(--accent-cyan) 35%, transparent);
 }
 .theme-toggle{
   width:42px; height:42px; border-radius:50%;
@@ -464,10 +474,10 @@ body{
   border-color:color-mix(in srgb, var(--accent-blue) 35%, transparent);
   color:var(--accent-blue);
 }
-.section-tag.purple{
-  background:color-mix(in srgb, var(--accent-purple) 12%, transparent);
-  border-color:color-mix(in srgb, var(--accent-purple) 35%, transparent);
-  color:var(--accent-purple);
+.section-tag.cyan{
+  background:color-mix(in srgb, var(--accent-cyan) 12%, transparent);
+  border-color:color-mix(in srgb, var(--accent-cyan) 35%, transparent);
+  color:var(--accent-cyan);
 }
 .section-title{
   font-family:'Exo 2',sans-serif; font-size:var(--step-2);
@@ -581,7 +591,7 @@ body{
 .module-card[data-color="emerald"]{--card-color-1:#10b981;--card-color-2:#5b8def;--card-glow:0 0 28px rgba(16,185,129,0.13)}
 .module-card[data-color="rose"]   {--card-color-1:#fb7185;--card-color-2:#fbbf24;--card-glow:0 0 28px rgba(251,113,133,0.13)}
 
-/* ========== ЕГЭ ПО НОМЕРАМ ========== */
+/* ========== ЕГЭ ПО НОМЕРАМ (banner) ========== */
 .numbers-banner{
   display: flex; flex-direction: column;
   align-items: center; justify-content: center;
@@ -795,6 +805,76 @@ body{
 .solvability-deco span:nth-child(2){ top: 68%; left: 14%; animation-delay: 1.5s; font-size: 6rem; }
 .solvability-deco span:nth-child(3){ top: 12%; right: 12%;animation-delay: 3s;   font-size: 5.5rem; }
 .solvability-deco span:nth-child(4){ top: 62%; right: 10%;animation-delay: 4.5s; font-size: 6.5rem; }
+
+/* ========== IUPAC banner ========== */
+.iupac-banner{
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  text-align: center;
+  padding: clamp(2rem, 5vw, 3.5rem) clamp(1.5rem, 4vw, 3rem);
+  background: linear-gradient(135deg,
+    color-mix(in srgb, var(--accent-cyan) 15%, var(--bg-card)),
+    color-mix(in srgb, var(--accent-purple) 15%, var(--bg-card)));
+  border-radius: var(--radius);
+  border: 1px solid color-mix(in srgb, var(--accent-cyan) 30%, var(--line));
+  position: relative; overflow: hidden;
+  cursor: pointer;
+  transition: transform var(--transition), box-shadow var(--transition);
+  max-width: 900px; margin: 0 auto;
+}
+.iupac-banner:hover{
+  transform: translateY(-4px);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.35),
+              0 0 30px color-mix(in srgb, var(--accent-cyan) 30%, transparent);
+}
+.iupac-banner::before{
+  content:''; position:absolute; inset:-50%;
+  background: conic-gradient(from 0deg,
+    transparent 0deg,
+    color-mix(in srgb, var(--accent-cyan) 20%, transparent) 90deg,
+    transparent 180deg,
+    color-mix(in srgb, var(--accent-purple) 20%, transparent) 270deg,
+    transparent 360deg);
+  animation: rotateBg 20s linear infinite;
+  z-index: 0;
+}
+.iupac-banner > *{ position: relative; z-index: 1; }
+.iupac-banner h3{
+  font-family:'Exo 2',sans-serif; font-size: var(--step-1);
+  font-weight: 800; margin-bottom: 0.7rem;
+  background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+  -webkit-background-clip:text; background-clip:text;
+  -webkit-text-fill-color:transparent; color: transparent;
+}
+.iupac-banner p{
+  color: var(--ink-muted); max-width: 500px;
+  margin-bottom: 1.5rem; line-height: 1.55;
+}
+.iupac-banner .btn{
+  padding: 0.85rem 2rem;
+  background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+  color: #fff;
+  box-shadow: 0 0 20px color-mix(in srgb, var(--accent-cyan) 45%, transparent);
+}
+[data-theme="dark"] .iupac-banner .btn{color: var(--bg-deep)}
+.iupac-banner .btn:hover{ transform: translateY(-3px); }
+
+.iupac-deco{
+  position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 0;
+}
+.iupac-deco span{
+  position: absolute;
+  font-family: 'Exo 2', sans-serif;
+  font-weight: 800;
+  color: color-mix(in srgb, var(--accent-cyan) 50%, transparent);
+  opacity: 0.06;
+  font-size: 5rem; line-height: 1;
+  animation: numFloat 12s ease-in-out infinite;
+}
+.iupac-deco span:nth-child(1){ top: 6%;  left: 7%;  animation-delay: 0s;   font-size: 5rem; }
+.iupac-deco span:nth-child(2){ top: 66%; left: 13%; animation-delay: 1.5s; font-size: 6rem; }
+.iupac-deco span:nth-child(3){ top: 10%; right: 9%; animation-delay: 3s;   font-size: 5.5rem; }
+.iupac-deco span:nth-child(4){ top: 64%; right: 11%;animation-delay: 4.5s; font-size: 6.5rem; }
 
 /* ========== КАТАЛОГ НОМЕРОВ ========== */
 .numbers-catalog-page{
@@ -1459,10 +1539,10 @@ footer a:hover{text-decoration:underline}
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:0.01ms!important;animation-iteration-count:1!important;transition-duration:0.01ms!important}
   html{scroll-behavior:auto}
-  .atom, .numbers-banner::before, .numbers-nums-deco span, .klass-banner::before, .klass-deco span, .solvability-banner::before, .solvability-deco span{animation:none}
+  .atom, .numbers-banner::before, .numbers-nums-deco span, .klass-banner::before, .klass-deco span, .solvability-banner::before, .solvability-deco span, .iupac-banner::before, .iupac-deco span{animation:none}
 }
 @media print{
-  .navbar,.scroll-top,#molecule-canvas,.scroll-indicator,.scroll-progress,.answer-toggle,.theme-toggle,.content-sidebar,.module-hint,.num-task-answer-toggle,.numbers-banner,.klass-banner,.solvability-banner{display:none!important}
+  .navbar,.scroll-top,#molecule-canvas,.scroll-indicator,.scroll-progress,.answer-toggle,.theme-toggle,.content-sidebar,.module-hint,.num-task-answer-toggle,.numbers-banner,.klass-banner,.solvability-banner,.iupac-banner{display:none!important}
   body{background:#fff; color:#000}
   .content-body{box-shadow:none; border:none; padding:0; background:none}
   .content-page{display:block!important; padding:0}
@@ -1497,6 +1577,7 @@ mjx-container[display="true"]{
     <button class="nav-btn numbers" id="numbersBtn">🎯 ЕГЭ по номерам</button>
     <button class="nav-btn solvability" id="solvabilityBtn">🧪 Растворимость</button>
     <button class="nav-btn periodic" id="periodicBtn">⚛ Таблица Менделеева</button>
+    <button class="nav-btn iupac" id="iupacBtn">📖 Справочник названий</button>
     <button class="nav-btn" data-nav="modules">Модули</button>
 
     <!-- Выпадающее меню Инструменты -->
@@ -1523,7 +1604,7 @@ mjx-container[display="true"]{
           <span class="tool-icon">🧬</span>
           <span class="tool-text">
             <span class="tool-title">Конструктор формул</span>
-            <span class="tool-desc">Соберите молекулу из атомов</span>
+            <span class="tool-desc">Соберите молекулу из атомов и групп</span>
           </span>
         </button>
       </div>
@@ -1640,6 +1721,26 @@ mjx-container[display="true"]{
     </div>
   </section>
 
+  <section class="section" id="iupac-section">
+    <div class="section-header">
+      <div class="section-tag cyan">Справочник названий</div>
+      <h2 class="section-title">ИЮПАК и тривиальные названия</h2>
+      <p class="section-desc">Более 150 соединений по классам — с 3D-просмотром молекул через PubChem</p>
+    </div>
+
+    <div class="iupac-banner" id="iupacBanner">
+      <div class="iupac-deco" aria-hidden="true">
+        <span>CH₄</span>
+        <span>C₆H₆</span>
+        <span>OH</span>
+        <span>NH₂</span>
+      </div>
+      <h3>📖 Справочник названий</h3>
+      <p>Выберите соединение — увидите интерактивную 3D-модель молекулы с возможностью вращения.</p>
+      <button class="btn" id="openIupacBtn">Открыть справочник →</button>
+    </div>
+  </section>
+
   <section class="section" id="about">
     <div class="section-header">
       <div class="section-tag">О курсе</div>
@@ -1649,7 +1750,7 @@ mjx-container[display="true"]{
       <p><strong>1. Изучайте теорию последовательно.</strong> Каждый блок построен на знаниях предыдущего. Не пропускайте темы — органическая химия является единой системой.</p>
       <p><strong>2. Используйте справочник по классам.</strong> Откройте раздел «Классы соединений» — там вся теория по каждому классу в удобном виде.</p>
       <p><strong>3. Тренируйтесь по номерам ЕГЭ.</strong> Откройте раздел «ЕГЭ по номерам» — там задания как на реальном экзамене.</p>
-      <p><strong>4. Работайте со справочниками и инструментами.</strong> Таблица Менделеева, таблица растворимости и инструменты (калькулятор масс, балансировщик уравнений, конструктор формул) — всегда в шапке сайта.</p>
+      <p><strong>4. Работайте со справочниками и инструментами.</strong> Таблица Менделеева, таблица растворимости, справочник названий с 3D-молекулами и инструменты — всегда в шапке сайта.</p>
       <p><strong>5. Проверяйте себя.</strong> Ответы скрыты до клика — сначала попробуйте решить самостоятельно.</p>
       <hr>
       <p style="text-align:center;color:var(--ink-muted);margin-bottom:0;">Удачи в подготовке к ЕГЭ! 🎓</p>
@@ -1659,6 +1760,10 @@ mjx-container[display="true"]{
   <footer>
     <p>OrgChem 2.0 — Интерактивный курс подготовки к ЕГЭ по органической химии</p>
     <p style="margin-top:0.5rem;">Источник: <a href="https://github.com/vdorlov/org_chem_2.0" target="_blank" rel="noopener">github.com/vdorlov/org_chem_2.0</a></p>
+    <p style="margin-top:0.5rem;font-size:0.78rem;opacity:0.7;">
+      3D-молекулы: <a href="https://pubchem.ncbi.nlm.nih.gov/" target="_blank" rel="noopener">PubChem</a> (NIH, Public Domain) ·
+      <a href="https://3dmol.org/" target="_blank" rel="noopener">3Dmol.js</a> (BSD License)
+    </p>
   </footer>
 </div>
 
@@ -1980,6 +2085,7 @@ function buildHashFor(state){
   if (!state || state.view === 'home') return location.pathname + location.search;
   if (state.view === 'periodic') return '#periodic';
   if (state.view === 'solvability') return '#solvability';
+  if (state.view === 'iupac') return '#iupac';
   if (state.view === 'tool') return '#tool-' + state.tool;
   if (state.view === 'numbers-catalog') return '#numbers';
   if (state.view === 'numbers-tasks') return '#numbers-' + state.num;
@@ -2182,6 +2288,14 @@ const TOOLS = {
     css: './tools/formula-builder/formula-builder.css',
     js: './tools/formula-builder/formula-builder.js',
     renderFn: '__renderFormulaBuilder'
+  },
+  'iupac-catalog': {
+    title: 'Справочник названий',
+    icon: '📖',
+    color: '#22d3ee',
+    css: './tools/iupac-catalog/iupac-catalog.css',
+    js: './tools/iupac-catalog/iupac-catalog.js',
+    renderFn: '__renderIupacCatalog'
   }
 };
 
@@ -2204,14 +2318,20 @@ async function showTool(toolId, opts = {}){
   const t = TOOLS[toolId];
   if (!t) return;
 
-  if (!opts.fromPop && !suppressHistory) pushView({view:'tool', tool: toolId});
+  // Специальная маршрутизация для справочника ИЮПАК (view: 'iupac')
+  const isIupac = toolId === 'iupac-catalog';
+
+  if (!opts.fromPop && !suppressHistory){
+    if (isIupac) pushView({view:'iupac'});
+    else pushView({view:'tool', tool: toolId});
+  }
   homePage.style.display = 'none';
   document.getElementById('backToModules')?.remove();
 
   contentPages.innerHTML = `
     <div class="tool-page" id="tool-root" style="--num-color: ${t.color};">
       <div class="tool-header">
-        <div class="tool-badge">🛠 Инструмент</div>
+        <div class="tool-badge">${isIupac ? '📖 Справочник' : '🛠 Инструмент'}</div>
         <h2>${t.icon} ${t.title}</h2>
         <div class="tool-actions">
           <button class="module-btn" data-goto="home">← На главную</button>
@@ -2219,7 +2339,7 @@ async function showTool(toolId, opts = {}){
       </div>
       <div id="tool-body">
         <p style="text-align:center;color:var(--ink-muted);padding:3rem;">
-          🔄 Загрузка инструмента…
+          🔄 Загрузка…
         </p>
       </div>
     </div>`;
@@ -3005,6 +3125,7 @@ window.addEventListener('popstate', (e) => {
     if (!st || st.view === 'home' || !st.view) showHome({fromPop:true});
     else if (st.view === 'periodic') showPeriodic({fromPop:true});
     else if (st.view === 'solvability') showSolvability({fromPop:true});
+    else if (st.view === 'iupac') showTool('iupac-catalog', {fromPop:true});
     else if (st.view === 'tool') showTool(st.tool, {fromPop:true});
     else if (st.view === 'numbers-catalog') showNumbersCatalog({fromPop:true});
     else if (st.view === 'numbers-tasks') showNumberTasks(st.num, {fromPop:true});
@@ -3080,6 +3201,7 @@ document.querySelectorAll('[data-nav]').forEach(btn => {
 
 document.getElementById('periodicBtn')?.addEventListener('click', () => showPeriodic());
 document.getElementById('solvabilityBtn')?.addEventListener('click', () => showSolvability());
+document.getElementById('iupacBtn')?.addEventListener('click', () => showTool('iupac-catalog'));
 document.getElementById('numbersBtn')?.addEventListener('click', () => showNumbersCatalog());
 document.getElementById('heroNumbersBtn')?.addEventListener('click', () => showNumbersCatalog());
 document.getElementById('openNumbersBtn')?.addEventListener('click', () => showNumbersCatalog());
@@ -3100,6 +3222,12 @@ document.getElementById('openSolvabilityBtn')?.addEventListener('click', () => s
 document.getElementById('solvabilityBanner')?.addEventListener('click', (e) => {
   if (e.target.closest('#openSolvabilityBtn')) return;
   showSolvability();
+});
+
+document.getElementById('openIupacBtn')?.addEventListener('click', () => showTool('iupac-catalog'));
+document.getElementById('iupacBanner')?.addEventListener('click', (e) => {
+  if (e.target.closest('#openIupacBtn')) return;
+  showTool('iupac-catalog');
 });
 
 const scrollProgress = document.getElementById('scrollProgress');
@@ -3305,6 +3433,7 @@ window.addEventListener('DOMContentLoaded', () => {
   const h = location.hash;
   if (h === '#periodic'){ suppressHistory = true; showPeriodic({fromPop:true}); setTimeout(()=>{suppressHistory=false;},100); return; }
   if (h === '#solvability'){ suppressHistory = true; showSolvability({fromPop:true}); setTimeout(()=>{suppressHistory=false;},100); return; }
+  if (h === '#iupac'){ suppressHistory = true; showTool('iupac-catalog', {fromPop:true}); setTimeout(()=>{suppressHistory=false;},100); return; }
   const tm = h.match(/^#tool-([a-z-]+)$/);
   if (tm){ suppressHistory = true; showTool(tm[1], {fromPop:true}); setTimeout(()=>{suppressHistory=false;},100); return; }
   if (h === '#numbers'){ suppressHistory = true; showNumbersCatalog({fromPop:true}); setTimeout(()=>{suppressHistory=false;},100); return; }
