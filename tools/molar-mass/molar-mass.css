@@ -1,1 +1,103 @@
+/* Калькулятор молярных масс */
+.molar-mass-input-row{
+  display: flex;
+  gap: 0.7rem;
+  flex-wrap: wrap;
+}
+.molar-mass-input-row .tool-input{
+  flex: 1;
+  min-width: 200px;
+}
 
+/* Быстрые примеры */
+.molar-mass-examples{
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+.molar-mass-example{
+  padding: 0.4rem 0.85rem;
+  background: var(--bg-hover);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  cursor: pointer;
+  color: var(--ink-muted);
+  transition: all var(--transition);
+}
+.molar-mass-example:hover{
+  color: var(--accent-cyan);
+  border-color: var(--accent-cyan);
+  transform: translateY(-1px);
+}
+
+/* Результат */
+.molar-result{
+  margin-top: 1.2rem;
+  padding: 1.4rem;
+  background: color-mix(in srgb, var(--accent-cyan) 6%, transparent);
+  border-radius: 16px;
+  border-left: 4px solid var(--accent-cyan);
+  animation: fadeIn 0.3s ease-out;
+}
+.molar-total{
+  font-family: 'Exo 2', sans-serif;
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--accent-cyan);
+  margin-bottom: 0.2rem;
+  line-height: 1.1;
+}
+.molar-total-suffix{
+  font-size: 0.9rem;
+  color: var(--ink-muted);
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+.molar-breakdown{
+  display: grid;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+.molar-row{
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+  gap: 0.8rem;
+  align-items: center;
+  padding: 0.6rem 0.9rem;
+  background: var(--bg-card);
+  border-radius: 10px;
+  border: 1px solid var(--line);
+}
+.molar-symbol{
+  font-family: 'Exo 2', sans-serif;
+  font-weight: 800;
+  font-size: 1.1rem;
+  min-width: 40px;
+}
+.molar-name{
+  color: var(--ink-muted);
+  font-size: 0.9rem;
+}
+.molar-count{
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--accent-amber);
+  font-weight: 700;
+}
+.molar-contrib{
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--ink);
+  font-weight: 600;
+  text-align: right;
+}
+.molar-formula-rendered{
+  margin-top: 1rem;
+  padding: 0.8rem 1rem;
+  background: var(--bg-deep);
+  border-radius: 10px;
+  text-align: center;
+  font-size: 1.3rem;
+  color: var(--ink);
+}
