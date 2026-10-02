@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Органическая химия 2.0 — Подготовка к ЕГЭ</title>
-<meta name="description" content="Интерактивный курс подготовки к ЕГЭ по органической химии: теория, тренировочные задания, ЕГЭ по номерам и таблица Менделеева.">
+<meta name="description" content="Интерактивный курс подготовки к ЕГЭ по органической химии: теория, классы соединений, тренировочные задания, ЕГЭ по номерам и таблица Менделеева.">
 
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%2322d3ee'/%3E%3Cstop offset='1' stop-color='%23b47cf0'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx='32' cy='32' r='6' fill='url(%23g)'/%3E%3Cellipse cx='32' cy='32' rx='24' ry='9' fill='none' stroke='url(%23g)' stroke-width='2.5' transform='rotate(30 32 32)'/%3E%3Cellipse cx='32' cy='32' rx='24' ry='9' fill='none' stroke='url(%23g)' stroke-width='2.5' transform='rotate(-30 32 32)'/%3E%3Cellipse cx='32' cy='32' rx='24' ry='9' fill='none' stroke='url(%23g)' stroke-width='2.5' transform='rotate(90 32 32)'/%3E%3C/svg%3E">
 <meta name="theme-color" content="#0a0e27">
@@ -137,6 +137,16 @@ body{
   background:color-mix(in srgb, var(--accent-pink) 12%, transparent);
   border-color:var(--accent-pink);
   box-shadow:0 0 14px color-mix(in srgb, var(--accent-pink) 35%, transparent);
+}
+.nav-btn.klass{
+  border-color:color-mix(in srgb, var(--accent-green) 45%, transparent);
+  color:var(--accent-green);
+  display:inline-flex; align-items:center; gap:0.4rem;
+}
+.nav-btn.klass:hover{
+  background:color-mix(in srgb, var(--accent-green) 12%, transparent);
+  border-color:var(--accent-green);
+  box-shadow:0 0 14px color-mix(in srgb, var(--accent-green) 35%, transparent);
 }
 .theme-toggle{
   width:42px; height:42px; border-radius:50%;
@@ -300,6 +310,11 @@ body{
   background:color-mix(in srgb, var(--accent-pink) 12%, transparent);
   border-color:color-mix(in srgb, var(--accent-pink) 35%, transparent);
   color:var(--accent-pink);
+}
+.section-tag.green{
+  background:color-mix(in srgb, var(--accent-green) 12%, transparent);
+  border-color:color-mix(in srgb, var(--accent-green) 35%, transparent);
+  color:var(--accent-green);
 }
 .section-title{
   font-family:'Exo 2',sans-serif; font-size:var(--step-2);
@@ -488,6 +503,76 @@ body{
   50%    { transform: translateY(-15px) rotate(5deg); }
 }
 
+/* ========== КЛАССЫ (banner) ========== */
+.klass-banner{
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  text-align: center;
+  padding: clamp(2rem, 5vw, 3.5rem) clamp(1.5rem, 4vw, 3rem);
+  background: linear-gradient(135deg,
+    color-mix(in srgb, var(--accent-green) 15%, var(--bg-card)),
+    color-mix(in srgb, var(--accent-cyan) 15%, var(--bg-card)));
+  border-radius: var(--radius);
+  border: 1px solid color-mix(in srgb, var(--accent-green) 30%, var(--line));
+  position: relative; overflow: hidden;
+  cursor: pointer;
+  transition: transform var(--transition), box-shadow var(--transition);
+  max-width: 900px; margin: 0 auto;
+}
+.klass-banner:hover{
+  transform: translateY(-4px);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.35),
+              0 0 30px color-mix(in srgb, var(--accent-green) 30%, transparent);
+}
+.klass-banner::before{
+  content:''; position:absolute; inset:-50%;
+  background: conic-gradient(from 0deg,
+    transparent 0deg,
+    color-mix(in srgb, var(--accent-green) 20%, transparent) 90deg,
+    transparent 180deg,
+    color-mix(in srgb, var(--accent-cyan) 20%, transparent) 270deg,
+    transparent 360deg);
+  animation: rotateBg 20s linear infinite;
+  z-index: 0;
+}
+.klass-banner > *{ position: relative; z-index: 1; }
+.klass-banner h3{
+  font-family:'Exo 2',sans-serif; font-size: var(--step-1);
+  font-weight: 800; margin-bottom: 0.7rem;
+  background: linear-gradient(135deg, var(--accent-green), var(--accent-cyan));
+  -webkit-background-clip:text; background-clip:text;
+  -webkit-text-fill-color:transparent; color: transparent;
+}
+.klass-banner p{
+  color: var(--ink-muted); max-width: 500px;
+  margin-bottom: 1.5rem; line-height: 1.55;
+}
+.klass-banner .btn{
+  padding: 0.85rem 2rem;
+  background: linear-gradient(135deg, var(--accent-green), var(--accent-cyan));
+  color: #fff;
+  box-shadow: 0 0 20px color-mix(in srgb, var(--accent-green) 45%, transparent);
+}
+[data-theme="dark"] .klass-banner .btn{color: var(--bg-deep)}
+.klass-banner .btn:hover{ transform: translateY(-3px); }
+
+.klass-deco{
+  position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 0;
+}
+.klass-deco span{
+  position: absolute;
+  font-family: 'Exo 2', sans-serif;
+  font-weight: 800;
+  color: color-mix(in srgb, var(--accent-green) 50%, transparent);
+  opacity: 0.06;
+  font-size: 5rem; line-height: 1;
+  animation: numFloat 12s ease-in-out infinite;
+}
+.klass-deco span:nth-child(1){ top: 10%; left: 6%;  animation-delay: 0s;   font-size: 5rem; }
+.klass-deco span:nth-child(2){ top: 70%; left: 15%; animation-delay: 1.5s; font-size: 6rem; }
+.klass-deco span:nth-child(3){ top: 15%; right: 10%;animation-delay: 3s;   font-size: 5.5rem; }
+.klass-deco span:nth-child(4){ top: 65%; right: 12%;animation-delay: 4.5s; font-size: 6.5rem; }
+
 /* КАТАЛОГ НОМЕРОВ */
 .numbers-catalog-page{
   padding: 6.5rem clamp(1rem,4vw,2rem) 3rem;
@@ -578,7 +663,99 @@ body{
   position: relative; z-index: 1;
 }
 
-/* СТРАНИЦА ЗАДАНИЙ НОМЕРА */
+/* ========== КЛАССЫ — каталог ========== */
+.klass-catalog-page{
+  padding: 6.5rem clamp(1rem,4vw,2rem) 3rem;
+  max-width: 1400px; margin: 0 auto; min-height: 100vh;
+  animation: fadeIn 0.35s ease-out;
+}
+.klass-catalog-header{text-align: center; margin-bottom: 2.5rem;}
+.klass-catalog-header h2{
+  font-family:'Exo 2',sans-serif; font-size: var(--step-2);
+  font-weight: 800; margin-bottom: 0.6rem;
+  background: linear-gradient(135deg, var(--accent-green), var(--accent-cyan), var(--accent-purple));
+  -webkit-background-clip:text; background-clip:text;
+  -webkit-text-fill-color:transparent; color:transparent;
+}
+.klass-catalog-header p{color:var(--ink-muted); max-width: 600px; margin: 0 auto;}
+
+.klass-grid{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.2rem;
+  perspective: 1200px;
+}
+.klass-card{
+  position: relative;
+  border-radius: var(--radius);
+  padding: 1.6rem 1.4rem 1.3rem;
+  cursor: pointer;
+  border: 1px solid var(--line);
+  background: var(--bg-card);
+  overflow: hidden;
+  transition: transform 0.35s cubic-bezier(0.175,0.885,0.32,1.275),
+              border-color var(--transition),
+              box-shadow var(--transition);
+  opacity: 0; transform: translateY(24px);
+  transform-style: preserve-3d;
+  will-change: transform;
+  display: flex; flex-direction: column;
+  min-height: 150px;
+}
+.klass-card.visible{
+  opacity: 1; transform: translateY(0);
+  transition: opacity 0.5s ease, transform 0.5s ease, border-color 0.3s, box-shadow 0.3s;
+}
+.klass-card:hover{
+  transform: translateY(-8px) scale(1.02);
+  border-color: var(--klass-color);
+  box-shadow: 0 15px 40px rgba(0,0,0,0.35),
+              0 0 30px color-mix(in srgb, var(--klass-color) 40%, transparent);
+}
+.klass-card::before{
+  content:''; position:absolute; top:0; left:0; right:0; height:4px;
+  background: linear-gradient(90deg, var(--klass-color), transparent);
+  opacity: 0; transition: opacity var(--transition);
+}
+.klass-card:hover::before{opacity: 1}
+.klass-card .klass-icon{
+  width: 48px; height: 48px; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.4rem; margin-bottom: 0.9rem;
+  background: linear-gradient(135deg, var(--klass-color), color-mix(in srgb, var(--klass-color) 40%, var(--accent-cyan)));
+  box-shadow: 0 0 18px color-mix(in srgb, var(--klass-color) 40%, transparent);
+  transition: transform 0.3s ease;
+}
+.klass-card:hover .klass-icon{
+  transform: rotate(-8deg) scale(1.15);
+}
+.klass-card .klass-title{
+  font-family: 'Exo 2', sans-serif;
+  font-size: 1.1rem; font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 0.35rem;
+  position: relative; z-index: 1;
+}
+.klass-card .klass-subtitle{
+  font-size: 0.82rem;
+  color: var(--ink-muted);
+  line-height: 1.4;
+  position: relative; z-index: 1;
+  flex: 1;
+}
+.klass-card .klass-arrow{
+  position: absolute; top: 1.4rem; right: 1.4rem;
+  font-size: 1.4rem; font-weight: 800;
+  color: var(--klass-color);
+  opacity: 0.4;
+  transition: opacity var(--transition), transform var(--transition);
+}
+.klass-card:hover .klass-arrow{
+  opacity: 1;
+  transform: translateX(4px);
+}
+
+/* ========== СТРАНИЦА ЗАДАНИЙ НОМЕРА / КЛАССА ========== */
 .number-tasks-page{
   padding: 6.5rem clamp(1rem,4vw,2rem) 3rem;
   max-width: 1000px; margin: 0 auto; min-height: 100vh;
@@ -1312,19 +1489,22 @@ footer a:hover{text-decoration:underline}
   .periodic-page{padding:5.5rem 1rem 2rem}
   .pt-modal-head{flex-direction: column; text-align: center; gap:1rem;}
   .pt-modal-title h3{font-size:1.4rem;}
-  .numbers-catalog-page, .number-tasks-page{padding:5.5rem 1rem 2rem;}
+  .numbers-catalog-page, .number-tasks-page, .klass-catalog-page{padding:5.5rem 1rem 2rem;}
   .numbers-grid{grid-template-columns:repeat(auto-fit, minmax(160px, 1fr)); gap: 0.8rem;}
   .number-card{padding: 1.3rem 1rem 1rem;}
   .number-card .big-num{font-size: 3rem;}
   .number-card .card-title{font-size: 0.85rem; min-height: 2.5em;}
+  .klass-grid{grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap: 0.8rem;}
+  .klass-card{padding: 1.2rem 1rem;}
+  .klass-card .klass-title{font-size: 1rem;}
 }
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:0.01ms!important;animation-iteration-count:1!important;transition-duration:0.01ms!important}
   html{scroll-behavior:auto}
-  .atom, .orbit, .numbers-banner::before, .numbers-nums-deco span{animation:none}
+  .atom, .orbit, .numbers-banner::before, .numbers-nums-deco span, .klass-banner::before, .klass-deco span{animation:none}
 }
 @media print{
-  .navbar,.scroll-top,#molecule-canvas,.scroll-indicator,.scroll-progress,.answer-toggle,.theme-toggle,.content-sidebar,.module-hint,.pt-controls,.pt-legend,.num-task-answer-toggle,.numbers-banner{display:none!important}
+  .navbar,.scroll-top,#molecule-canvas,.scroll-indicator,.scroll-progress,.answer-toggle,.theme-toggle,.content-sidebar,.module-hint,.pt-controls,.pt-legend,.num-task-answer-toggle,.numbers-banner,.klass-banner{display:none!important}
   body{background:#fff; color:#000}
   .content-body{box-shadow:none; border:none; padding:0; background:none}
   .content-page{display:block!important; padding:0}
@@ -1345,6 +1525,7 @@ sub,sup{font-size:0.75em; line-height:0}
     <div class="logo-text">OrgChem 2.0</div>
   </a>
   <div class="nav-links" id="navLinks">
+    <button class="nav-btn klass" id="klassBtn">📚 Классы</button>
     <button class="nav-btn numbers" id="numbersBtn">🎯 ЕГЭ по номерам</button>
     <button class="nav-btn periodic" id="periodicBtn">🧪 Таблица Менделеева</button>
     <button class="nav-btn" data-nav="modules">Модули</button>
@@ -1375,21 +1556,22 @@ sub,sup{font-size:0.75em; line-height:0}
     </div>
     <div class="hero-badge">Подготовка к ЕГЭ по химии</div>
     <h1>Органическая химия<br><span class="gradient-text">2.0</span></h1>
-    <p class="hero-subtitle">Интерактивный курс для подготовки к ЕГЭ. Теория, тренировочные задания, ЕГЭ по номерам и таблица Менделеева — всё в одном месте.</p>
+    <p class="hero-subtitle">Интерактивный курс для подготовки к ЕГЭ. Классы соединений, теория, ЕГЭ по номерам и таблица Менделеева — всё в одном месте.</p>
     <div class="hero-stats">
       <div class="stat-item"><div class="stat-number" data-count="11">0</div><div class="stat-label">модулей</div></div>
-      <div class="stat-item"><div class="stat-number" data-count="500" data-suffix="+">0</div><div class="stat-label">заданий</div></div>
+      <div class="stat-item"><div class="stat-number" data-count="13">0</div><div class="stat-label">классов</div></div>
       <div class="stat-item"><div class="stat-number" data-count="118">0</div><div class="stat-label">элементов</div></div>
     </div>
     <div class="hero-cta">
       <a href="#modules" class="btn btn-primary">🚀 Начать обучение</a>
-      <button class="btn btn-secondary" id="heroNumbersBtn">🎯 ЕГЭ по номерам</button>
+      <button class="btn btn-secondary" id="heroKlassBtn">📚 Классы соединений</button>
     </div>
     <button class="scroll-indicator" onclick="document.getElementById('modules').scrollIntoView({behavior:'smooth'})" aria-label="Вниз">
       <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
     </button>
   </section>
 
+  <!-- МОДУЛИ -->
   <section class="section" id="modules">
     <div class="section-header">
       <div class="section-tag">Учебные модули</div>
@@ -1399,6 +1581,28 @@ sub,sup{font-size:0.75em; line-height:0}
     <div class="modules-grid" id="modulesGrid"></div>
   </section>
 
+  <!-- КЛАССЫ -->
+  <section class="section" id="klass-section">
+    <div class="section-header">
+      <div class="section-tag green">Классы соединений</div>
+      <h2 class="section-title">Теория по классам органических веществ</h2>
+      <p class="section-desc">Справочник по каждому классу: строение, свойства, реакции и получение</p>
+    </div>
+
+    <div class="klass-banner" id="klassBanner">
+      <div class="klass-deco" aria-hidden="true">
+        <span>C</span>
+        <span>H</span>
+        <span>O</span>
+        <span>N</span>
+      </div>
+      <h3>📚 Меню классов соединений</h3>
+      <p>Алканы, алкены, спирты, кислоты, амины и другие — вся теория в одном месте.</p>
+      <button class="btn" id="openKlassBtn">Открыть меню →</button>
+    </div>
+  </section>
+
+  <!-- ЕГЭ ПО НОМЕРАМ -->
   <section class="section" id="numbers-section">
     <div class="section-header">
       <div class="section-tag pink">ЕГЭ по номерам</div>
@@ -1426,10 +1630,10 @@ sub,sup{font-size:0.75em; line-height:0}
     </div>
     <div class="content-body">
       <p><strong>1. Изучайте теорию последовательно.</strong> Каждый блок построен на знаниях предыдущего. Не пропускайте темы — органическая химия является единой системой.</p>
-      <p><strong>2. Решайте задания сразу после теории.</strong> Так вы лучше запомните материал и поймёте, как применять знания на практике.</p>
+      <p><strong>2. Используйте справочник по классам.</strong> Откройте раздел «Классы соединений» — там вся теория по каждому классу в удобном виде.</p>
       <p><strong>3. Тренируйтесь по номерам ЕГЭ.</strong> Откройте раздел «ЕГЭ по номерам» — там задания как на реальном экзамене.</p>
-      <p><strong>4. Используйте таблицу Менделеева.</strong> Откройте её в любой момент через кнопку в шапке — каждый элемент кликабельный.</p>
-      <p><strong>5. Возвращайтесь к сложным темам.</strong> Если что-то непонятно — перечитайте теорию, посмотрите таблицы, решите задания ещё раз.</p>
+      <p><strong>4. Проверяйте себя.</strong> Ответы скрыты до клика — сначала попробуйте решить самостоятельно.</p>
+      <p><strong>5. Используйте таблицу Менделеева.</strong> Она всегда доступна в шапке сайта.</p>
       <hr>
       <p style="text-align:center;color:var(--ink-muted);margin-bottom:0;">Удачи в подготовке к ЕГЭ! 🎓</p>
     </div>
@@ -1456,56 +1660,56 @@ sub,sup{font-size:0.75em; line-height:0}
 'use strict';
 
 /* ============================================================
-   MODULES META
+   MODULES META — файлы в bloks/
    ============================================================ */
 const MODULES = {
   1:{color:'cyan', icon:'⚛', title:'Теоретические основы',
      desc:'Гомологический ряд, гибридизация, типы связей, изомерия и номенклатура',
-     theoryFile:'Blok_01_Teoreticheskie_osnovy.md',
-     practiceFiles:[{label:'Тренировочные', file:'Blok_01_Trenirovochnye_zadaniya.md'}]},
+     theoryFile:'bloks/Blok_01_Teoreticheskie_osnovy.md',
+     practiceFiles:[{label:'Тренировочные', file:'bloks/Blok_01_Trenirovochnye_zadaniya.md'}]},
   2:{color:'purple', icon:'🌱', title:'Углеводороды',
      desc:'Алканы, алкены, алкины, алкадиены и арены: свойства и реакции',
-     theoryFile:'Blok_02_Uglevodorody.md',
-     practiceFiles:[{label:'Тренировочные', file:'Blok_02_Trenirovochnye_zadaniya.md'}]},
+     theoryFile:'bloks/Blok_02_Uglevodorody.md',
+     practiceFiles:[{label:'Тренировочные', file:'bloks/Blok_02_Trenirovochnye_zadaniya.md'}]},
   3:{color:'pink', icon:'🧪', title:'Галогенопроизводные',
      desc:'Реакции SN1 и SN2, реактивы Гриньяра, реакция Вюрца',
-     theoryFile:'Blok_03_Galogenproizvodnye.md',
-     practiceFiles:[{label:'Тренировочные', file:'Blok_03_Trenirovochnye_zadaniya.md'}]},
+     theoryFile:'bloks/Blok_03_Galogenproizvodnye.md',
+     practiceFiles:[{label:'Тренировочные', file:'bloks/Blok_03_Trenirovochnye_zadaniya.md'}]},
   4:{color:'amber', icon:'💧', title:'Кислородсодержащие',
      desc:'Спирты, фенолы, альдегиды, кетоны и карбоновые кислоты',
-     theoryFile:'Blok_04_Kislorodsoderzhashchie_soedineniya.md',
-     practiceFiles:[{label:'Тренировочные', file:'Blok_04_Trenirovochnye_zadaniya.md'}]},
+     theoryFile:'bloks/Blok_04_Kislorodsoderzhashchie_soedineniya.md',
+     practiceFiles:[{label:'Тренировочные', file:'bloks/Blok_04_Trenirovochnye_zadaniya.md'}]},
   5:{color:'green', icon:'🦠', title:'Азотсодержащие',
      desc:'Амины, аминокислоты, нитросоединения и амиды',
-     theoryFile:'Blok_05_Azotsoderzhashchie_soedineniya.md',
-     practiceFiles:[{label:'Тренировочные', file:'Blok_05_Trenirovochnye_zadaniya.md'}]},
+     theoryFile:'bloks/Blok_05_Azotsoderzhashchie_soedineniya.md',
+     practiceFiles:[{label:'Тренировочные', file:'bloks/Blok_05_Trenirovochnye_zadaniya.md'}]},
   6:{color:'red', icon:'🍬', title:'Углеводы и полимеры',
      desc:'Моносахариды, дисахариды, полисахариды и синтетические полимеры',
-     theoryFile:'Blok_06_Uglevody_i_polimery.md',
-     practiceFiles:[{label:'Тренировочные', file:'Blok_06_Trenirovochnye_zadaniya.md'}]},
+     theoryFile:'bloks/Blok_06_Uglevody_i_polimery.md',
+     practiceFiles:[{label:'Тренировочные', file:'bloks/Blok_06_Trenirovochnye_zadaniya.md'}]},
   7:{color:'blue', icon:'📡', title:'Генетическая связь',
      desc:'Связь между классами органических соединений и цепочки превращений',
-     theoryFile:'Blok_07_Geneticheskaya_svyaz.md',
-     practiceFiles:[{label:'Тренировочные', file:'Blok_07_Trenirovochnye_zadaniya.md'}]},
+     theoryFile:'bloks/Blok_07_Geneticheskaya_svyaz.md',
+     practiceFiles:[{label:'Тренировочные', file:'bloks/Blok_07_Trenirovochnye_zadaniya.md'}]},
   8:{color:'indigo', icon:'📝', title:'Письменные задания 32–34',
      desc:'Разбор типовых задач высокой сложности из второй части ЕГЭ',
-     theoryFile:'Blok_08_Pismennye_zadaniya_32_33_34.md',
+     theoryFile:'bloks/Blok_08_Pismennye_zadaniya_32_33_34.md',
      practiceFiles:[
-       {label:'Задание 32', file:'Blok_08_Trenirovochnye_zadaniya_32.md'},
-       {label:'Задание 33', file:'Blok_08_Trenirovochnye_zadaniya_33.md'},
-       {label:'Задание 34', file:'Blok_08_Trenirovochnye_zadaniya_34.md'}
+       {label:'Задание 32', file:'bloks/Blok_08_Trenirovochnye_zadaniya_32.md'},
+       {label:'Задание 33', file:'bloks/Blok_08_Trenirovochnye_zadaniya_33.md'},
+       {label:'Задание 34', file:'bloks/Blok_08_Trenirovochnye_zadaniya_34.md'}
      ]},
   9:{color:'emerald', icon:'🧬', title:'Нуклеиновые кислоты',
      desc:'Строение, свойства и биологическая роль нуклеиновых кислот',
-     theoryFile:'Blok_09_Nukleinovie_kisloty.md',
+     theoryFile:'bloks/Blok_09_Nukleinovie_kisloty.md',
      practiceFiles:[]},
   10:{color:'rose', icon:'🛢️', title:'Природные источники углеводородов',
      desc:'Нефть, газ, уголь и продукты их переработки',
-     theoryFile:'Blok_10_Prirodnie_istochniki_uglevodorodov.md',
+     theoryFile:'bloks/Blok_10_Prirodnie_istochniki_uglevodorodov.md',
      practiceFiles:[]},
   11:{color:'cyan', icon:'🏆', title:'Итоговое повторение',
      desc:'Комплексный тренинг и повторение всего курса перед экзаменом',
-     theoryFile:'Blok_11_Itogovoe_povtorenie_i_trening.md',
+     theoryFile:'bloks/Blok_11_Itogovoe_povtorenie_i_trening.md',
      practiceFiles:[]}
 };
 
@@ -1517,8 +1721,26 @@ const TABLES = {
 };
 
 /* ============================================================
+   ★★★ КЛАССЫ — теория по классам соединений (папка klass/) ★★★
+   ============================================================ */
+const KLASS_LIST = [
+  {id:'alkany',      title:'Алканы',                   subtitle:'Предельные углеводороды',         icon:'🔗', color:'#22d3ee', file:'klass/Alkany.md'},
+  {id:'alkeny',      title:'Алкены',                   subtitle:'Непредельные с C=C',              icon:'⚡', color:'#5b8def', file:'klass/Alkeny.md'},
+  {id:'alkiny',      title:'Алкины',                   subtitle:'Непредельные с C≡C',              icon:'🧵', color:'#b47cf0', file:'klass/Alkiny.md'},
+  {id:'dieny',       title:'Диены',                    subtitle:'Алкадиены (две C=C)',             icon:'🔀', color:'#a855f7', file:'klass/Dieny.md'},
+  {id:'cykloalkany', title:'Циклоалканы',              subtitle:'Предельные циклы',                 icon:'⭕', color:'#f472b6', file:'klass/Cykloalkany.md'},
+  {id:'areny',       title:'Арены',                    subtitle:'Ароматические углеводороды',      icon:'💎', color:'#fbbf24', file:'klass/Areny.md'},
+  {id:'spirty',      title:'Спирты',                   subtitle:'Одноатомные и многоатомные',      icon:'🍷', color:'#fb923c', file:'klass/Spirty.md'},
+  {id:'fenoly',      title:'Фенолы',                   subtitle:'Ароматические спирты',            icon:'🌸', color:'#f87171', file:'klass/Fenoly.md'},
+  {id:'aldehydy',    title:'Альдегиды и кетоны',       subtitle:'Карбонильные соединения',         icon:'⚗️', color:'#34d399', file:'klass/Aldegidy_ketony.md'},
+  {id:'karbonovye',  title:'Карбоновые кислоты',       subtitle:'Одноосновные и многоосновные',    icon:'🧪', color:'#10b981', file:'klass/Karbonovie_kisloty.md'},
+  {id:'efiry',       title:'Эфиры',                    subtitle:'Простые и сложные',               icon:'💠', color:'#06b6d4', file:'klass/Efiry.md'},
+  {id:'aminy',       title:'Амины',                    subtitle:'Азотсодержащие органические',     icon:'🦠', color:'#818cf8', file:'klass/Aminy.md'},
+  {id:'aminokisloty',title:'Аминокислоты',             subtitle:'NH₂ + COOH в одной молекуле',     icon:'🧬', color:'#c084fc', file:'klass/Aminokisloty.md'}
+];
+
+/* ============================================================
    ЕГЭ ПО НОМЕРАМ — карта номеров
-   .md — в number_tasks/, картинки — в task_XX/ (в корне)
    ============================================================ */
 const NUMBER_TASKS = {
   10: {
@@ -1729,6 +1951,8 @@ function buildHashFor(state){
   if (state.view === 'periodic') return '#periodic';
   if (state.view === 'numbers-catalog') return '#numbers';
   if (state.view === 'numbers-tasks') return '#numbers-' + state.num;
+  if (state.view === 'klass-catalog') return '#klass';
+  if (state.view === 'klass-detail') return '#klass-' + state.id;
   const t = state.type === 'theory' ? 'theory' : 'practice';
   const idx = state.type === 'practice' ? '-' + (state.idx || 0) : '';
   return `#m${state.num}-${t}${idx}`;
@@ -1776,19 +2000,118 @@ function showPeriodic(opts = {}){
   if (!opts.fromPop) window.scrollTo({top:0, behavior:'auto'});
 }
 
-function ensureBackButton(){
-  if (document.getElementById('backToModules')) return;
+function ensureBackButton(onBack){
+  const existing = document.getElementById('backToModules');
+  if (existing) existing.remove();
   const btn = document.createElement('button');
   btn.className = 'nav-btn back';
   btn.id = 'backToModules';
   btn.textContent = '← Назад';
-  btn.addEventListener('click', () => {
-    const st = history.state;
-    if (st && st.view === 'numbers-tasks') showNumbersCatalog();
-    else if (st && st.view === 'numbers-catalog') showHome();
-    else showHome();
-  });
+  btn.addEventListener('click', onBack || (() => showHome()));
   navLinks.insertBefore(btn, navLinks.firstChild);
+}
+
+/* ============================================================
+   ★★★ КЛАССЫ — каталог ★★★
+   ============================================================ */
+function showKlassCatalog(opts = {}){
+  if (!opts.fromPop && !suppressHistory) pushView({view:'klass-catalog'});
+  homePage.style.display = 'none';
+  document.getElementById('backToModules')?.remove();
+
+  const cards = KLASS_LIST.map(k => `
+    <div class="klass-card" data-id="${k.id}" style="--klass-color: ${k.color};">
+      <div class="klass-icon">${k.icon}</div>
+      <div class="klass-title">${k.title}</div>
+      <div class="klass-subtitle">${k.subtitle}</div>
+      <div class="klass-arrow">→</div>
+    </div>
+  `).join('');
+
+  contentPages.innerHTML = `
+    <div class="klass-catalog-page">
+      <div class="klass-catalog-header">
+        <div class="section-tag green">Классы соединений</div>
+        <h2>Теория по классам органических веществ</h2>
+        <p>Выберите класс — откроется подробный конспект: строение, свойства, реакции, получение и применение.</p>
+      </div>
+      <div class="klass-grid" id="klassGrid">
+        ${cards}
+      </div>
+      <div style="text-align:center; margin-top:2rem;">
+        <button class="module-btn" style="max-width:300px; margin:0 auto; padding:0.8rem 1.5rem;" data-goto="home">← На главную</button>
+      </div>
+    </div>`;
+
+  contentPages.querySelector('[data-goto="home"]')?.addEventListener('click', () => showHome());
+
+  contentPages.querySelectorAll('.klass-card').forEach(card => {
+    const id = card.dataset.id;
+    card.addEventListener('click', () => showKlassDetail(id));
+    requestAnimationFrame(() => card.classList.add('visible'));
+    card.addEventListener('mousemove', e => {
+      const r = card.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width  - 0.5;
+      const y = (e.clientY - r.top)  / r.height - 0.5;
+      card.style.transform = `translateY(-8px) scale(1.02) rotateX(${y * -5}deg) rotateY(${x * 5}deg)`;
+    });
+    card.addEventListener('mouseleave', () => { card.style.transform = ''; });
+  });
+
+  ensureBackButton(() => showHome());
+  if (!opts.fromPop) window.scrollTo({top:0, behavior:'auto'});
+}
+
+/* ============================================================
+   ★★★ КЛАССЫ — детальная страница класса ★★★
+   ============================================================ */
+async function showKlassDetail(id, opts = {}){
+  const meta = KLASS_LIST.find(k => k.id === id);
+  if (!meta) return;
+
+  if (!opts.fromPop && !suppressHistory) pushView({view:'klass-detail', id});
+  homePage.style.display = 'none';
+  document.getElementById('backToModules')?.remove();
+
+  contentPages.innerHTML = `
+    <div class="number-tasks-page" style="--num-color: ${meta.color};">
+      <div class="number-tasks-header">
+        <div class="badge">${meta.icon} ${meta.title}</div>
+        <h2>${meta.title}</h2>
+        <div class="meta" id="klassMeta">
+          <span>🔄 Загрузка…</span>
+        </div>
+        <div class="header-actions" style="justify-content:center; display:flex; gap:0.7rem; margin-top:1.2rem; flex-wrap:wrap;">
+          <button class="module-btn" data-goto="catalog">← Все классы</button>
+          <button class="module-btn" data-goto="home">← На главную</button>
+        </div>
+      </div>
+      <div class="content-body" id="klassBody">
+        <p style="text-align:center;color:var(--ink-muted);padding:2rem;">🔄 Загрузка конспекта…</p>
+      </div>
+    </div>`;
+
+  contentPages.querySelector('[data-goto="catalog"]')?.addEventListener('click', () => showKlassCatalog());
+  contentPages.querySelector('[data-goto="home"]')?.addEventListener('click', () => showHome());
+
+  ensureBackButton(() => showKlassCatalog());
+  if (!opts.fromPop) window.scrollTo({top:0, behavior:'auto'});
+
+  const body = document.getElementById('klassBody');
+  const metaBlock = document.getElementById('klassMeta');
+
+  try {
+    const md = await fetchMarkdown(meta.file);
+    const html = parseSimpleMarkdown(md);
+    body.innerHTML = html;
+    metaBlock.innerHTML = `<span>📖 Конспект по классу</span><span>💡 Теория + примеры</span>`;
+  } catch(e){
+    body.innerHTML = `<div style="text-align:center;padding:2rem;">
+      <p style="color:var(--accent-red);font-weight:700;font-size:1.1rem;">⚠️ Не удалось загрузить конспект</p>
+      <p style="color:var(--ink-muted);margin-top:0.8rem;">Проверьте, что файл <code>${meta.file}</code> есть в репозитории.</p>
+      <p style="color:var(--ink-soft);font-size:0.85rem;margin-top:0.5rem;font-family:monospace;">${(e.message||'').slice(0,200)}</p>
+    </div>`;
+  }
 }
 
 /* ============================================================
@@ -1838,7 +2161,7 @@ function showNumbersCatalog(opts = {}){
     card.addEventListener('mouseleave', () => { card.style.transform = ''; });
   });
 
-  ensureBackButton();
+  ensureBackButton(() => showHome());
   if (!opts.fromPop) window.scrollTo({top:0, behavior:'auto'});
 }
 
@@ -1874,7 +2197,7 @@ async function showNumberTasks(num, opts = {}){
   contentPages.querySelector('[data-goto="catalog"]')?.addEventListener('click', () => showNumbersCatalog());
   contentPages.querySelector('[data-goto="home"]')?.addEventListener('click', () => showHome());
 
-  ensureBackButton();
+  ensureBackButton(() => showNumbersCatalog());
   if (!opts.fromPop) window.scrollTo({top:0, behavior:'auto'});
 
   const list = document.getElementById('numTasksList');
@@ -1923,7 +2246,6 @@ function parseNumberTasks(md, imagesDir){
     const s = raw.trim();
     if (!s) continue;
 
-    // "N. M" — номер задания в файле и номер ЕГЭ
     const numMatch = s.match(/^(\d+)[.)]\s+(\d+)\s*$/);
     if (numMatch){
       flushTask();
@@ -1938,7 +2260,6 @@ function parseNumberTasks(md, imagesDir){
 
     if (!current) continue;
 
-    // Картинка Obsidian: ![[filename]] или ![[filename|alt]]
     const imgMatch = s.match(/^!\[\[([^\]\|]+)(?:\|([^\]]+))?\]\]$/);
     if (imgMatch){
       const name = imgMatch[1].trim();
@@ -1953,7 +2274,6 @@ function parseNumberTasks(md, imagesDir){
       continue;
     }
 
-    // "- Ответ:" — открывает блок ответа
     if (/^\s*-\s*Ответ\s*:?\s*(.*)$/i.test(raw)){
       const inlineMatch = raw.match(/^\s*-\s*Ответ\s*:?\s*(.*)$/i);
       current.inAnswer = true;
@@ -1964,7 +2284,6 @@ function parseNumberTasks(md, imagesDir){
       continue;
     }
 
-    // Внутри блока ответа — забираем строки с большим отступом
     if (current.inAnswer){
       const indentMatch = raw.match(/^(\s*)/);
       const indent = indentMatch ? indentMatch[1].length : 0;
@@ -2055,7 +2374,7 @@ function escapeHtml(s){
 }
 
 /* ============================================================
-   fetchMarkdown — относительные пути + localStorage
+   fetchMarkdown
    ============================================================ */
 async function fetchMarkdown(filename){
   try {
@@ -2198,7 +2517,7 @@ async function showContentPage(num, title, filename, type, practiceIdx, opts = {
     });
   });
 
-  ensureBackButton();
+  ensureBackButton(() => showHome());
   if (!opts.fromPop) window.scrollTo({top:0, behavior:'auto'});
   const body = document.getElementById('page-body');
   const meta = document.getElementById('headerMeta');
@@ -2230,7 +2549,7 @@ async function showContentPage(num, title, filename, type, practiceIdx, opts = {
 }
 
 /* ============================================================
-   MARKDOWN PARSER (для теории/практики)
+   MARKDOWN PARSER
    ============================================================ */
 function parseMarkdown(md, isPractice){
   if (!md) return {html:'<p>Контент недоступен</p>', taskCount:0};
@@ -2742,6 +3061,8 @@ window.addEventListener('popstate', (e) => {
     else if (st.view === 'periodic') showPeriodic({fromPop:true});
     else if (st.view === 'numbers-catalog') showNumbersCatalog({fromPop:true});
     else if (st.view === 'numbers-tasks') showNumberTasks(st.num, {fromPop:true});
+    else if (st.view === 'klass-catalog') showKlassCatalog({fromPop:true});
+    else if (st.view === 'klass-detail') showKlassDetail(st.id, {fromPop:true});
     else if (st.view === 'content'){
       if (st.type === 'theory') showTheory(st.num, {fromPop:true});
       else showPractice(st.num, st.idx || 0, {fromPop:true});
@@ -2778,6 +3099,14 @@ document.getElementById('openNumbersBtn')?.addEventListener('click', () => showN
 document.getElementById('numbersBanner')?.addEventListener('click', (e) => {
   if (e.target.closest('#openNumbersBtn')) return;
   showNumbersCatalog();
+});
+
+document.getElementById('klassBtn')?.addEventListener('click', () => showKlassCatalog());
+document.getElementById('heroKlassBtn')?.addEventListener('click', () => showKlassCatalog());
+document.getElementById('openKlassBtn')?.addEventListener('click', () => showKlassCatalog());
+document.getElementById('klassBanner')?.addEventListener('click', (e) => {
+  if (e.target.closest('#openKlassBtn')) return;
+  showKlassCatalog();
 });
 
 const scrollProgress = document.getElementById('scrollProgress');
@@ -2975,20 +3304,6 @@ document.addEventListener('keydown', e => {
 })();
 
 /* ===================== DEBUG ===================== */
-window.debugParseTask = function(){
-  const tasks = document.querySelectorAll('.task, .num-task');
-  console.log('Найдено задач:', tasks.length);
-};
-window.debugNumberTasks = function(){
-  const cards = document.querySelectorAll('.num-task');
-  console.log('Карточек заданий:', cards.length);
-  cards.forEach((c, i) => {
-    const num = c.querySelector('.num-task-badge')?.textContent || '?';
-    const imgs = c.querySelectorAll('.num-task-image').length;
-    const ans = c.querySelectorAll('.num-task-answer-list li').length;
-    console.log(`#${i+1} Задание ${num}: картинок ${imgs}, ответов ${ans}`);
-  });
-};
 window.clearOrgChemCache = function(){
   Object.keys(localStorage).filter(k => k.startsWith(MD_STORAGE_PREFIX)).forEach(k => localStorage.removeItem(k));
   console.log('✓ Кэш .md очищен');
@@ -3002,6 +3317,9 @@ window.addEventListener('DOMContentLoaded', () => {
   if (h === '#numbers'){ suppressHistory = true; showNumbersCatalog({fromPop:true}); setTimeout(()=>{suppressHistory=false;},100); return; }
   const nm = h.match(/^#numbers-(\d+)$/);
   if (nm){ suppressHistory = true; showNumberTasks(parseInt(nm[1],10), {fromPop:true}); setTimeout(()=>{suppressHistory=false;},100); return; }
+  if (h === '#klass'){ suppressHistory = true; showKlassCatalog({fromPop:true}); setTimeout(()=>{suppressHistory=false;},100); return; }
+  const km = h.match(/^#klass-([a-z]+)$/i);
+  if (km){ suppressHistory = true; showKlassDetail(km[1], {fromPop:true}); setTimeout(()=>{suppressHistory=false;},100); return; }
   const m = h.match(/^#m([\w]+)-(theory|practice)(?:-(\d+))?$/);
   if (m){
     const num = m[1], type = m[2], idx = parseInt(m[3] || '0', 10);
