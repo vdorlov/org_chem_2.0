@@ -457,7 +457,7 @@
 
       // === ШАГ 5. Добавляем модель ===
       console.log('📦 Шаг 5: addModel(smiles, "smi")');
-      const model = viewer.addModel(smiles, 'smi');
+      const model = viewer.addModel(smiles, 'smiles');
 
       if (!model){
         throw new Error('addModel вернул null — не удалось распарсить SMILES: ' + smiles);
