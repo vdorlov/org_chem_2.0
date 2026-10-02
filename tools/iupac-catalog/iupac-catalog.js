@@ -281,10 +281,18 @@
       }
       const data = await r.json();
       const props = data?.PropertyTable?.Properties;
-      if (!props || !props[0]?.CanonicalSMILES){
-        throw new Error('SMILES не найден');
+      if (!props || !props[0]){
+        throw new Error('PubChem вернул пустой ответ для ' + iupacName);
       }
-      const smiles = props[0].CanonicalSMILES;
+      // PubChem может вернуть под разными ключами в зависимости от эндпоинта и версии API
+      const smiles = props[0].CanonicalSMILES
+                  || props[0].ConnectivitySMILES
+                  || props[0].SMILES
+                  || props[0].IsomericSMILES;
+      if (!smiles){
+        console.warn('Ответ PubChem не содержит SMILES:', props[0]);
+        throw new Error('SMILES не найден в ответе PubChem');
+      }
       smilesCache.set(key, smiles);
       return smiles;
     } catch(e){
