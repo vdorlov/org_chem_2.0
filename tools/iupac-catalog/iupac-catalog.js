@@ -299,7 +299,7 @@
 
       if (!r.ok){
         if (r.status === 404) throw new Error('PubChem не знает такое название: ' + iupacName);
-        if (r.status === 503) throw new Error('PubChem перегружен, подождите 10 секунд и попробуйте снова');
+        if (r.status === 503) throw new Error('PubChem перегружен, подождите 10 секунд');
         if (r.status === 429) throw new Error('PubChem временно ограничил запросы, подождите минуту');
         throw new Error(`PubChem вернул ошибку ${r.status}`);
       }
@@ -311,8 +311,7 @@
         throw new Error('PubChem вернул пустой ответ для ' + iupacName);
       }
 
-      // PubChem возвращает разные ключи в зависимости от эндпоинта и версии API.
-      // Принимаем любой доступный.
+      // PubChem возвращает разные ключи в зависимости от эндпоинта и версии API
       const smiles = props[0].CanonicalSMILES
                   || props[0].ConnectivitySMILES
                   || props[0].IsomericSMILES
@@ -379,7 +378,6 @@
     const modal = document.getElementById('iupacModal');
     if (modal) modal.classList.remove('open');
     document.body.style.overflow = '';
-    // Чистим viewer
     const viewerEl = document.getElementById('iupac-3d-viewer');
     if (viewerEl){
       viewerEl.innerHTML = '<div class="iupac-3d-status">🔄 Загрузка молекулы…</div>';
@@ -387,11 +385,17 @@
     currentViewer = null;
   }
 
+  /* ============================================================
+     ОТКРЫТИЕ МОДАЛКИ С 3D
+     Пошагово с логированием каждого этапа.
+     ============================================================ */
   async function openMoleculeModal(item, groupColor){
     ensureModal();
     const modal = document.getElementById('iupacModal');
     const modalContent = document.getElementById('iupacModalContent');
     const viewerEl = document.getElementById('iupac-3d-viewer');
+
+    console.log('🎬 openMoleculeModal:', item);
 
     modalContent.style.setProperty('--modal-color', groupColor);
     document.getElementById('iupacModalTitle').textContent = item.name;
@@ -402,36 +406,66 @@
     document.body.style.overflow = 'hidden';
 
     try {
-      // Параллельно грузим 3Dmol.js и SMILES
-      const [, smiles] = await Promise.all([
-        load3Dmol(),
-        fetchSmiles(item.iupac)
-      ]);
+      // === ШАГ 1. Загрузка 3Dmol.js ===
+      console.log('📦 Шаг 1: загрузка 3Dmol.js…');
+      await load3Dmol();
+      console.log('✅ 3Dmol.js загружен. window.$3Dmol =', typeof window.$3Dmol);
 
-      if (!window.$3Dmol){
-        throw new Error('3Dmol.js не загрузился — проверьте интернет');
+      if (!window.$3Dmol || typeof window.$3Dmol.createViewer !== 'function'){
+        throw new Error('3Dmol.js загрузился, но createViewer недоступен');
       }
 
-      // Готовим контейнер с ЯВНОЙ высотой (иначе WebGL framebuffer нулевой)
+      // === ШАГ 2. Получение SMILES из PubChem ===
+      console.log('📦 Шаг 2: запрос SMILES из PubChem для', item.iupac);
+      const smiles = await fetchSmiles(item.iupac);
+      console.log('✅ SMILES =', smiles);
+
+      // === ШАГ 3. Готовим контейнер ===
+      console.log('📦 Шаг 3: создание контейнера');
       viewerEl.innerHTML = '';
+
       const container = document.createElement('div');
-      container.style.width = '100%';
+      container.id = 'iupac-3d-canvas';
+      container.style.width = '600px';
       container.style.height = '480px';
-      container.style.position = 'relative';
+      container.style.maxWidth = '100%';
+      container.style.background = 'rgba(255,255,255,0.03)';
+      container.style.borderRadius = '12px';
       viewerEl.appendChild(container);
 
-      // Ждём, пока контейнер получит размеры в layout
-      await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
+      // Ждём, пока браузер рассчитает layout
+      await new Promise(r => setTimeout(r, 50));
 
-      // Создаём viewer
+      const rect = container.getBoundingClientRect();
+      console.log('📐 Размер контейнера:', rect.width, '×', rect.height);
+
+      if (rect.width < 10 || rect.height < 10){
+        throw new Error('Контейнер имеет нулевой размер: ' + rect.width + '×' + rect.height);
+      }
+
+      // === ШАГ 4. Создаём viewer ===
+      console.log('📦 Шаг 4: createViewer');
       const viewer = window.$3Dmol.createViewer(container, {
-        backgroundColor: 'rgba(0,0,0,0)'
+        backgroundColor: '#0a0e27'
       });
-      currentViewer = viewer;
 
-      // Правильный способ загрузки SMILES в 3Dmol:
-      // addModel(строка, формат). Формат 'smi' — сокращение для SMILES.
-      viewer.addModel(smiles, 'smi');
+      if (!viewer){
+        throw new Error('createViewer вернул null');
+      }
+      currentViewer = viewer;
+      console.log('✅ viewer создан');
+
+      // === ШАГ 5. Добавляем модель ===
+      console.log('📦 Шаг 5: addModel(smiles, "smi")');
+      const model = viewer.addModel(smiles, 'smi');
+
+      if (!model){
+        throw new Error('addModel вернул null — не удалось распарсить SMILES: ' + smiles);
+      }
+      console.log('✅ модель добавлена');
+
+      // === ШАГ 6. Стили и рендер ===
+      console.log('📦 Шаг 6: стили + рендер');
       viewer.setStyle({}, {
         stick: { radius: 0.15, colorscheme: 'Jmol' },
         sphere: { scale: 0.25, colorscheme: 'Jmol' }
@@ -439,14 +473,19 @@
       viewer.zoomTo();
       viewer.render();
       viewer.spin('y', 0.5);
+      console.log('🎉 Молекула отрисована');
 
     } catch(e){
-      console.error('Ошибка 3D-просмотра:', e);
+      console.error('❌ ОШИБКА 3D:', e);
+      console.error('❌ Сообщение:', e.message);
+      console.error('❌ Стек:', e.stack);
       viewerEl.innerHTML = `<div class="iupac-3d-error">
-        ⚠️ ${escapeHtml(e.message || 'Не удалось загрузить молекулу')}<br>
-        <small style="color:var(--ink-muted);margin-top:0.5rem;display:block;">
-          Попробуйте ещё раз или проверьте подключение к интернету.
-        </small>
+        <div style="font-weight:700;margin-bottom:0.5rem;">⚠️ Не удалось загрузить молекулу</div>
+        <div style="font-size:0.85rem;color:var(--ink-muted);margin-bottom:0.8rem;">
+          ${escapeHtml(e.message || 'Неизвестная ошибка')}
+        </div>
+        <button class="module-btn" style="padding:0.5rem 1rem;font-size:0.85rem;"
+          onclick="event.stopPropagation(); document.getElementById('iupacModal').classList.remove('open'); document.body.style.overflow='';">Закрыть</button>
       </div>`;
     }
   }
@@ -498,14 +537,12 @@
 
     container.innerHTML = html || '<div class="iupac-empty">По вашему запросу ничего не найдено</div>';
 
-    // Клик по шапке группы — collapse
     container.querySelectorAll('.iupac-group-header').forEach(h => {
       h.addEventListener('click', () => {
         h.closest('.iupac-group').classList.toggle('collapsed');
       });
     });
 
-    // Клик по кнопке 3D
     container.querySelectorAll('.iupac-3d-btn').forEach(btn => {
       btn.addEventListener('click', async () => {
         const groupId = btn.dataset.group;
