@@ -1,1 +1,201 @@
+/* Конструктор формул */
+.fb-layout{
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 1.2rem;
+}
+@media (max-width: 900px){
+  .fb-layout{ grid-template-columns: 1fr; }
+}
 
+/* Палитра элементов */
+.fb-palette{
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+  gap: 0.5rem;
+  margin-bottom: 1.2rem;
+}
+.fb-element{
+  aspect-ratio: 1;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: var(--bg-card);
+  color: var(--ink);
+  font-family: 'Exo 2', sans-serif;
+  font-weight: 800;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: all var(--transition);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+}
+.fb-element:hover{
+  transform: translateY(-3px) scale(1.05);
+  border-color: var(--el-color, var(--accent-cyan));
+  background: color-mix(in srgb, var(--el-color, var(--accent-cyan)) 12%, var(--bg-card));
+  box-shadow: 0 0 16px color-mix(in srgb, var(--el-color, var(--accent-cyan)) 40%, transparent);
+}
+.fb-element .fb-sym{
+  font-size: 1.3rem;
+  line-height: 1;
+  color: var(--el-color, var(--ink));
+}
+.fb-element .fb-name{
+  font-size: 0.6rem;
+  font-weight: 600;
+  color: var(--ink-muted);
+  margin-top: 4px;
+  text-align: center;
+  line-height: 1.1;
+}
+
+/* Сборочная область */
+.fb-canvas{
+  background: var(--bg-deep);
+  border: 2px dashed var(--line);
+  border-radius: 16px;
+  padding: 1.5rem;
+  min-height: 200px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  align-items: flex-start;
+  align-content: flex-start;
+  transition: border-color var(--transition);
+}
+.fb-canvas.dragover{
+  border-color: var(--accent-cyan);
+  background: color-mix(in srgb, var(--accent-cyan) 5%, var(--bg-deep));
+}
+
+/* Атом в собранной молекуле */
+.fb-atom{
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0.5rem 0.7rem;
+  background: var(--bg-card);
+  border: 2px solid var(--el-color, var(--accent-cyan));
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all var(--transition);
+  animation: fbFadeIn 0.25s ease-out;
+}
+@keyframes fbFadeIn{
+  from{ opacity: 0; transform: scale(0.8); }
+  to  { opacity: 1; transform: scale(1); }
+}
+.fb-atom:hover{
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3),
+              0 0 14px color-mix(in srgb, var(--el-color, var(--accent-cyan)) 40%, transparent);
+}
+.fb-atom-sym{
+  font-family: 'Exo 2', sans-serif;
+  font-weight: 800;
+  font-size: 1.4rem;
+  color: var(--el-color, var(--ink));
+  line-height: 1;
+}
+.fb-atom-count{
+  font-size: 0.75rem;
+  color: var(--accent-amber);
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+}
+.fb-atom-count.hidden{
+  visibility: hidden;
+}
+.fb-atom-close{
+  position: absolute;
+  top: -8px; right: -8px;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: var(--accent-red);
+  color: #fff;
+  border: none;
+  font-size: 11px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0;
+  transition: opacity var(--transition);
+}
+.fb-atom:hover .fb-atom-close{ opacity: 1; }
+
+/* Панель справа */
+.fb-panel{
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 1.2rem;
+  position: sticky;
+  top: 6rem;
+  align-self: start;
+}
+.fb-result-formula{
+  font-family: 'Exo 2', sans-serif;
+  font-size: 1.6rem;
+  font-weight: 800;
+  text-align: center;
+  color: var(--accent-cyan);
+  padding: 1rem;
+  background: var(--bg-deep);
+  border-radius: 12px;
+  margin-bottom: 1rem;
+  min-height: 3rem;
+  word-break: break-all;
+  letter-spacing: 0.5px;
+}
+.fb-result-formula .empty{
+  color: var(--ink-muted);
+  font-size: 1rem;
+  font-weight: 400;
+  font-style: italic;
+}
+.fb-info{
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+.fb-info-row{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0.7rem;
+  background: var(--bg-hover);
+  border-radius: 8px;
+  font-size: 0.9rem;
+}
+.fb-info-row .label{
+  color: var(--ink-muted);
+}
+.fb-info-row .value{
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  color: var(--ink);
+}
+.fb-info-row .value.big{
+  color: var(--accent-cyan);
+  font-size: 1.1rem;
+}
+
+.fb-actions{
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.fb-empty-hint{
+  color: var(--ink-muted);
+  font-style: italic;
+  font-size: 0.9rem;
+  text-align: center;
+  padding: 3rem 1rem;
+}
