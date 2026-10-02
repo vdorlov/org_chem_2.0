@@ -3,8 +3,7 @@
    Экспортирует window.__renderIupacCatalog(containerEl)
 
    Лицензия 3Dmol.js: BSD (свободное использование)
-   Данные: PubChem PUG REST API (NIH, Public Domain)
-          NCI Cactus (NIH, Public Domain)
+   Данные: NCI Cactus (NIH, Public Domain)
    ============================================================ */
 (function(){
   'use strict';
@@ -262,9 +261,7 @@
   }
 
   /* ============================================================
-     ЗАПРОС SDF ИЗ НЕСКОЛЬКИХ ИСТОЧНИКОВ
-     PubChem сначала, если не сработает — NCI Cactus
-     Кэш: localStorage (переживает закрытие браузера)
+     КЭШ SDF В LOCALSTORAGE
      ============================================================ */
   const SDF_STORAGE_PREFIX = 'orgchem-sdf:';
 
@@ -281,98 +278,63 @@
     } catch(e){ /* переполнение — игнорируем */ }
   }
 
-  // Обёртка над fetch с таймаутом (не более 8 секунд на источник)
-  async function fetchWithTimeout(url, timeoutMs = 8000){
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), timeoutMs);
-    try {
-      const r = await fetch(url, {signal: controller.signal});
-      return r;
-    } finally {
-      clearTimeout(timer);
-    }
-  }
-
-  // Источники SDF по приоритету.
-  // ВАЖНО: PubChem SDF отдаётся как "attachment" (Content-Disposition),
-  // и на некоторых мобильных браузерах fetch().text() зависает.
-  // Поэтому первым идёт NCI Cactus — он отдаёт SDF как text/plain.
-  const SDF_SOURCES = [
-    {
-      name: 'NCI Cactus',
-      // Cactus принимает название → возвращает SDF как text/plain
-      url: (name) => `https://cactus.nci.nih.gov/chemical/structure/${encodeURIComponent(name)}/sdf`
-    },
-    {
-      name: 'PubChem',
-      url: (name) => `https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/${encodeURIComponent(name)}/SDF?record_type=3d`
-    }
-  ];
-
+  /* ============================================================
+     ЗАПРОС SDF ИЗ NCI CACTUS
+     Cactus отдаёт SDF как text/plain — читается без проблем
+     (в отличие от PubChem, где Content-Disposition: attachment)
+     ============================================================ */
   async function fetchSDF(iupacName){
     const key = iupacName.toLowerCase();
 
-    // 1. Проверяем localStorage
+    // 1. Из кэша
     const cached = sdfCacheGet(key);
     if (cached){
       console.log('📦 SDF из кэша:', iupacName, '→ длина', cached.length);
       return cached;
     }
 
-    // 2. Пробуем источники по очереди
-    let lastError = null;
+    // 2. Запрос к NCI Cactus
+    const url = `https://cactus.nci.nih.gov/chemical/structure/${encodeURIComponent(iupacName)}/sdf`;
+    console.log('🔍 NCI Cactus:', url);
 
-    for (const source of SDF_SOURCES){
-      const url = source.url(iupacName);
-      console.log(`🔍 ${source.name}:`, url);
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 10000);
 
-      try {
-        const r = await fetchWithTimeout(url, 8000);
-        console.log(`📥 ${source.name}: статус ${r.status}`);
+    try {
+      const r = await fetch(url, {signal: controller.signal, cache: 'force-cache'});
+      clearTimeout(timer);
+      console.log('📥 Cactus статус:', r.status);
 
-        if (!r.ok){
-          lastError = new Error(`${source.name}: HTTP ${r.status}`);
-          continue;
-        }
-
-        const sdf = await r.text();
-        console.log(`📄 ${source.name}: длина ответа ${sdf.length}`);
-
-        // Проверяем, что это действительно SDF (а не HTML или JSON с ошибкой)
-        if (!sdf || sdf.length < 50){
-          lastError = new Error(`${source.name}: слишком короткий ответ`);
-          continue;
-        }
-        if (sdf.trim().startsWith('<') || sdf.trim().startsWith('{')){
-          lastError = new Error(`${source.name}: вернул не SDF`);
-          continue;
-        }
-        if (!/\$\$\$\$/.test(sdf)){
-          lastError = new Error(`${source.name}: нет завершающего маркера SDF`);
-          continue;
-        }
-
-        console.log(`✅ SDF получен из ${source.name}:`, iupacName, '→ длина', sdf.length);
-        sdfCacheSet(key, sdf);
-        return sdf;
-
-      } catch(e){
-        console.warn(`⚠️ ${source.name} не сработал:`, e.message);
-        if (e.name === 'AbortError'){
-          lastError = new Error(`${source.name}: таймаут 8 секунд`);
-        } else {
-          lastError = new Error(`${source.name}: ${e.message}`);
-        }
+      if (!r.ok){
+        throw new Error(`HTTP ${r.status}`);
       }
-    }
 
-    // Все источники не сработали
-    console.error('❌ fetchSDF: все источники исчерпаны:', lastError);
-    throw new Error('Не удалось получить 3D-структуру. ' + (lastError ? lastError.message : ''));
+      const sdf = await r.text();
+      console.log('📄 Cactus длина ответа:', sdf.length);
+
+      if (!sdf || sdf.length < 50){
+        throw new Error('слишком короткий ответ (' + (sdf ? sdf.length : 0) + ' байт)');
+      }
+      if (!/\$\$\$\$/.test(sdf)){
+        console.warn('⚠️ В ответе Cactus нет маркера конца SDF, но продолжаем');
+      }
+
+      console.log('✅ SDF получен:', iupacName, '→ длина', sdf.length);
+      sdfCacheSet(key, sdf);
+      return sdf;
+
+    } catch(e){
+      clearTimeout(timer);
+      console.error('❌ fetchSDF (Cactus):', e);
+      if (e.name === 'AbortError'){
+        throw new Error('NCI Cactus не ответил за 10 секунд');
+      }
+      throw new Error('Не удалось получить 3D-структуру: ' + e.message);
+    }
   }
 
   /* ============================================================
-     МОДАЛКА С 3D
+     МОДАЛКА
      ============================================================ */
   let modalInited = false;
   let currentViewer = null;
@@ -397,7 +359,7 @@
           <div class="iupac-3d-status">🔄 Загрузка молекулы…</div>
         </div>
         <div class="iupac-modal-footer">
-          <span>Данные: <a href="https://pubchem.ncbi.nlm.nih.gov/" target="_blank" rel="noopener">PubChem</a> / <a href="https://cactus.nci.nih.gov/" target="_blank" rel="noopener">NCI Cactus</a> · <a href="https://3dmol.org/" target="_blank" rel="noopener">3Dmol.js</a> (BSD)</span>
+          <span>Данные: <a href="https://cactus.nci.nih.gov/" target="_blank" rel="noopener">NCI Cactus</a> · <a href="https://3dmol.org/" target="_blank" rel="noopener">3Dmol.js</a> (BSD)</span>
           <span>🖱 Вращайте мышью · Колесо — масштаб</span>
         </div>
       </div>`;
@@ -426,6 +388,7 @@
 
   /* ============================================================
      ОТКРЫТИЕ МОДАЛКИ С 3D
+     Каждый шаг выводится прямо в модалку — чтобы видеть, где стоп
      ============================================================ */
   async function openMoleculeModal(item, groupColor){
     ensureModal();
@@ -433,68 +396,75 @@
     const modalContent = document.getElementById('iupacModalContent');
     const viewerEl = document.getElementById('iupac-3d-viewer');
 
-    console.log('🎬 openMoleculeModal:', item);
+    // Отладочный статус прямо в модалке
+    const log = (html) => {
+      console.log('[IUPAC]', html.replace(/<[^>]+>/g, ' '));
+      if (viewerEl){
+        viewerEl.innerHTML = `<div class="iupac-3d-status" style="padding:2rem 1rem;text-align:center;font-family:monospace;font-size:0.85rem;line-height:2;">${html}</div>`;
+      }
+    };
 
     modalContent.style.setProperty('--modal-color', groupColor);
     document.getElementById('iupacModalTitle').textContent = item.name;
     document.getElementById('iupacModalFormula').textContent = item.formula || '';
 
-    viewerEl.innerHTML = '<div class="iupac-3d-status">🔄 Получение 3D-структуры…</div>';
     modal.classList.add('open');
     document.body.style.overflow = 'hidden';
 
     try {
-      // === ШАГ 1. Загрузка 3Dmol.js ===
-      console.log('📦 Шаг 1: загрузка 3Dmol.js…');
+      // ШАГ 1 — 3Dmol.js
+      log('📦 Шаг 1/6: загрузка 3Dmol.js…');
       await load3Dmol();
-      console.log('✅ 3Dmol.js загружен');
-
       if (!window.$3Dmol || typeof window.$3Dmol.createViewer !== 'function'){
-        throw new Error('3Dmol.js не загрузился');
+        throw new Error('3Dmol.js загрузился, но createViewer недоступен');
       }
+      log('✅ Шаг 1: 3Dmol.js загружен');
 
-      // === ШАГ 2. Получение SDF ===
-      console.log('📦 Шаг 2: запрос SDF для', item.iupac);
+      // ШАГ 2 — SDF из Cactus
+      log('📦 Шаг 2/6: запрос SDF из NCI Cactus…<br><span style="font-size:0.75rem;color:var(--ink-muted)">' + item.iupac + '</span>');
       const sdf = await fetchSDF(item.iupac);
-      console.log('✅ SDF длина =', sdf.length);
+      log('✅ Шаг 2: SDF получен<br><span style="font-size:0.75rem;color:var(--ink-muted)">Размер: ' + sdf.length + ' байт</span>');
 
-      // === ШАГ 3. Контейнер ===
-      console.log('📦 Шаг 3: создание контейнера');
+      // ШАГ 3 — контейнер
+      log('📦 Шаг 3/6: создание контейнера…');
+      await new Promise(r => setTimeout(r, 80));
+
       viewerEl.innerHTML = '';
-
       const container = document.createElement('div');
       container.id = 'iupac-3d-canvas';
-      container.style.width = '600px';
+      container.style.width = '100%';
       container.style.height = '480px';
-      container.style.maxWidth = '100%';
       container.style.background = 'rgba(255,255,255,0.03)';
       container.style.borderRadius = '12px';
+      container.style.position = 'relative';
       viewerEl.appendChild(container);
 
-      await new Promise(r => setTimeout(r, 60));
+      await new Promise(r => setTimeout(r, 80));
 
       const rect = container.getBoundingClientRect();
-      console.log('📐 Размер контейнера:', rect.width, '×', rect.height);
+      log('✅ Шаг 3: контейнер ' + Math.round(rect.width) + '×' + Math.round(rect.height) + ' px');
 
       if (rect.width < 10 || rect.height < 10){
-        throw new Error('Контейнер имеет нулевой размер');
+        throw new Error('Контейнер имеет нулевой размер: ' + rect.width + '×' + rect.height);
       }
 
-      // === ШАГ 4. viewer ===
-      console.log('📦 Шаг 4: createViewer');
+      // ШАГ 4 — viewer
+      log('📦 Шаг 4/6: createViewer…');
       const viewer = window.$3Dmol.createViewer(container, {
         backgroundColor: '#0a0e27'
       });
       if (!viewer) throw new Error('createViewer вернул null');
       currentViewer = viewer;
+      log('✅ Шаг 4: viewer создан');
 
-      // === ШАГ 5. Модель из SDF ===
-      console.log('📦 Шаг 5: addModel(sdf, "sdf")');
+      // ШАГ 5 — addModel
+      log('📦 Шаг 5/6: парсинг SDF…');
       const model = viewer.addModel(sdf, 'sdf');
-      if (!model) throw new Error('addModel вернул null');
+      if (!model) throw new Error('addModel вернул null — не удалось распарсить SDF');
+      log('✅ Шаг 5: модель добавлена');
 
-      // === ШАГ 6. Стили ===
-      console.log('📦 Шаг 6: стили + рендер');
+      // ШАГ 6 — рендер
+      log('📦 Шаг 6/6: рендер…');
       viewer.setStyle({}, {
         stick: { radius: 0.15, colorscheme: 'Jmol' },
         sphere: { scale: 0.25, colorscheme: 'Jmol' }
@@ -502,18 +472,27 @@
       viewer.zoomTo();
       viewer.render();
       viewer.spin('y', 0.5);
-      console.log('🎉 Молекула отрисована');
+
+      // Прячем статус — теперь canvas должен быть виден
+      await new Promise(r => setTimeout(r, 200));
+      const statusEl = viewerEl.querySelector('.iupac-3d-status');
+      if (statusEl) statusEl.remove();
 
     } catch(e){
       console.error('❌ ОШИБКА 3D:', e);
-      viewerEl.innerHTML = `<div class="iupac-3d-error">
-        <div style="font-weight:700;margin-bottom:0.5rem;">⚠️ Не удалось загрузить молекулу</div>
-        <div style="font-size:0.85rem;color:var(--ink-muted);margin-bottom:0.8rem;">
-          ${escapeHtml(e.message || 'Неизвестная ошибка')}
-        </div>
-        <button class="module-btn" style="padding:0.5rem 1rem;font-size:0.85rem;"
-          onclick="event.stopPropagation(); document.getElementById('iupacModal').classList.remove('open'); document.body.style.overflow='';">Закрыть</button>
-      </div>`;
+      if (viewerEl){
+        viewerEl.innerHTML = `<div class="iupac-3d-error" style="padding:2rem 1rem;text-align:center;">
+          <div style="font-weight:700;margin-bottom:0.5rem;color:var(--accent-red);">⚠️ Ошибка</div>
+          <div style="font-size:0.88rem;color:var(--ink);margin-bottom:0.5rem;font-family:monospace;word-break:break-all;line-height:1.5;">
+            ${escapeHtml(e.message || 'Неизвестная ошибка')}
+          </div>
+          <div style="font-size:0.75rem;color:var(--ink-muted);margin-top:1rem;">
+            Проверьте интернет и попробуйте снова.
+          </div>
+          <button class="module-btn" style="margin-top:1.2rem;padding:0.5rem 1.2rem;font-size:0.85rem;"
+            onclick="event.stopPropagation(); document.getElementById('iupacModal').classList.remove('open'); document.body.style.overflow='';">Закрыть</button>
+        </div>`;
+      }
     }
   }
 
