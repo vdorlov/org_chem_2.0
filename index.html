@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Органическая химия 2.0 — Подготовка к ЕГЭ</title>
-<meta name="description" content="Интерактивный курс подготовки к ЕГЭ по органической химии: теория, классы соединений, тренировочные задания, ЕГЭ по номерам и таблица Менделеева.">
+<meta name="description" content="Интерактивный курс подготовки к ЕГЭ по органической химии: теория, классы соединений, ЕГЭ по номерам, таблица Менделеева и таблица растворимости.">
 
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%2322d3ee'/%3E%3Cstop offset='1' stop-color='%23b47cf0'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx='32' cy='32' r='6' fill='url(%23g)'/%3E%3Cellipse cx='32' cy='32' rx='24' ry='9' fill='none' stroke='url(%23g)' stroke-width='2.5' transform='rotate(30 32 32)'/%3E%3Cellipse cx='32' cy='32' rx='24' ry='9' fill='none' stroke='url(%23g)' stroke-width='2.5' transform='rotate(-30 32 32)'/%3E%3Cellipse cx='32' cy='32' rx='24' ry='9' fill='none' stroke='url(%23g)' stroke-width='2.5' transform='rotate(90 32 32)'/%3E%3C/svg%3E">
 <meta name="theme-color" content="#0a0e27">
@@ -147,6 +147,16 @@ body{
   background:color-mix(in srgb, var(--accent-green) 12%, transparent);
   border-color:var(--accent-green);
   box-shadow:0 0 14px color-mix(in srgb, var(--accent-green) 35%, transparent);
+}
+.nav-btn.solvability{
+  border-color:color-mix(in srgb, var(--accent-blue) 45%, transparent);
+  color:var(--accent-blue);
+  display:inline-flex; align-items:center; gap:0.4rem;
+}
+.nav-btn.solvability:hover{
+  background:color-mix(in srgb, var(--accent-blue) 12%, transparent);
+  border-color:var(--accent-blue);
+  box-shadow:0 0 14px color-mix(in srgb, var(--accent-blue) 35%, transparent);
 }
 .theme-toggle{
   width:42px; height:42px; border-radius:50%;
@@ -315,6 +325,11 @@ body{
   background:color-mix(in srgb, var(--accent-green) 12%, transparent);
   border-color:color-mix(in srgb, var(--accent-green) 35%, transparent);
   color:var(--accent-green);
+}
+.section-tag.blue{
+  background:color-mix(in srgb, var(--accent-blue) 12%, transparent);
+  border-color:color-mix(in srgb, var(--accent-blue) 35%, transparent);
+  color:var(--accent-blue);
 }
 .section-title{
   font-family:'Exo 2',sans-serif; font-size:var(--step-2);
@@ -572,6 +587,76 @@ body{
 .klass-deco span:nth-child(2){ top: 70%; left: 15%; animation-delay: 1.5s; font-size: 6rem; }
 .klass-deco span:nth-child(3){ top: 15%; right: 10%;animation-delay: 3s;   font-size: 5.5rem; }
 .klass-deco span:nth-child(4){ top: 65%; right: 12%;animation-delay: 4.5s; font-size: 6.5rem; }
+
+/* ========== SOLVABILITY banner ========== */
+.solvability-banner{
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  text-align: center;
+  padding: clamp(2rem, 5vw, 3.5rem) clamp(1.5rem, 4vw, 3rem);
+  background: linear-gradient(135deg,
+    color-mix(in srgb, var(--accent-blue) 15%, var(--bg-card)),
+    color-mix(in srgb, var(--accent-cyan) 15%, var(--bg-card)));
+  border-radius: var(--radius);
+  border: 1px solid color-mix(in srgb, var(--accent-blue) 30%, var(--line));
+  position: relative; overflow: hidden;
+  cursor: pointer;
+  transition: transform var(--transition), box-shadow var(--transition);
+  max-width: 900px; margin: 0 auto;
+}
+.solvability-banner:hover{
+  transform: translateY(-4px);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.35),
+              0 0 30px color-mix(in srgb, var(--accent-blue) 30%, transparent);
+}
+.solvability-banner::before{
+  content:''; position:absolute; inset:-50%;
+  background: conic-gradient(from 0deg,
+    transparent 0deg,
+    color-mix(in srgb, var(--accent-blue) 20%, transparent) 90deg,
+    transparent 180deg,
+    color-mix(in srgb, var(--accent-cyan) 20%, transparent) 270deg,
+    transparent 360deg);
+  animation: rotateBg 20s linear infinite;
+  z-index: 0;
+}
+.solvability-banner > *{ position: relative; z-index: 1; }
+.solvability-banner h3{
+  font-family:'Exo 2',sans-serif; font-size: var(--step-1);
+  font-weight: 800; margin-bottom: 0.7rem;
+  background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
+  -webkit-background-clip:text; background-clip:text;
+  -webkit-text-fill-color:transparent; color: transparent;
+}
+.solvability-banner p{
+  color: var(--ink-muted); max-width: 500px;
+  margin-bottom: 1.5rem; line-height: 1.55;
+}
+.solvability-banner .btn{
+  padding: 0.85rem 2rem;
+  background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
+  color: #fff;
+  box-shadow: 0 0 20px color-mix(in srgb, var(--accent-blue) 45%, transparent);
+}
+[data-theme="dark"] .solvability-banner .btn{color: var(--bg-deep)}
+.solvability-banner .btn:hover{ transform: translateY(-3px); }
+
+.solvability-deco{
+  position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 0;
+}
+.solvability-deco span{
+  position: absolute;
+  font-family: 'Exo 2', sans-serif;
+  font-weight: 800;
+  color: color-mix(in srgb, var(--accent-blue) 50%, transparent);
+  opacity: 0.06;
+  font-size: 5rem; line-height: 1;
+  animation: numFloat 12s ease-in-out infinite;
+}
+.solvability-deco span:nth-child(1){ top: 8%;  left: 8%;  animation-delay: 0s;   font-size: 5rem; }
+.solvability-deco span:nth-child(2){ top: 68%; left: 14%; animation-delay: 1.5s; font-size: 6rem; }
+.solvability-deco span:nth-child(3){ top: 12%; right: 12%;animation-delay: 3s;   font-size: 5.5rem; }
+.solvability-deco span:nth-child(4){ top: 62%; right: 10%;animation-delay: 4.5s; font-size: 6.5rem; }
 
 /* КАТАЛОГ НОМЕРОВ */
 .numbers-catalog-page{
@@ -1238,10 +1323,10 @@ footer a:hover{text-decoration:underline}
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:0.01ms!important;animation-iteration-count:1!important;transition-duration:0.01ms!important}
   html{scroll-behavior:auto}
-  .atom, .numbers-banner::before, .numbers-nums-deco span, .klass-banner::before, .klass-deco span{animation:none}
+  .atom, .numbers-banner::before, .numbers-nums-deco span, .klass-banner::before, .klass-deco span, .solvability-banner::before, .solvability-deco span{animation:none}
 }
 @media print{
-  .navbar,.scroll-top,#molecule-canvas,.scroll-indicator,.scroll-progress,.answer-toggle,.theme-toggle,.content-sidebar,.module-hint,.num-task-answer-toggle,.numbers-banner,.klass-banner{display:none!important}
+  .navbar,.scroll-top,#molecule-canvas,.scroll-indicator,.scroll-progress,.answer-toggle,.theme-toggle,.content-sidebar,.module-hint,.num-task-answer-toggle,.numbers-banner,.klass-banner,.solvability-banner{display:none!important}
   body{background:#fff; color:#000}
   .content-body{box-shadow:none; border:none; padding:0; background:none}
   .content-page{display:block!important; padding:0}
@@ -1264,7 +1349,8 @@ sub,sup{font-size:0.75em; line-height:0}
   <div class="nav-links" id="navLinks">
     <button class="nav-btn klass" id="klassBtn">📚 Классы</button>
     <button class="nav-btn numbers" id="numbersBtn">🎯 ЕГЭ по номерам</button>
-    <button class="nav-btn periodic" id="periodicBtn">🧪 Таблица Менделеева</button>
+    <button class="nav-btn solvability" id="solvabilityBtn">🧪 Растворимость</button>
+    <button class="nav-btn periodic" id="periodicBtn">⚛ Таблица Менделеева</button>
     <button class="nav-btn" data-nav="modules">Модули</button>
     <button class="nav-btn" data-nav="about">О курсе</button>
     <button class="theme-toggle" id="themeToggle" title="Сменить тему" aria-label="Сменить тему">🌙</button>
@@ -1293,7 +1379,7 @@ sub,sup{font-size:0.75em; line-height:0}
     </div>
     <div class="hero-badge">Подготовка к ЕГЭ по химии</div>
     <h1>Органическая химия<br><span class="gradient-text">2.0</span></h1>
-    <p class="hero-subtitle">Интерактивный курс для подготовки к ЕГЭ. Классы соединений, теория, ЕГЭ по номерам и таблица Менделеева — всё в одном месте.</p>
+    <p class="hero-subtitle">Интерактивный курс для подготовки к ЕГЭ. Классы соединений, теория, ЕГЭ по номерам, таблица Менделеева и таблица растворимости.</p>
     <div class="hero-stats">
       <div class="stat-item"><div class="stat-number" data-count="11">0</div><div class="stat-label">модулей</div></div>
       <div class="stat-item"><div class="stat-number" data-count="13">0</div><div class="stat-label">классов</div></div>
@@ -1357,6 +1443,26 @@ sub,sup{font-size:0.75em; line-height:0}
     </div>
   </section>
 
+  <section class="section" id="solvability-section">
+    <div class="section-header">
+      <div class="section-tag blue">Таблица растворимости</div>
+      <h2 class="section-title">Кислоты, основания, соли</h2>
+      <p class="section-desc">Интерактивная таблица — кликните по ячейке, чтобы увидеть название, формулу и пример реакции</p>
+    </div>
+
+    <div class="solvability-banner" id="solvabilityBanner">
+      <div class="solvability-deco" aria-hidden="true">
+        <span>Ag</span>
+        <span>Cl</span>
+        <span>Na</span>
+        <span>SO₄</span>
+      </div>
+      <h3>🧪 Таблица растворимости</h3>
+      <p>22 катиона × 14 анионов, обозначения Р / Н / М, примеры реакций и качественные реакции на ионы.</p>
+      <button class="btn" id="openSolvabilityBtn">Открыть таблицу →</button>
+    </div>
+  </section>
+
   <section class="section" id="about">
     <div class="section-header">
       <div class="section-tag">О курсе</div>
@@ -1366,8 +1472,8 @@ sub,sup{font-size:0.75em; line-height:0}
       <p><strong>1. Изучайте теорию последовательно.</strong> Каждый блок построен на знаниях предыдущего. Не пропускайте темы — органическая химия является единой системой.</p>
       <p><strong>2. Используйте справочник по классам.</strong> Откройте раздел «Классы соединений» — там вся теория по каждому классу в удобном виде.</p>
       <p><strong>3. Тренируйтесь по номерам ЕГЭ.</strong> Откройте раздел «ЕГЭ по номерам» — там задания как на реальном экзамене.</p>
-      <p><strong>4. Проверяйте себя.</strong> Ответы скрыты до клика — сначала попробуйте решить самостоятельно.</p>
-      <p><strong>5. Используйте таблицу Менделеева.</strong> Она всегда доступна в шапке сайта.</p>
+      <p><strong>4. Работайте со справочниками.</strong> Таблица Менделеева и таблица растворимости всегда доступны в шапке сайта.</p>
+      <p><strong>5. Проверяйте себя.</strong> Ответы скрыты до клика — сначала попробуйте решить самостоятельно.</p>
       <hr>
       <p style="text-align:center;color:var(--ink-muted);margin-bottom:0;">Удачи в подготовке к ЕГЭ! 🎓</p>
     </div>
@@ -1676,6 +1782,7 @@ if (!history.state || !history.state.orgchem){
 function buildHashFor(state){
   if (!state || state.view === 'home') return location.pathname + location.search;
   if (state.view === 'periodic') return '#periodic';
+  if (state.view === 'solvability') return '#solvability';
   if (state.view === 'numbers-catalog') return '#numbers';
   if (state.view === 'numbers-tasks') return '#numbers-' + state.num;
   if (state.view === 'klass-catalog') return '#klass';
@@ -1730,11 +1837,8 @@ function ensureBackButton(onBack){
 }
 
 /* ============================================================
-   ★★★ ТАБЛИЦА МЕНДЕЛЕЕВА — ЛЕНИВАЯ ЗАГРУЗКА ★★★
+   ЛЕНИВАЯ ЗАГРУЗКА ВНЕШНИХ МОДУЛЕЙ (Менделеев + Растворимость)
    ============================================================ */
-let periodicAssetsLoaded = false;
-let periodicLoadPromise = null;
-
 function loadScript(src){
   return new Promise((resolve, reject) => {
     const s = document.createElement('script');
@@ -1754,6 +1858,10 @@ function loadStyle(href){
     document.head.appendChild(l);
   });
 }
+
+/* ---------- Таблица Менделеева ---------- */
+let periodicAssetsLoaded = false;
+let periodicLoadPromise = null;
 
 async function loadPeriodicAssets(){
   if (periodicAssetsLoaded) return;
@@ -1794,6 +1902,55 @@ async function showPeriodic(opts = {}){
       root.innerHTML = `
         <div style="text-align:center;padding:3rem 1rem;">
           <p style="color:var(--accent-red);font-weight:700;font-size:1.1rem;">⚠️ Не удалось загрузить таблицу</p>
+          <p style="color:var(--ink-muted);margin-top:0.8rem;">${e.message || 'Проверьте интернет.'}</p>
+        </div>`;
+    }
+  }
+}
+
+/* ---------- Таблица растворимости ---------- */
+let solvabilityAssetsLoaded = false;
+let solvabilityLoadPromise = null;
+
+async function loadSolvabilityAssets(){
+  if (solvabilityAssetsLoaded) return;
+  if (solvabilityLoadPromise) return solvabilityLoadPromise;
+  solvabilityLoadPromise = (async () => {
+    await Promise.all([
+      loadStyle('./solvability_tab/solvability.css'),
+      loadScript('./solvability_tab/solvability.js')
+    ]);
+    solvabilityAssetsLoaded = true;
+  })();
+  return solvabilityLoadPromise;
+}
+
+async function showSolvability(opts = {}){
+  if (!opts.fromPop && !suppressHistory) pushView({view:'solvability'});
+  homePage.style.display = 'none';
+  document.getElementById('backToModules')?.remove();
+
+  contentPages.innerHTML = `
+    <div id="solvability-root">
+      <p style="text-align:center;color:var(--ink-muted);padding:4rem 1rem;">
+        🔄 Загрузка таблицы растворимости…
+      </p>
+    </div>`;
+
+  ensureBackButton(() => showHome());
+  if (!opts.fromPop) window.scrollTo({top:0, behavior:'auto'});
+
+  try {
+    await loadSolvabilityAssets();
+    const root = document.getElementById('solvability-root');
+    if (!root) return;
+    await window.__renderSolvability(root);
+  } catch(e){
+    const root = document.getElementById('solvability-root');
+    if (root){
+      root.innerHTML = `
+        <div style="text-align:center;padding:3rem 1rem;">
+          <p style="color:var(--accent-red);font-weight:700;font-size:1.1rem;">⚠️ Не удалось загрузить таблицу растворимости</p>
           <p style="color:var(--ink-muted);margin-top:0.8rem;">${e.message || 'Проверьте интернет.'}</p>
         </div>`;
     }
@@ -2549,6 +2706,7 @@ window.addEventListener('popstate', (e) => {
   try {
     if (!st || st.view === 'home' || !st.view) showHome({fromPop:true});
     else if (st.view === 'periodic') showPeriodic({fromPop:true});
+    else if (st.view === 'solvability') showSolvability({fromPop:true});
     else if (st.view === 'numbers-catalog') showNumbersCatalog({fromPop:true});
     else if (st.view === 'numbers-tasks') showNumberTasks(st.num, {fromPop:true});
     else if (st.view === 'klass-catalog') showKlassCatalog({fromPop:true});
@@ -2583,6 +2741,7 @@ document.querySelectorAll('[data-nav]').forEach(btn => {
 });
 
 document.getElementById('periodicBtn')?.addEventListener('click', () => showPeriodic());
+document.getElementById('solvabilityBtn')?.addEventListener('click', () => showSolvability());
 document.getElementById('numbersBtn')?.addEventListener('click', () => showNumbersCatalog());
 document.getElementById('heroNumbersBtn')?.addEventListener('click', () => showNumbersCatalog());
 document.getElementById('openNumbersBtn')?.addEventListener('click', () => showNumbersCatalog());
@@ -2597,6 +2756,12 @@ document.getElementById('openKlassBtn')?.addEventListener('click', () => showKla
 document.getElementById('klassBanner')?.addEventListener('click', (e) => {
   if (e.target.closest('#openKlassBtn')) return;
   showKlassCatalog();
+});
+
+document.getElementById('openSolvabilityBtn')?.addEventListener('click', () => showSolvability());
+document.getElementById('solvabilityBanner')?.addEventListener('click', (e) => {
+  if (e.target.closest('#openSolvabilityBtn')) return;
+  showSolvability();
 });
 
 const scrollProgress = document.getElementById('scrollProgress');
@@ -2801,6 +2966,7 @@ window.addEventListener('DOMContentLoaded', () => {
   applyTheme(document.documentElement.getAttribute('data-theme'));
   const h = location.hash;
   if (h === '#periodic'){ suppressHistory = true; showPeriodic({fromPop:true}); setTimeout(()=>{suppressHistory=false;},100); return; }
+  if (h === '#solvability'){ suppressHistory = true; showSolvability({fromPop:true}); setTimeout(()=>{suppressHistory=false;},100); return; }
   if (h === '#numbers'){ suppressHistory = true; showNumbersCatalog({fromPop:true}); setTimeout(()=>{suppressHistory=false;},100); return; }
   const nm = h.match(/^#numbers-(\d+)$/);
   if (nm){ suppressHistory = true; showNumberTasks(parseInt(nm[1],10), {fromPop:true}); setTimeout(()=>{suppressHistory=false;},100); return; }
