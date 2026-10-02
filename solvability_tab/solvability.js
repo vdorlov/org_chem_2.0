@@ -103,7 +103,7 @@
 
       anions.forEach(a => {
         const key = c.id + '|' + a.id;
-        const cell = cells[key] || { type: 'unknown' };
+        const cell = cells[key] || { type: 'soluble' };
         const typeData = DATA.types[cell.type] || DATA.types.unknown;
         const td = document.createElement('td');
         td.className = 'sv-cell';
@@ -191,20 +191,19 @@
   function openModal(key){
     const cell = DATA.cells[key];
     if (!cell){
-      // Fallback — показываем "нет данных"
-      const [cId, aId] = key.split('|');
-      const c = DATA.cations.find(x => x.id === cId);
-      const a = DATA.anions.find(x => x.id === aId);
-      showModal({
-        cation: c, anion: a,
-        type: 'unknown',
-        name: 'Нет данных',
-        formula: (c?.formula || '') + (a?.formula || ''),
-        reaction: '',
-        note: 'В базе пока нет информации об этой комбинации.'
-      });
-      return;
-    }
+        const [cId, aId] = key.split('|');
+        const c = DATA.cations.find(x => x.id === cId);
+        const a = DATA.anions.find(x => x.id === aId);
+        showModal({
+          cation: c, anion: a,
+          type: 'soluble',
+          name: 'Растворимое вещество',
+          formula: (c?.formula || '') + (a?.formula || ''),
+          reaction: '',
+          note: 'По умолчанию считается растворимым. Уточните информацию в справочнике.'
+        });
+        return;
+   }
     const [cId, aId] = key.split('|');
     const c = DATA.cations.find(x => x.id === cId);
     const a = DATA.anions.find(x => x.id === aId);
