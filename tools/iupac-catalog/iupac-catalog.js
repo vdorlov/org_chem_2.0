@@ -261,37 +261,37 @@
   }
 
   /* ============================================================
-     ЗАПРОС SMILES ИЗ PUBCHEM
+     ЗАПРОС 3D-SDF ИЗ PUBCHEM
      Кэш: localStorage (переживает закрытие браузера)
      ============================================================ */
-  const SMILES_STORAGE_PREFIX = 'orgchem-pubchem-smiles:';
+  const SDF_STORAGE_PREFIX = 'orgchem-pubchem-sdf:';
 
-  function smilesCacheGet(key){
+  function sdfCacheGet(key){
     try {
-      return localStorage.getItem(SMILES_STORAGE_PREFIX + key);
+      return localStorage.getItem(SDF_STORAGE_PREFIX + key);
     } catch(e){
       return null;
     }
   }
-  function smilesCacheSet(key, value){
+  function sdfCacheSet(key, value){
     try {
-      localStorage.setItem(SMILES_STORAGE_PREFIX + key, value);
+      localStorage.setItem(SDF_STORAGE_PREFIX + key, value);
     } catch(e){ /* переполнение — игнорируем */ }
   }
 
-  async function fetchSmiles(iupacName){
+  async function fetchSDF(iupacName){
     const key = iupacName.toLowerCase();
 
     // 1. Проверяем localStorage
-    const cached = smilesCacheGet(key);
+    const cached = sdfCacheGet(key);
     if (cached){
-      console.log('📦 SMILES из кэша:', iupacName, '→', cached);
+      console.log('📦 SDF из кэша:', iupacName, '→ длина', cached.length);
       return cached;
     }
 
-    // 2. Запрашиваем PubChem
-    const url = `https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/${encodeURIComponent(iupacName)}/property/CanonicalSMILES/JSON`;
-    console.log('🔍 PubChem:', url);
+    // 2. Запрашиваем PubChem — 3D-структуру в формате SDF
+    const url = `https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/${encodeURIComponent(iupacName)}/SDF?record_type=3d`;
+    console.log('🔍 PubChem (SDF 3D):', url);
 
     try {
       const r = await fetch(url, {cache: 'force-cache'});
@@ -304,30 +304,18 @@
         throw new Error(`PubChem вернул ошибку ${r.status}`);
       }
 
-      const data = await r.json();
-      const props = data?.PropertyTable?.Properties;
+      const sdf = await r.text();
 
-      if (!props || !props[0]){
-        throw new Error('PubChem вернул пустой ответ для ' + iupacName);
+      if (!sdf || sdf.length < 50){
+        throw new Error('PubChem вернул пустой SDF для ' + iupacName);
       }
 
-      // PubChem возвращает разные ключи в зависимости от эндпоинта и версии API
-      const smiles = props[0].CanonicalSMILES
-                  || props[0].ConnectivitySMILES
-                  || props[0].IsomericSMILES
-                  || props[0].SMILES;
-
-      if (!smiles){
-        console.warn('⚠️ Ответ PubChem без SMILES:', props[0]);
-        throw new Error('SMILES не найден в ответе PubChem');
-      }
-
-      console.log('✅ SMILES получен:', iupacName, '→', smiles);
-      smilesCacheSet(key, smiles);
-      return smiles;
+      console.log('✅ SDF получен:', iupacName, '→ длина', sdf.length);
+      sdfCacheSet(key, sdf);
+      return sdf;
 
     } catch(e){
-      console.error('❌ fetchSmiles error:', iupacName, e);
+      console.error('❌ fetchSDF error:', iupacName, e);
       throw e;
     }
   }
@@ -387,7 +375,7 @@
 
   /* ============================================================
      ОТКРЫТИЕ МОДАЛКИ С 3D
-     Пошагово с логированием каждого этапа.
+     Грузим готовую 3D-структуру (SDF) из PubChem
      ============================================================ */
   async function openMoleculeModal(item, groupColor){
     ensureModal();
@@ -401,7 +389,7 @@
     document.getElementById('iupacModalTitle').textContent = item.name;
     document.getElementById('iupacModalFormula').textContent = item.formula || '';
 
-    viewerEl.innerHTML = '<div class="iupac-3d-status">🔄 Получение структуры из PubChem…</div>';
+    viewerEl.innerHTML = '<div class="iupac-3d-status">🔄 Получение 3D-структуры из PubChem…</div>';
     modal.classList.add('open');
     document.body.style.overflow = 'hidden';
 
@@ -415,10 +403,10 @@
         throw new Error('3Dmol.js загрузился, но createViewer недоступен');
       }
 
-      // === ШАГ 2. Получение SMILES из PubChem ===
-      console.log('📦 Шаг 2: запрос SMILES из PubChem для', item.iupac);
-      const smiles = await fetchSmiles(item.iupac);
-      console.log('✅ SMILES =', smiles);
+      // === ШАГ 2. Получение 3D-SDF из PubChem ===
+      console.log('📦 Шаг 2: запрос SDF из PubChem для', item.iupac);
+      const sdf = await fetchSDF(item.iupac);
+      console.log('✅ SDF длина =', sdf.length);
 
       // === ШАГ 3. Готовим контейнер ===
       console.log('📦 Шаг 3: создание контейнера');
@@ -455,12 +443,12 @@
       currentViewer = viewer;
       console.log('✅ viewer создан');
 
-      // === ШАГ 5. Добавляем модель ===
-      console.log('📦 Шаг 5: addModel(smiles, "smiles")');
-      const model = viewer.addModel(smiles, 'smiles');
+      // === ШАГ 5. Добавляем модель из SDF (готовые 3D-координаты) ===
+      console.log('📦 Шаг 5: addModel(sdf, "sdf")');
+      const model = viewer.addModel(sdf, 'sdf');
 
       if (!model){
-        throw new Error('addModel вернул null — не удалось распарсить SMILES: ' + smiles);
+        throw new Error('addModel вернул null — не удалось распарсить SDF');
       }
       console.log('✅ модель добавлена');
 
