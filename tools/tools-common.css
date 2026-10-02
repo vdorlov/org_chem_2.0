@@ -1,0 +1,121 @@
+/* ============================================================
+   ОБЩИЕ СТИЛИ ДЛЯ ИНСТРУМЕНТОВ
+   ============================================================ */
+.tool-page{
+  padding: 6.5rem clamp(1rem,4vw,2rem) 3rem;
+  max-width: 1000px; margin: 0 auto; min-height: 100vh;
+  animation: fadeIn 0.35s ease-out;
+}
+.tool-header{
+  text-align: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1.8rem;
+  border-bottom: 1px solid var(--line);
+}
+.tool-badge{
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  padding: 0.5rem 1.1rem; margin-bottom: 1.2rem;
+  background: color-mix(in srgb, var(--accent-purple) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent-purple) 40%, transparent);
+  border-radius: 50px;
+  color: var(--accent-purple);
+  font-size: 0.85rem; font-weight: 700;
+}
+.tool-header h2{
+  font-family: 'Exo 2', sans-serif;
+  font-size: var(--step-2); font-weight: 800;
+  margin-bottom: 1rem;
+  background: linear-gradient(135deg, var(--accent-purple), var(--accent-cyan));
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent; color: transparent;
+}
+.tool-actions{
+  display: flex; gap: 0.7rem; justify-content: center; flex-wrap: wrap;
+}
+
+/* Общие компоненты инструментов */
+.tool-card{
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1.6rem;
+  margin-bottom: 1.2rem;
+}
+.tool-label{
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--ink-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 0.5rem;
+}
+.tool-input{
+  width: 100%;
+  padding: 0.85rem 1rem;
+  background: var(--bg-deep);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  color: var(--ink);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.05rem;
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+.tool-input:focus{
+  outline: none;
+  border-color: var(--accent-cyan);
+  box-shadow: var(--glow-cyan);
+}
+.tool-btn{
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  padding: 0.75rem 1.6rem;
+  background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  font-family: 'Exo 2', sans-serif;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: transform var(--transition), box-shadow var(--transition);
+  box-shadow: var(--glow-cyan);
+}
+[data-theme="dark"] .tool-btn{color: var(--bg-deep)}
+.tool-btn:hover{
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(34,211,238,0.35);
+}
+.tool-btn:disabled{
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+.tool-btn-secondary{
+  background: var(--bg-hover);
+  color: var(--ink);
+  box-shadow: none;
+  border: 1px solid var(--line);
+}
+.tool-btn-secondary:hover{
+  background: color-mix(in srgb, var(--bg-hover) 150%, transparent);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+}
+.tool-error{
+  color: var(--accent-red);
+  font-size: 0.9rem;
+  margin-top: 0.6rem;
+  padding: 0.6rem 0.9rem;
+  background: color-mix(in srgb, var(--accent-red) 10%, transparent);
+  border-radius: 10px;
+  border-left: 3px solid var(--accent-red);
+}
+.tool-success{
+  color: var(--accent-green);
+  font-size: 0.9rem;
+  margin-top: 0.6rem;
+  padding: 0.6rem 0.9rem;
+  background: color-mix(in srgb, var(--accent-green) 10%, transparent);
+  border-radius: 10px;
+  border-left: 3px solid var(--accent-green);
+}
