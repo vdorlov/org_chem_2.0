@@ -456,7 +456,7 @@
       console.log('✅ viewer создан');
 
       // === ШАГ 5. Добавляем модель ===
-      console.log('📦 Шаг 5: addModel(smiles, "smi")');
+      console.log('📦 Шаг 5: addModel(smiles, "smiles")');
       const model = viewer.addModel(smiles, 'smiles');
 
       if (!model){
