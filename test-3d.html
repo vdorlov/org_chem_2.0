@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Тест 3Dmol.js</title>
+<style>
+  body { margin:0; background:#0a0e27; color:#fff; font-family: monospace; }
+  #status { padding: 1rem; font-size: 0.9rem; line-height: 1.6; }
+  #viewer { width: 100vw; height: 70vh; position: relative; border-top: 1px solid #333; }
+  #viewer canvas { display: block !important; }
+  .btns { padding: 1rem; }
+  button { padding: 0.6rem 1.2rem; margin-right: 0.5rem; font-family: monospace; font-size: 0.9rem; cursor: pointer; }
+</style>
+</head>
+<body>
+
+<div id="status">🔄 Загрузка 3Dmol.js…</div>
+<div id="viewer"></div>
+<div class="btns">
+  <button onclick="reloadSDF()">🔄 Перезагрузить молекулу</button>
+  <button onclick="checkWebGL()">🔍 Проверить WebGL</button>
+  <button onclick="showCanvasSize()">📐 Размер canvas</button>
+</div>
+
+<!-- Путь к локальной копии 3Dmol.js в вашем репозитории -->
+<script src="./tools/iupac-catalog/lib/3Dmol-min.js"></script>
+
+<script>
+  var statusEl = document.getElementById('status');
+  var viewer = null;
+  var modelUrl = './tools/iupac-catalog/3D_model/Alkany/Methan.sdf';
+
+  function log(msg){
+    console.log(msg);
+    statusEl.innerHTML += '<br>' + msg;
+  }
+
+  function checkWebGL(){
+    var c = document.createElement('canvas');
+    var gl2 = c.getContext('webgl2');
+    var gl1 = c.getContext('webgl') || c.getContext('experimental-webgl');
+    var ctx = gl2 || gl1;
+    var renderer = '—', vendor = '—';
+    if (ctx) {
+      var dbg = ctx.getExtension('WEBGL_debug_renderer_info');
+      if (dbg) {
+        renderer = ctx.getParameter(dbg.UNMASKED_RENDERER_WEBGL);
+        vendor = ctx.getParameter(dbg.UNMASKED_VENDOR_WEBGL);
+      }
+    }
+    alert(
+      'WebGL2: ' + (gl2 ? 'ДА' : 'НЕТ') + '\n' +
+      'WebGL1: ' + (gl1 ? 'ДА' : 'НЕТ') + '\n' +
+      'Vendor: ' + vendor + '\n' +
+      'Renderer: ' + renderer
+    );
+  }
+
+  function showCanvasSize(){
+    if (!viewer) { alert('viewer ещё не создан'); return; }
+    var el = document.getElementById('viewer');
+    var canvas = el.querySelector('canvas');
+    if (!canvas) { alert('canvas не найден'); return; }
+    alert(
+      'Container: ' + el.clientWidth + ' × ' + el.clientHeight + '\n' +
+      'Canvas attr: ' + canvas.width + ' × ' + canvas.height + '\n' +
+      'Canvas CSS: ' + canvas.clientWidth + ' × ' + canvas.clientHeight
+    );
+  }
+
+  function init(){
+    statusEl.innerHTML = '🔄 Инициализация…';
+
+    if (!window.$3Dmol){
+      log('❌ $3Dmol не определён — библиотека не загрузилась');
+      return;
+    }
+    log('✅ $3Dmol загружен (версия: ' + ($3Dmol.version || 'неизвестна') + ')');
+
+    var el = document.getElementById('viewer');
+    var rect = el.getBoundingClientRect();
+    log('📐 Размер #viewer: ' + Math.round(rect.width) + ' × ' + Math.round(rect.height));
+
+    try {
+      viewer = $3Dmol.createViewer(el, {
+        backgroundColor: '#0a0e27',
+        antialias: true
+      });
+    } catch(e){
+      log('❌ createViewer упал: ' + e.message);
+      return;
+    }
+
+    if (!viewer){
+      log('❌ createViewer вернул null');
+      return;
+    }
+    log('✅ viewer создан');
+
+    var canvas = el.querySelector('canvas');
+    if (canvas){
+      log('📐 canvas: атрибуты ' + canvas.width + '×' + canvas.height +
+          ', CSS ' + canvas.clientWidth + '×' + canvas.clientHeight);
+    } else {
+      log('❌ canvas НЕ создан!');
+      return;
+    }
+
+    loadSDF();
+  }
+
+  function loadSDF(){
+    log('🔍 Загружаю ' + modelUrl + '…');
+    fetch(modelUrl)
+      .then(function(r){
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        return r.text();
+      })
+      .then(function(sdf){
+        log('📄 SDF получен, длина ' + sdf.length + ' байт');
+
+        if (viewer.clear) viewer.clear();
+
+        var model = viewer.addModel(sdf, 'sdf');
+        if (!model){
+          log('❌ addModel вернул null');
+          return;
+        }
+        log('✅ Модель добавлена');
+
+        viewer.setStyle({}, {
+          stick: { radius: 0.15 },
+          sphere: { scale: 0.25 }
+        });
+        viewer.zoomTo();
+        viewer.render();
+        log('🎨 Первый render() выполнен');
+
+        setTimeout(function(){
+          viewer.resize();
+          viewer.render();
+          log('🎨 Повторный resize()+render() выполнен');
+
+          // Проверим, что canvas реально непустой:
+          // считаем количество пикселей, отличных от фона.
+          try {
+            var canvas = document.querySelector('#viewer canvas');
+            var gl = canvas.getContext('webgl2') || canvas.getContext('webgl');
+            if (gl) {
+              var pixels = new Uint8Array(canvas.width * canvas.height * 4);
+              gl.readPixels(0, 0, canvas.width, canvas.height, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
+              var nonBg = 0;
+              // фон #0a0e27 = rgb(10,14,39)
+              for (var i = 0; i < pixels.length; i += 4) {
+                var dr = Math.abs(pixels[i]   - 10);
+                var dg = Math.abs(pixels[i+1] - 14);
+                var db = Math.abs(pixels[i+2] - 39);
+                if (dr + dg + db > 30) nonBg++;
+              }
+              log('🔬 Непустых пикселей (отличаются от фона): ' + nonBg +
+                  ' из ' + (canvas.width * canvas.height));
+              if (nonBg > 100) {
+                log('✅ Молекула должна быть видна!');
+              } else {
+                log('⚠️ Canvas почти пуст — молекула не нарисована');
+              }
+            }
+          } catch(err) {
+            log('⚠️ Не удалось прочитать пиксели: ' + err.message);
+          }
+
+          viewer.spin('y', 0.5);
+        }, 300);
+      })
+      .catch(function(e){
+        log('❌ fetch SDF упал: ' + e.message);
+      });
+  }
+
+  function reloadSDF(){ loadSDF(); }
+
+  window.addEventListener('load', function(){
+    setTimeout(init, 150);
+  });
+</script>
+</body>
+</html>
