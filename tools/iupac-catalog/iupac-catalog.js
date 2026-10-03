@@ -21,31 +21,30 @@
   const CATALOG = [
     {
       id: 'alkany',
-      title: 'Алканы',
-      icon: '🔗',
-      color: '#22d3ee',
-      dir: 'tools/iupac-catalog/3D_model/Alkany/', // база для SDF
-      items: [
-        { name: 'Метан',            iupac: 'methane',            formula: 'CH₄',       file: 'Methan.sdf' },
-        { name: 'Этан',             iupac: 'ethane',             formula: 'C₂H₆',      file: 'Ethan.sdf' },
-        { name: 'Пропан',           iupac: 'propane',            formula: 'C₃H₈',      file: 'Prophan.sdf' },
-        { name: 'Бутан',            iupac: 'butane',             formula: 'C₄H₁₀',     file: 'Buthan.sdf' },
-        { name: '2-Метилпропан',    iupac: '2-methylpropane',    formula: '(CH₃)₃CH',  file: '2-methylpropane.sdf' },
-        { name: 'Пентан',           iupac: 'pentane',            formula: 'C₅H₁₂',     file: 'Pentane.sdf' },
-        { name: '2-Метилбутан',     iupac: '2-methylbutane',     formula: 'C₅H₁₂',     file: '2-methylbutane.sdf' },
-        { name: '2,2-Диметилпропан',iupac: '2,2-dimethylpropane',formula: 'C₅H₁₂',     file: '2,2-dimethylpropane.sdf' },
-        { name: 'Гексан',           iupac: 'hexane',             formula: 'C₆H₁₄',     file: 'Hexane.sdf' },
-        { name: '2,3-Диметилбутан', iupac: '2,3-dimethylbutane', formula: 'C₆H₁₄',     file: '2,3-dimethylbutane.sdf' },
-        { name: 'Гептан',           iupac: 'heptane',            formula: 'C₇H₁₆',     file: 'Gepthane.sdf' },
-        { name: 'Октан',            iupac: 'octane',             formula: 'C₈H₁₈',     file: 'Okthane.sdf' },
-        { name: 'Нонан',            iupac: 'nonane',             formula: 'C₉H₂₀',     file: 'Nonane.sdf' },
-        /* Декан удалён — нет файла в PubChem */
-        { name: 'Циклогексан',      iupac: 'cyclohexane',        formula: 'C₆H₁₂',     file: 'Cyklohexan.sdf' },
-        { name: 'Метилциклогексан', iupac: 'methylcyclohexane',  formula: 'C₇H₁₄',     file: 'Methylcyklohexan.sdf' },
-        { name: 'Циклопропан',      iupac: 'cyclopropane',       formula: 'C₃H₆',      file: 'Cyklopropan.sdf' },
-        { name: 'Циклобутан',       iupac: 'cyclobutane',        formula: 'C₄H₈',      file: 'Cyklobuthan.sdf' }
+     title: 'Алканы',
+     icon: '🔗',
+     color: '#22d3ee',
+     dir: 'tools/iupac-catalog/3D_model/Alkany/',
+     items: [
+       { name: 'Метан',              iupac: 'methane',            formula: 'CH₄',       file: 'Methan.sdf' },
+       { name: 'Этан',               iupac: 'ethane',             formula: 'C₂H₆',      file: 'Eyhan.sdf' },
+       { name: 'Пропан',             iupac: 'propane',            formula: 'C₃H₈',      file: 'Prophan.sdf' },
+       { name: 'Бутан',              iupac: 'butane',             formula: 'C₄H₁₀',     file: 'Buthan.sdf' },
+       { name: '2-Метилпропан',      iupac: '2-methylpropane',    formula: '(CH₃)₃CH',  file: '2-methylpropane.sdf' },
+       { name: 'Пентан',             iupac: 'pentane',            formula: 'C₅H₁₂',     file: 'Pentane.sdf' },
+       { name: '2-Метилбутан',       iupac: '2-methylbutane',     formula: 'C₅H₁₂',     file: '2-methylbutane.sdf' },
+       { name: '2,2-Диметилпропан',  iupac: '2,2-dimethylpropane',formula: 'C₅H₁₂',     file: '2,2-dimethylpropan.sdf' },
+       { name: 'Гексан',             iupac: 'hexane',             formula: 'C₆H₁₄',     file: 'Hexane.sdf' },
+       { name: '2,2-Диметилбутан',   iupac: '2,2-dimethylbutane', formula: 'C₆H₁₄',     file: '2,2-dimethylbuthane.sdf' },
+       { name: 'Гептан',             iupac: 'heptane',            formula: 'C₇H₁₆',     file: 'Gepthane.sdf' },
+       { name: 'Октан',              iupac: 'octane',             formula: 'C₈H₁₈',     file: 'Okthane.sdf' },
+       { name: 'Нонан',              iupac: 'nonane',             formula: 'C₉H₂₀',     file: 'Nonane.sdf' },
+       { name: 'Циклогексан',        iupac: 'cyclohexane',        formula: 'C₆H₁₂',     file: 'Cyklohexan.sdf' },
+       { name: 'Метилциклогексан',   iupac: 'methylcyclohexane',  formula: 'C₇H₁₄',     file: 'Methylcyklohexan.sdf' },
+       { name: 'Циклопропан',        iupac: 'cyclopropane',       formula: 'C₃H₆',      file: 'Cyklopropane.sdf' },
+       { name: 'Циклобутан',         iupac: 'cyclobutane',        formula: 'C₄H₈',      file: 'Cyklobuthane.sdf' }
       ]
-    },
+   },
     /* ------------------------------------------------------------------
        Остальные классы оставлены как «заглушки» — SDF-файлы для них
        вы сможете добавить позже, положив их в соответствующую папку
