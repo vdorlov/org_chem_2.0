@@ -143,6 +143,13 @@
   background: color-mix(in srgb, var(--group-color, var(--accent-cyan)) 5%, var(--bg-deep));
   transform: translateY(-2px);
 }
+/* Карточка без 3D-модели */
+.iupac-item-disabled{
+  opacity: 0.6;
+}
+.iupac-item-disabled:hover{
+  transform: none;
+}
 .iupac-item-name{
   flex: 1;
   font-family: 'Exo 2', sans-serif;
@@ -181,8 +188,11 @@
   transform: scale(1.05);
 }
 .iupac-3d-btn:disabled{
-  opacity: 0.5;
-  cursor: wait;
+  opacity: 0.4;
+  cursor: not-allowed;
+  background: transparent;
+  border-color: var(--line);
+  color: var(--ink-soft);
 }
 
 /* Ничего не найдено */
@@ -300,13 +310,6 @@
   flex-wrap: wrap;
   font-size: 0.8rem;
   color: var(--ink-muted);
-}
-.iupac-modal-footer a{
-  color: var(--accent-cyan);
-  text-decoration: none;
-}
-.iupac-modal-footer a:hover{
-  text-decoration: underline;
 }
 
 .iupac-3d-status{
