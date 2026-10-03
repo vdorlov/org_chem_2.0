@@ -9,8 +9,8 @@
    ВАЖНО:
    - в каталоге поле называется `file` (только имя файла),
      полный путь собирается как group.dir + item.file.
-   - перед созданием viewer ждём завершения CSS-анимации модалки,
-     иначе canvas получает нулевой размер и сцена пустая.
+   - CSS-анимация scale() убрана из модалки, иначе ломается
+     начальный layout WebGL2-канваса.
    ============================================================ */
 (function(){
   'use strict';
@@ -482,27 +482,37 @@
 
       log('📦 Шаг 3/4: подготовка контейнера…');
 
-      // ⚠️ Ждём завершения CSS-анимации открытия модалки
-      //    (transform: scale(0.9) → scale(1)), иначе контейнер
-      //    получит нулевые размеры и canvas будет пустым.
-      await new Promise(function(r){ setTimeout(r, 350); });
+      // Ждём двух кадров после открытия модалки, чтобы браузер
+      // пересчитал layout с финальными размерами .iupac-modal-content
+      await new Promise(function(r){
+        requestAnimationFrame(function(){
+          requestAnimationFrame(r);
+        });
+      });
 
-      // Полностью очищаем viewerEl и создаём свежий контейнер
       viewerEl.innerHTML = '';
+      viewerEl.style.position = 'relative';
+
+      var vw = viewerEl.clientWidth  || 720;
+      var vh = viewerEl.clientHeight || 480;
+      console.log('📐 viewerEl:', vw, '×', vh);
+
       var container = document.createElement('div');
       container.id = 'iupac-3d-canvas';
-      container.style.width = '100%';
-      container.style.height = '100%';
+      // Точные размеры в пикселях, чтобы 3Dmol.js не зависел от CSS
+      container.style.width = vw + 'px';
+      container.style.height = vh + 'px';
       container.style.position = 'absolute';
       container.style.top = '0';
       container.style.left = '0';
       container.style.background = 'rgba(255,255,255,0.03)';
-      viewerEl.style.position = 'relative';
       viewerEl.appendChild(container);
 
-      // Ждём двух кадров, чтобы браузер пересчитал layout
+      // Ещё два кадра — чтобы контейнер успел появиться в DOM
       await new Promise(function(r){
-        requestAnimationFrame(function(){ requestAnimationFrame(r); });
+        requestAnimationFrame(function(){
+          requestAnimationFrame(r);
+        });
       });
 
       var cw = container.clientWidth;
@@ -530,25 +540,32 @@
       });
       viewer.zoomTo();
       viewer.render();
+      console.log('🎨 Первый render() выполнен');
 
-      // ⚠️ Повторный resize + render через 300 мс — часто именно это
-      //    «оживляет» canvas, если первый рендер ушёл в никуда.
+      // «Догоняем» layout несколькими resize+render
+      [100, 300, 700].forEach(function(delay){
+        setTimeout(function(){
+          try {
+            viewer.resize();
+            viewer.render();
+            console.log('🎨 resize+render через ' + delay + ' мс');
+          } catch(err){
+            console.warn('render через ' + delay + ' мс не удался:', err);
+          }
+        }, delay);
+      });
+
+      // Вращение включаем только после того, как рендер сработал
       setTimeout(function(){
         try {
-          viewer.resize();
-          viewer.render();
           viewer.spin('y', 0.5);
-          console.log('✅ Повторный рендер выполнен');
+          var statusEl = viewerEl.querySelector('.iupac-3d-status');
+          if (statusEl) statusEl.remove();
+          console.log('✅ Молекула должна быть видна');
         } catch(err){
-          console.warn('Повторный рендер не удался:', err);
+          console.warn('spin не удался:', err);
         }
-      }, 300);
-
-      // Убираем статус «Загрузка…»
-      setTimeout(function(){
-        var statusEl = viewerEl.querySelector('.iupac-3d-status');
-        if (statusEl) statusEl.remove();
-      }, 400);
+      }, 800);
 
     } catch(e){
       console.error('❌ ОШИБКА 3D:', e);
@@ -586,7 +603,7 @@
       if (query && !filtered.length) return '';
 
       var itemsHtml = filtered.map(function(item){
-        // ⚠️ Проверяем именно item.file (имя файла), а не item.sdf.
+        // Проверяем именно item.file (имя файла), а не item.sdf
         var hasModel = !!item.file;
 
         return '<div class="iupac-item' + (hasModel ? '' : ' iupac-item-disabled') + '">' +
