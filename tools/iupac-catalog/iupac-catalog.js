@@ -4,13 +4,14 @@
 
    Все SDF-модели берутся из локальной папки репозитория
    (tools/iupac-catalog/3D_model/...).
-   3Dmol.js подключается из ./lib/3Dmol-min.js (fallback — CDN).
 
-   ВАЖНО:
-   - в каталоге поле называется `file` (только имя файла),
-     полный путь собирается как group.dir + item.file.
-   - CSS-анимация scale() убрана из модалки, иначе ломается
-     начальный layout WebGL2-канваса.
+   КЛЮЧЕВЫЕ МОМЕНТЫ:
+   - ждём 400 мс после открытия модалки, пока завершится
+     CSS-переход opacity, иначе WebGL-контекст создаётся
+     в «невидимом» контейнере с нулевыми размерами;
+   - контейнеру задаются фиксированные размеры в пикселях;
+   - несколько повторных resize+render, чтобы поймать момент,
+     когда layout окончательно устаканится.
    ============================================================ */
 (function(){
   'use strict';
@@ -369,9 +370,6 @@
       if (!sdf || sdf.length < 20){
         throw new Error('слишком короткий ответ (' + (sdf ? sdf.length : 0) + ' байт)');
       }
-      if (!/\$\$\$\$/.test(sdf)){
-        console.warn('⚠️ В файле нет маркера конца SDF, но продолжаем:', url);
-      }
 
       sdfCacheSet(cacheKey, sdf);
       return sdf;
@@ -480,41 +478,28 @@
       log('✅ Шаг 2: SDF получен<br>' +
           '<span style="font-size:0.7rem;color:var(--ink-muted)">Размер: ' + sdf.length + ' байт</span>');
 
-      log('📦 Шаг 3/4: подготовка контейнера…');
+      log('📦 Шаг 3/4: ждём появления модалки…');
+      // ⚠️ ГЛАВНОЕ ИСПРАВЛЕНИЕ: ждём 400 мс, чтобы CSS-переход
+      //    opacity: 0 → 1 завершился и модалка стала полностью видимой.
+      await new Promise(function(r){ setTimeout(r, 400); });
 
-      // Ждём двух кадров после открытия модалки, чтобы браузер
-      // пересчитал layout с финальными размерами .iupac-modal-content
-      await new Promise(function(r){
-        requestAnimationFrame(function(){
-          requestAnimationFrame(r);
-        });
-      });
+      log('📦 Шаг 4/4: создаём canvas…');
 
       viewerEl.innerHTML = '';
       viewerEl.style.position = 'relative';
 
-      var vw = viewerEl.clientWidth  || 720;
-      var vh = viewerEl.clientHeight || 480;
-      console.log('📐 viewerEl:', vw, '×', vh);
-
+      // ⚠️ Фиксированные размеры в пикселях, а не проценты —
+      //    чтобы не зависеть от flex/анимации.
       var container = document.createElement('div');
       container.id = 'iupac-3d-canvas';
-      // Точные размеры в пикселях, чтобы 3Dmol.js не зависел от CSS
-      container.style.width = vw + 'px';
-      container.style.height = vh + 'px';
-      container.style.position = 'absolute';
-      container.style.top = '0';
-      container.style.left = '0';
+      container.style.width = '700px';
+      container.style.height = '480px';
+      container.style.position = 'relative';
+      container.style.margin = '0 auto';
       container.style.background = 'rgba(255,255,255,0.03)';
       viewerEl.appendChild(container);
 
-      // Ещё два кадра — чтобы контейнер успел появиться в DOM
-      await new Promise(function(r){
-        requestAnimationFrame(function(){
-          requestAnimationFrame(r);
-        });
-      });
-
+      // Форсируем layout, чтобы размеры точно посчитались
       var cw = container.clientWidth;
       var ch = container.clientHeight;
       console.log('📐 Размер контейнера:', cw, '×', ch);
@@ -523,7 +508,8 @@
         throw new Error('Контейнер имеет нулевой размер: ' + cw + '×' + ch);
       }
 
-      log('📦 Шаг 4/4: рендер…');
+      // ⚠️ antialias: false — отключает FBO-путь в 3Dmol, который
+      //    ломается при создании в нестабильном контейнере.
       var viewer = window.$3Dmol.createViewer(container, {
         backgroundColor: '#0a0e27',
         antialias: false,
@@ -531,6 +517,7 @@
       });
       if (!viewer) throw new Error('createViewer вернул null');
       currentViewer = viewer;
+      console.log('✅ Viewer создан');
 
       var model = viewer.addModel(sdf, 'sdf');
       if (!model) throw new Error('addModel вернул null — не удалось распарсить SDF');
@@ -543,30 +530,26 @@
       viewer.render();
       console.log('🎨 Первый render() выполнен');
 
-      // «Догоняем» layout несколькими resize+render
-      [100, 300, 700].forEach(function(delay){
+      // ⚠️ Несколько повторных resize+render — «догоняем» layout,
+      //    который может устаканиваться не сразу.
+      [100, 400, 800, 1500].forEach(function(delay){
         setTimeout(function(){
           try {
             viewer.resize();
             viewer.render();
-            console.log('🎨 resize+render через ' + delay + ' мс');
+            console.log('🎨 resize+render через', delay, 'мс');
           } catch(err){
             console.warn('render через ' + delay + ' мс не удался:', err);
           }
         }, delay);
       });
 
-      // Вращение включаем только после того, как рендер сработал
+      // Убираем статус «Загрузка…»
       setTimeout(function(){
-        try {
-          viewer.spin('y', 0.5);
-          var statusEl = viewerEl.querySelector('.iupac-3d-status');
-          if (statusEl) statusEl.remove();
-          console.log('✅ Молекула должна быть видна');
-        } catch(err){
-          console.warn('spin не удался:', err);
-        }
-      }, 800);
+        var statusEl = viewerEl.querySelector('.iupac-3d-status');
+        if (statusEl) statusEl.remove();
+        try { viewer.spin('y', 0.5); } catch(err){}
+      }, 1600);
 
     } catch(e){
       console.error('❌ ОШИБКА 3D:', e);
@@ -604,7 +587,6 @@
       if (query && !filtered.length) return '';
 
       var itemsHtml = filtered.map(function(item){
-        // Проверяем именно item.file (имя файла), а не item.sdf
         var hasModel = !!item.file;
 
         return '<div class="iupac-item' + (hasModel ? '' : ' iupac-item-disabled') + '">' +
@@ -654,7 +636,6 @@
         var item = group && group.items.find(function(it){ return it.iupac === iupac; });
         if (!item || !group) return;
 
-        // Собираем полный путь: dir + file → item.sdf
         var fullItem = Object.assign({}, item, {
           sdf: item.file ? (group.dir + item.file) : null
         });
