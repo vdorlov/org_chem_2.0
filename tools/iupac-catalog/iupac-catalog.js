@@ -36,7 +36,7 @@
         { name: '2-Метилбутан',       iupac: '2-methylbutane',      formula: 'C₅H₁₂',     file: '2-methylbutane.sdf' },
         { name: '2,2-Диметилпропан',  iupac: '2,2-dimethylpropane', formula: 'C₅H₁₂',     file: '2,2-dimethylpropan.sdf' },
         { name: 'Гексан',             iupac: 'hexane',              formula: 'C₆H₁₄',     file: 'Hexane.sdf' },
-        { name: '2,2-Диметилбутан',   iupac: '2,2-dimethylbutane',  formula: 'C₆H₁₄',     file: '2,2-dimethylbuthane.sdf' },
+        { name: '2,3-Диметилбутан',   iupac: '2,3-dimethylbutane',  formula: 'C₆H₁₄',     file: '2,3-dimethylbuthane.sdf' },
         { name: 'Гептан',             iupac: 'heptane',             formula: 'C₇H₁₆',     file: 'Gepthane.sdf' },
         { name: 'Октан',              iupac: 'octane',              formula: 'C₈H₁₈',     file: 'Okthane.sdf' },
         { name: 'Нонан',              iupac: 'nonane',              formula: 'C₉H₂₀',     file: 'Nonane.sdf' },
