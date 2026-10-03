@@ -14,7 +14,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;700;800&family=Open+Sans:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="./tools/tools-common.css">
 
-<!-- MathJax: подключён, но не запускаем автозапуск — рендерим вручную после парсинга .md -->
+<!-- MathJax -->
 <script>
   window.MathJax = {
     tex: {
@@ -93,6 +93,10 @@ body{
   z-index:10000; will-change:width;
   box-shadow:0 0 10px var(--accent-cyan);
 }
+
+/* ============================================================
+   NAVBAR — новая структура
+   ============================================================ */
 .navbar{
   position:fixed; top:0; left:0; right:0; z-index:1000;
   background:color-mix(in srgb, var(--bg-deep) 88%, transparent);
@@ -106,6 +110,29 @@ body{
   .navbar{ backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
 }
 .navbar.scrolled{padding-top:0.45rem; padding-bottom:0.45rem;}
+
+.nav-left{
+  display:flex; align-items:center; gap:0.7rem;
+}
+.back-btn{
+  width:38px; height:38px; border-radius:50%;
+  border:1px solid color-mix(in srgb, var(--accent-cyan) 40%, transparent);
+  background:color-mix(in srgb, var(--accent-cyan) 8%, transparent);
+  color:var(--accent-cyan);
+  cursor:pointer;
+  display:none;
+  align-items:center; justify-content:center;
+  font-size:1.1rem;
+  transition:all var(--transition);
+}
+.back-btn.visible{display:flex;}
+.back-btn:hover{
+  background:var(--accent-cyan);
+  color:var(--bg-deep);
+  transform:translateX(-3px);
+  box-shadow:var(--glow-cyan);
+}
+
 .logo{
   display:flex; align-items:center; gap:0.7rem;
   cursor:pointer; text-decoration:none; border:none; background:none;
@@ -126,88 +153,117 @@ body{
   -webkit-background-clip:text; background-clip:text;
   -webkit-text-fill-color:transparent; color:transparent;
 }
-.nav-links{display:flex; gap:0.6rem; align-items:center; flex-wrap:wrap; justify-content:flex-end}
-.nav-btn{
-  padding:0.5rem 1.1rem; border-radius:10px;
-  border:1px solid var(--line); background:transparent;
-  color:var(--ink-muted); text-decoration:none;
-  font-size:0.9rem; font-weight:600; cursor:pointer;
-  font-family:inherit;
+
+.nav-links{
+  display:flex; gap:0.5rem; align-items:center;
+  flex-wrap:wrap; justify-content:flex-end;
+}
+
+/* ---------- Групповые dropdown ---------- */
+.nav-group{
+  position:relative;
+  display:inline-block;
+}
+.nav-group-btn{
+  display:inline-flex; align-items:center; gap:0.45rem;
+  padding:0.5rem 1rem;
+  border-radius:10px;
+  border:1px solid var(--group-color, var(--accent-cyan));
+  background:color-mix(in srgb, var(--group-color, var(--accent-cyan)) 10%, transparent);
+  color:var(--group-color, var(--accent-cyan));
+  font-family:'Exo 2',sans-serif;
+  font-weight:700;
+  font-size:0.9rem;
+  cursor:pointer;
   transition:all var(--transition);
+  white-space:nowrap;
 }
-.nav-btn:hover{background:var(--bg-hover); color:var(--ink); border-color:var(--accent-cyan)}
-.nav-btn.back{
-  border-color:color-mix(in srgb, var(--accent-cyan) 40%, transparent);
-  color:var(--accent-cyan);
+.nav-group-btn:hover,
+.nav-group.open .nav-group-btn{
+  background:var(--group-color, var(--accent-cyan));
+  color:var(--bg-deep);
+  box-shadow:0 0 16px color-mix(in srgb, var(--group-color, var(--accent-cyan)) 40%, transparent);
 }
-.nav-btn.periodic{
-  border-color:color-mix(in srgb, var(--accent-amber) 45%, transparent);
-  color:var(--accent-amber);
-  display:inline-flex; align-items:center; gap:0.4rem;
+.nav-group-btn .caret{
+  font-size:0.7rem;
+  transition:transform var(--transition);
+  opacity:0.8;
 }
-.nav-btn.periodic:hover{
-  background:color-mix(in srgb, var(--accent-amber) 12%, transparent);
-  border-color:var(--accent-amber);
-  box-shadow:0 0 14px color-mix(in srgb, var(--accent-amber) 35%, transparent);
+.nav-group.open .nav-group-btn .caret{
+  transform:rotate(180deg);
 }
-.nav-btn.numbers{
-  border-color:color-mix(in srgb, var(--accent-pink) 45%, transparent);
-  color:var(--accent-pink);
-  display:inline-flex; align-items:center; gap:0.4rem;
+
+.nav-group-menu{
+  position:absolute;
+  top:calc(100% + 8px);
+  right:0;
+  min-width:290px;
+  background:var(--bg-card);
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:0.5rem;
+  box-shadow:0 12px 40px rgba(0,0,0,0.35),
+             0 0 0 1px color-mix(in srgb, var(--group-color, var(--accent-cyan)) 20%, transparent);
+  opacity:0;
+  transform:translateY(-8px) scale(0.96);
+  pointer-events:none;
+  transition:opacity var(--transition),transform var(--transition);
+  z-index:1001;
 }
-.nav-btn.numbers:hover{
-  background:color-mix(in srgb, var(--accent-pink) 12%, transparent);
-  border-color:var(--accent-pink);
-  box-shadow:0 0 14px color-mix(in srgb, var(--accent-pink) 35%, transparent);
+.nav-group.open .nav-group-menu{
+  opacity:1;
+  transform:translateY(0) scale(1);
+  pointer-events:auto;
 }
-.nav-btn.klass{
-  border-color:color-mix(in srgb, var(--accent-green) 45%, transparent);
-  color:var(--accent-green);
-  display:inline-flex; align-items:center; gap:0.4rem;
+.nav-group-menu::before{
+  content:'';
+  position:absolute;
+  top:-6px; right:22px;
+  width:12px; height:12px;
+  background:var(--bg-card);
+  border-left:1px solid var(--line);
+  border-top:1px solid var(--line);
+  transform:rotate(45deg);
 }
-.nav-btn.klass:hover{
-  background:color-mix(in srgb, var(--accent-green) 12%, transparent);
-  border-color:var(--accent-green);
-  box-shadow:0 0 14px color-mix(in srgb, var(--accent-green) 35%, transparent);
+
+.nav-menu-item{
+  display:flex; align-items:flex-start;
+  gap:0.8rem;
+  width:100%;
+  padding:0.7rem 0.85rem;
+  background:transparent;
+  border:none;
+  border-radius:10px;
+  cursor:pointer;
+  text-align:left;
+  font-family:inherit;
+  color:var(--ink);
+  transition:background var(--transition);
 }
-.nav-btn.solvability{
-  border-color:color-mix(in srgb, var(--accent-blue) 45%, transparent);
-  color:var(--accent-blue);
-  display:inline-flex; align-items:center; gap:0.4rem;
+.nav-menu-item:hover{
+  background:color-mix(in srgb, var(--item-color, var(--accent-cyan)) 10%, transparent);
 }
-.nav-btn.solvability:hover{
-  background:color-mix(in srgb, var(--accent-blue) 12%, transparent);
-  border-color:var(--accent-blue);
-  box-shadow:0 0 14px color-mix(in srgb, var(--accent-blue) 35%, transparent);
+.nav-menu-item .mi-icon{
+  font-size:1.4rem;
+  line-height:1;
+  flex-shrink:0;
+  margin-top:0.1rem;
 }
-.nav-btn.tools{
-  border-color:color-mix(in srgb, var(--accent-purple) 45%, transparent);
-  color:var(--accent-purple);
-  display:inline-flex; align-items:center; gap:0.35rem;
+.nav-menu-item .mi-text{
+  display:flex; flex-direction:column; gap:0.15rem;
 }
-.nav-btn.tools:hover,
-.tools-dropdown.open .nav-btn.tools{
-  background:color-mix(in srgb, var(--accent-purple) 12%, transparent);
-  border-color:var(--accent-purple);
-  box-shadow:0 0 14px color-mix(in srgb, var(--accent-purple) 35%, transparent);
+.nav-menu-item .mi-title{
+  font-weight:700;
+  font-size:0.9rem;
+  color:var(--item-color, var(--ink));
+  font-family:'Exo 2',sans-serif;
 }
-.nav-btn.tools .caret{
-  font-size:0.75rem;
-  transition: transform var(--transition);
+.nav-menu-item .mi-desc{
+  font-size:0.76rem;
+  color:var(--ink-muted);
+  line-height:1.3;
 }
-.tools-dropdown.open .nav-btn.tools .caret{
-  transform: rotate(180deg);
-}
-.nav-btn.iupac{
-  border-color:color-mix(in srgb, var(--accent-cyan) 45%, transparent);
-  color:var(--accent-cyan);
-  display:inline-flex; align-items:center; gap:0.4rem;
-}
-.nav-btn.iupac:hover{
-  background:color-mix(in srgb, var(--accent-cyan) 12%, transparent);
-  border-color:var(--accent-cyan);
-  box-shadow:0 0 14px color-mix(in srgb, var(--accent-cyan) 35%, transparent);
-}
+
 .theme-toggle{
   width:42px; height:42px; border-radius:50%;
   border:1px solid var(--line); background:var(--bg-card);
@@ -217,97 +273,21 @@ body{
 }
 .theme-toggle:hover{border-color:var(--accent-amber); transform:rotate(20deg) scale(1.08)}
 
-/* ========== Инструменты — выпадающее меню ========== */
-.tools-dropdown{
-  position: relative;
-  display: inline-block;
-}
-.tools-menu{
-  position: absolute;
-  top: calc(100% + 8px);
-  right: 0;
-  min-width: 320px;
-  background: var(--bg-card);
-  border: 1px solid var(--line);
-  border-radius: 14px;
-  padding: 0.5rem;
-  box-shadow: 0 12px 40px rgba(0,0,0,0.35),
-              0 0 0 1px color-mix(in srgb, var(--accent-purple) 20%, transparent);
-  opacity: 0;
-  transform: translateY(-8px) scale(0.96);
-  pointer-events: none;
-  transition: opacity var(--transition), transform var(--transition);
-  z-index: 1001;
-}
-.tools-dropdown.open .tools-menu{
-  opacity: 1;
-  transform: translateY(0) scale(1);
-  pointer-events: auto;
-}
-.tools-menu::before{
-  content:'';
-  position:absolute;
-  top: -6px; right: 20px;
-  width: 12px; height: 12px;
-  background: var(--bg-card);
-  border-left: 1px solid var(--line);
-  border-top: 1px solid var(--line);
-  transform: rotate(45deg);
-}
-.tools-menu-item{
-  display: flex;
-  align-items: flex-start;
-  gap: 0.8rem;
-  width: 100%;
-  padding: 0.7rem 0.85rem;
-  background: transparent;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  text-align: left;
-  font-family: inherit;
-  color: var(--ink);
-  transition: background var(--transition);
-}
-.tools-menu-item:hover{
-  background: color-mix(in srgb, var(--accent-purple) 10%, transparent);
-}
-.tools-menu-item .tool-icon{
-  font-size: 1.4rem;
-  line-height: 1;
-  flex-shrink: 0;
-  margin-top: 0.1rem;
-}
-.tools-menu-item .tool-text{
-  display: flex;
-  flex-direction: column;
-  gap: 0.15rem;
-}
-.tools-menu-item .tool-title{
-  font-weight: 700;
-  font-size: 0.9rem;
-  color: var(--ink);
-}
-.tools-menu-item .tool-desc{
-  font-size: 0.78rem;
-  color: var(--ink-muted);
-  line-height: 1.3;
-}
-@media (max-width: 768px){
-  .tools-menu{
-    position: fixed;
-    top: auto;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    min-width: 100%;
-    border-radius: 20px 20px 0 0;
-    transform: translateY(100%);
+@media (max-width: 900px){
+  .nav-group-menu{
+    position:fixed;
+    top:auto;
+    bottom:0; left:0; right:0;
+    min-width:100%;
+    border-radius:20px 20px 0 0;
+    transform:translateY(100%);
+    max-height:70vh;
+    overflow-y:auto;
   }
-  .tools-dropdown.open .tools-menu{
-    transform: translateY(0);
+  .nav-group.open .nav-group-menu{
+    transform:translateY(0);
   }
-  .tools-menu::before{display:none;}
+  .nav-group-menu::before{display:none;}
 }
 
 /* HERO */
@@ -1552,7 +1532,7 @@ footer a:hover{text-decoration:underline}
 a:focus-visible,button:focus-visible{outline:2px solid var(--accent-cyan); outline-offset:2px; border-radius:6px}
 sub,sup{font-size:0.75em; line-height:0}
 
-/* MathJax — чтобы SVG-формулы не ломали вёрстку */
+/* MathJax */
 mjx-container{
   font-size: 1.02em !important;
   line-height: 1.4 !important;
@@ -1568,49 +1548,112 @@ mjx-container[display="true"]{
 <canvas id="molecule-canvas" aria-hidden="true"></canvas>
 
 <nav class="navbar" id="navbar">
-  <a href="#" class="logo" id="logoBtn" title="На главную">
-    <div class="logo-icon">⚛</div>
-    <div class="logo-text">OrgChem 2.0</div>
-  </a>
+  <div class="nav-left">
+    <button class="back-btn" id="backNavBtn" title="Назад" aria-label="Назад">←</button>
+    <a href="#" class="logo" id="logoBtn" title="На главную">
+      <div class="logo-icon">⚛</div>
+      <div class="logo-text">OrgChem 2.0</div>
+    </a>
+  </div>
   <div class="nav-links" id="navLinks">
-    <button class="nav-btn klass" id="klassBtn">📚 Классы</button>
-    <button class="nav-btn numbers" id="numbersBtn">🎯 ЕГЭ по номерам</button>
-    <button class="nav-btn solvability" id="solvabilityBtn">🧪 Растворимость</button>
-    <button class="nav-btn periodic" id="periodicBtn">⚛ Таблица Менделеева</button>
-    <button class="nav-btn iupac" id="iupacBtn">📖 Справочник названий</button>
-    <button class="nav-btn" data-nav="modules">Модули</button>
 
-    <!-- Выпадающее меню Инструменты -->
-    <div class="tools-dropdown" id="toolsDropdown">
-      <button class="nav-btn tools" id="toolsBtn" aria-haspopup="true" aria-expanded="false">
-        🛠 Инструменты <span class="caret">▾</span>
+    <!-- ============ ГРУППА: ИЗУЧЕНИЕ ============ -->
+    <div class="nav-group" id="groupStudy" style="--group-color: #5b8def;">
+      <button class="nav-group-btn" aria-haspopup="true" aria-expanded="false">
+        📚 Изучение <span class="caret">▾</span>
       </button>
-      <div class="tools-menu" role="menu">
-        <button class="tools-menu-item" data-tool="molar-mass">
-          <span class="tool-icon">⚖️</span>
-          <span class="tool-text">
-            <span class="tool-title">Калькулятор молярных масс</span>
-            <span class="tool-desc">H₂SO₄ → 98 г/моль</span>
+      <div class="nav-group-menu" role="menu">
+        <button class="nav-menu-item" data-nav="modules" style="--item-color:#22d3ee;">
+          <span class="mi-icon">📦</span>
+          <span class="mi-text">
+            <span class="mi-title">Модули</span>
+            <span class="mi-desc">11 учебных блоков с теорией и заданиями</span>
           </span>
         </button>
-        <button class="tools-menu-item" data-tool="equation-balancer">
-          <span class="tool-icon">⚗️</span>
-          <span class="tool-text">
-            <span class="tool-title">Ввод уравнений реакций</span>
-            <span class="tool-desc">Расстановка коэффициентов</span>
+        <button class="nav-menu-item" data-nav="klassBtn" style="--item-color:#34d399;">
+          <span class="mi-icon">📚</span>
+          <span class="mi-text">
+            <span class="mi-title">Классы соединений</span>
+            <span class="mi-desc">Алканы, спирты, кислоты и другие</span>
           </span>
         </button>
-        <button class="tools-menu-item" data-tool="formula-builder">
-          <span class="tool-icon">🧬</span>
-          <span class="tool-text">
-            <span class="tool-title">Конструктор формул</span>
-            <span class="tool-desc">Соберите молекулу из атомов и групп</span>
+        <button class="nav-menu-item" data-nav="numbersBtn" style="--item-color:#f472b6;">
+          <span class="mi-icon">🎯</span>
+          <span class="mi-text">
+            <span class="mi-title">ЕГЭ по номерам</span>
+            <span class="mi-desc">Задания, сгруппированные по номерам</span>
+          </span>
+        </button>
+        <button class="nav-menu-item" data-nav="about" style="--item-color:#b47cf0;">
+          <span class="mi-icon">ℹ️</span>
+          <span class="mi-text">
+            <span class="mi-title">О курсе</span>
+            <span class="mi-desc">Как работать с материалами сайта</span>
           </span>
         </button>
       </div>
     </div>
 
-    <button class="nav-btn" data-nav="about">О курсе</button>
+    <!-- ============ ГРУППА: СПРАВОЧНИКИ ============ -->
+    <div class="nav-group" id="groupRefs" style="--group-color: #22d3ee;">
+      <button class="nav-group-btn" aria-haspopup="true" aria-expanded="false">
+        📖 Справочники <span class="caret">▾</span>
+      </button>
+      <div class="nav-group-menu" role="menu">
+        <button class="nav-menu-item" id="periodicBtn" style="--item-color:#fbbf24;">
+          <span class="mi-icon">⚛</span>
+          <span class="mi-text">
+            <span class="mi-title">Таблица Менделеева</span>
+            <span class="mi-desc">118 элементов с подробной информацией</span>
+          </span>
+        </button>
+        <button class="nav-menu-item" id="solvabilityBtn" style="--item-color:#5b8def;">
+          <span class="mi-icon">🧪</span>
+          <span class="mi-text">
+            <span class="mi-title">Растворимость</span>
+            <span class="mi-desc">Таблица растворимости и реакции</span>
+          </span>
+        </button>
+        <button class="nav-menu-item" id="iupacBtn" style="--item-color:#22d3ee;">
+          <span class="mi-icon">📖</span>
+          <span class="mi-text">
+            <span class="mi-title">Справочник названий</span>
+            <span class="mi-desc">ИЮПАК и тривиальные названия + 3D</span>
+          </span>
+        </button>
+      </div>
+    </div>
+
+    <!-- ============ ГРУППА: ИНСТРУМЕНТЫ ============ -->
+    <div class="nav-group" id="toolsDropdown" style="--group-color: #b47cf0;">
+      <button class="nav-group-btn" id="toolsBtn" aria-haspopup="true" aria-expanded="false">
+        🛠 Инструменты <span class="caret">▾</span>
+      </button>
+      <div class="nav-group-menu" role="menu">
+        <button class="nav-menu-item" data-tool="molar-mass" style="--item-color:#22d3ee;">
+          <span class="mi-icon">⚖️</span>
+          <span class="mi-text">
+            <span class="mi-title">Калькулятор молярных масс</span>
+            <span class="mi-desc">H₂SO₄ → 98 г/моль</span>
+          </span>
+        </button>
+        <button class="nav-menu-item" data-tool="equation-balancer" style="--item-color:#b47cf0;">
+          <span class="mi-icon">⚗️</span>
+          <span class="mi-text">
+            <span class="mi-title">Ввод уравнений реакций</span>
+            <span class="mi-desc">Расстановка коэффициентов</span>
+          </span>
+        </button>
+        <button class="nav-menu-item" data-tool="formula-builder" style="--item-color:#34d399;">
+          <span class="mi-icon">🧬</span>
+          <span class="mi-text">
+            <span class="mi-title">Конструктор формул</span>
+            <span class="mi-desc">Соберите молекулу из атомов</span>
+          </span>
+        </button>
+      </div>
+    </div>
+
     <button class="theme-toggle" id="themeToggle" title="Сменить тему" aria-label="Сменить тему">🌙</button>
   </div>
 </nav>
@@ -1759,7 +1802,6 @@ mjx-container[display="true"]{
 
   <footer>
     <p>OrgChem 2.0 — Интерактивный курс подготовки к ЕГЭ по органической химии</p>
-    <p style="margin-top:0.5rem;">Источник: <a href="https://github.com/vdorlov/org_chem_2.0" target="_blank" rel="noopener">github.com/vdorlov/org_chem_2.0</a></p>
     <p style="margin-top:0.5rem;font-size:0.78rem;opacity:0.7;">
       3D-молекулы: <a href="https://pubchem.ncbi.nlm.nih.gov/" target="_blank" rel="noopener">PubChem</a> (NIH, Public Domain) ·
       <a href="https://3dmol.org/" target="_blank" rel="noopener">3Dmol.js</a> (BSD License)
@@ -1775,7 +1817,7 @@ mjx-container[display="true"]{
 'use strict';
 
 /* ============================================================
-   MODULES META — файлы в bloks/
+   MODULES META
    ============================================================ */
 const MODULES = {
   1:{color:'cyan', icon:'⚛', title:'Теоретические основы',
@@ -1836,7 +1878,7 @@ const TABLES = {
 };
 
 /* ============================================================
-   КЛАССЫ — теория по классам соединений (папка klass/)
+   КЛАССЫ
    ============================================================ */
 const KLASS_LIST = [
   {id:'alkany',      title:'Алканы',                   subtitle:'Предельные углеводороды',         icon:'🔗', color:'#22d3ee', file:'klass/Alkany.md'},
@@ -1855,87 +1897,29 @@ const KLASS_LIST = [
 ];
 
 /* ============================================================
-   ЕГЭ ПО НОМЕРАМ — карта номеров
+   ЕГЭ ПО НОМЕРАМ
    ============================================================ */
 const NUMBER_TASKS = {
-  10: {
-    num: 10,
-    title: 'Номенклатура и классификация органических веществ',
-    shortTitle: 'Номенклатура и классификация',
-    icon: '🏷️',
-    color: '#22d3ee',
-    file: 'number_tasks/10_Zadanie_Nomenklatura_klassifikacia_organicheskish_vechsestv.md',
-    imagesDir: 'task_10/'
-  },
-  11: {
-    num: 11,
-    title: 'Изомеры и гомологи',
-    shortTitle: 'Изомеры и гомологи',
-    icon: '🧬',
-    color: '#b47cf0',
-    file: 'number_tasks/11_Zadanie_Izomery_gomology.md',
-    imagesDir: 'task_11/'
-  },
-  12: {
-    num: 12,
-    title: 'Свойства углеводородов и кислородсодержащих веществ',
-    shortTitle: 'Свойства веществ',
-    icon: '⚗️',
-    color: '#f472b6',
-    file: 'number_tasks/12_Zadanie_Svoistva_uglevodorodov_kislorodosoderzhaschih_veschestv.md',
-    imagesDir: 'task_12/'
-  },
-  13: {
-    num: 13,
-    title: 'Азотсодержащие вещества, углеводы, жиры',
-    shortTitle: 'Азотсодержащие и углеводы',
-    icon: '🧪',
-    color: '#34d399',
-    file: 'number_tasks/13_Zadanie_Azotosoderzhaschie_veschesta_uglevody_zhiry.md',
-    imagesDir: 'task_13/'
-  },
-  14: {
-    num: 14,
-    title: 'Свойства углеводородов',
-    shortTitle: 'Свойства углеводородов',
-    icon: '🔥',
-    color: '#fbbf24',
-    file: 'number_tasks/14_Zadanie_Svoystva_uglevodorodov.md',
-    imagesDir: 'task_14/'
-  },
-  15: {
-    num: 15,
-    title: 'Свойства кислородсодержащих веществ',
-    shortTitle: 'Свойства кислородсодержащих',
-    icon: '💧',
-    color: '#fb7185',
-    file: 'number_tasks/15_Zadanie_Svoystva_kislorodosoderzhaschih_veschestv.md',
-    imagesDir: 'task_15/'
-  },
-  16: {
-    num: 16,
-    title: 'Цепочки превращений органических веществ',
-    shortTitle: 'Цепочки превращений',
-    icon: '🔗',
-    color: '#818cf8',
-    file: 'number_tasks/16_Zadanie_Cepochki_prevrascheniy_organicheskhih_veschestv.md',
-    imagesDir: 'task_16/'
-  },
-  32: {
-    num: 32,
-    title: 'Цепочки превращений органических веществ (задание 32)',
-    shortTitle: 'Цепочки превращений (32)',
-    icon: '🧩',
-    color: '#c084fc',
-    file: 'number_tasks/32_Zadanie_Cepochki_prevrascheniy_organicheskhih_veschestv.md',
-    imagesDir: 'task_32/'
-  }
+  10: {num: 10, title: 'Номенклатура и классификация органических веществ', shortTitle: 'Номенклатура и классификация',
+       icon: '🏷️', color: '#22d3ee', file: 'number_tasks/10_Zadanie_Nomenklatura_klassifikacia_organicheskish_vechsestv.md', imagesDir: 'task_10/'},
+  11: {num: 11, title: 'Изомеры и гомологи', shortTitle: 'Изомеры и гомологи',
+       icon: '🧬', color: '#b47cf0', file: 'number_tasks/11_Zadanie_Izomery_gomology.md', imagesDir: 'task_11/'},
+  12: {num: 12, title: 'Свойства углеводородов и кислородсодержащих веществ', shortTitle: 'Свойства веществ',
+       icon: '⚗️', color: '#f472b6', file: 'number_tasks/12_Zadanie_Svoistva_uglevodorodov_kislorodosoderzhaschih_veschestv.md', imagesDir: 'task_12/'},
+  13: {num: 13, title: 'Азотсодержащие вещества, углеводы, жиры', shortTitle: 'Азотсодержащие и углеводы',
+       icon: '🧪', color: '#34d399', file: 'number_tasks/13_Zadanie_Azotosoderzhaschie_veschesta_uglevody_zhiry.md', imagesDir: 'task_13/'},
+  14: {num: 14, title: 'Свойства углеводородов', shortTitle: 'Свойства углеводородов',
+       icon: '🔥', color: '#fbbf24', file: 'number_tasks/14_Zadanie_Svoystva_uglevodorodov.md', imagesDir: 'task_14/'},
+  15: {num: 15, title: 'Свойства кислородсодержащих веществ', shortTitle: 'Свойства кислородсодержащих',
+       icon: '💧', color: '#fb7185', file: 'number_tasks/15_Zadanie_Svoystva_kislorodosoderzhaschih_veschestv.md', imagesDir: 'task_15/'},
+  16: {num: 16, title: 'Цепочки превращений органических веществ', shortTitle: 'Цепочки превращений',
+       icon: '🔗', color: '#818cf8', file: 'number_tasks/16_Zadanie_Cepochki_prevrascheniy_organicheskhih_veschestv.md', imagesDir: 'task_16/'},
+  32: {num: 32, title: 'Цепочки превращений органических веществ (задание 32)', shortTitle: 'Цепочки превращений (32)',
+       icon: '🧩', color: '#c084fc', file: 'number_tasks/32_Zadanie_Cepochki_prevrascheniy_organicheskhih_veschestv.md', imagesDir: 'task_32/'}
 };
 
 const LOCAL_BASE = './';
-const RAW_FALLBACKS = [
-  'https://raw.githubusercontent.com/vdorlov/org_chem_2.0/master/'
-];
+const RAW_FALLBACKS = ['https://raw.githubusercontent.com/vdorlov/org_chem_2.0/master/'];
 const contentCache = new Map();
 const MD_STORAGE_PREFIX = 'orgchem-md:';
 
@@ -1959,29 +1943,21 @@ document.getElementById('themeToggle').addEventListener('click', () => {
 });
 applyTheme(document.documentElement.getAttribute('data-theme'));
 
-/* ============================================================
-   MathJax — рендер формул LaTeX после вставки контента
-   ============================================================ */
+/* ===================== MathJax ===================== */
 function renderMathJax(container){
   if (!container) return;
   if (!window.MathJax || !window.MathJax.typesetPromise){
     if (window.MathJax && window.MathJax.startup && window.MathJax.startup.promise){
       window.MathJax.startup.promise
-        .then(() => {
-          try { window.MathJax.typesetPromise([container]); } catch(e){}
-        })
+        .then(() => { try { window.MathJax.typesetPromise([container]); } catch(e){} })
         .catch(() => {});
     }
     return;
   }
-  try {
-    window.MathJax.typesetPromise([container]).catch(() => {});
-  } catch(e){ /* ignore */ }
+  try { window.MathJax.typesetPromise([container]).catch(() => {}); } catch(e){}
 }
 
-/* ============================================================
-   РЕНДЕР КАРТОЧЕК МОДУЛЕЙ
-   ============================================================ */
+/* ===================== MODULE CARDS ===================== */
 const cardClickGuard = new WeakMap();
 
 function buildModuleCard(num, m){
@@ -2075,6 +2051,7 @@ function buildModuleCard(num, m){
 const homePage = document.getElementById('home-page');
 const contentPages = document.getElementById('content-pages');
 const navLinks = document.getElementById('navLinks');
+const backNavBtn = document.getElementById('backNavBtn');
 
 let suppressHistory = false;
 if (!history.state || !history.state.orgchem){
@@ -2096,9 +2073,7 @@ function buildHashFor(state){
   return `#m${state.num}-${t}${idx}`;
 }
 function pushView(state){
-  try {
-    history.pushState({orgchem:true, ...state}, '', buildHashFor(state));
-  } catch(e){ /* ignore */ }
+  try { history.pushState({orgchem:true, ...state}, '', buildHashFor(state)); } catch(e){}
 }
 
 function getModule(num){
@@ -2106,7 +2081,19 @@ function getModule(num){
   return MODULES[num];
 }
 
+function showBackButton(visible, onClick){
+  if (!backNavBtn) return;
+  if (visible){
+    backNavBtn.classList.add('visible');
+    backNavBtn.onclick = onClick || (() => showHome());
+  } else {
+    backNavBtn.classList.remove('visible');
+    backNavBtn.onclick = null;
+  }
+}
+
 function showHome(opts = {}){
+  showBackButton(false);
   document.getElementById('backToModules')?.remove();
   homePage.style.display = 'block';
   contentPages.innerHTML = '';
@@ -2129,19 +2116,8 @@ function showPractice(num, idx, opts = {}){
   showContentPage(num, title, pf.file, 'practice', idx, opts);
 }
 
-function ensureBackButton(onBack){
-  const existing = document.getElementById('backToModules');
-  if (existing) existing.remove();
-  const btn = document.createElement('button');
-  btn.className = 'nav-btn back';
-  btn.id = 'backToModules';
-  btn.textContent = '← Назад';
-  btn.addEventListener('click', onBack || (() => showHome()));
-  navLinks.insertBefore(btn, navLinks.firstChild);
-}
-
 /* ============================================================
-   ЛЕНИВАЯ ЗАГРУЗКА ВНЕШНИХ МОДУЛЕЙ
+   ЛЕНИВАЯ ЗАГРУЗКА
    ============================================================ */
 function loadScript(src){
   return new Promise((resolve, reject) => {
@@ -2166,7 +2142,6 @@ function loadStyle(href){
 /* ---------- Таблица Менделеева ---------- */
 let periodicAssetsLoaded = false;
 let periodicLoadPromise = null;
-
 async function loadPeriodicAssets(){
   if (periodicAssetsLoaded) return;
   if (periodicLoadPromise) return periodicLoadPromise;
@@ -2184,17 +2159,12 @@ async function showPeriodic(opts = {}){
   if (!opts.fromPop && !suppressHistory) pushView({view:'periodic'});
   homePage.style.display = 'none';
   document.getElementById('backToModules')?.remove();
-
   contentPages.innerHTML = `
     <div id="periodic-root">
-      <p style="text-align:center;color:var(--ink-muted);padding:4rem 1rem;">
-        🔄 Загрузка таблицы Менделеева…
-      </p>
+      <p style="text-align:center;color:var(--ink-muted);padding:4rem 1rem;">🔄 Загрузка таблицы Менделеева…</p>
     </div>`;
-
-  ensureBackButton(() => showHome());
+  showBackButton(true, () => showHome());
   if (!opts.fromPop) window.scrollTo({top:0, behavior:'auto'});
-
   try {
     await loadPeriodicAssets();
     const root = document.getElementById('periodic-root');
@@ -2203,11 +2173,10 @@ async function showPeriodic(opts = {}){
   } catch(e){
     const root = document.getElementById('periodic-root');
     if (root){
-      root.innerHTML = `
-        <div style="text-align:center;padding:3rem 1rem;">
-          <p style="color:var(--accent-red);font-weight:700;font-size:1.1rem;">⚠️ Не удалось загрузить таблицу</p>
-          <p style="color:var(--ink-muted);margin-top:0.8rem;">${e.message || 'Проверьте интернет.'}</p>
-        </div>`;
+      root.innerHTML = `<div style="text-align:center;padding:3rem 1rem;">
+        <p style="color:var(--accent-red);font-weight:700;font-size:1.1rem;">⚠️ Не удалось загрузить таблицу</p>
+        <p style="color:var(--ink-muted);margin-top:0.8rem;">${e.message || 'Проверьте интернет.'}</p>
+      </div>`;
     }
   }
 }
@@ -2215,7 +2184,6 @@ async function showPeriodic(opts = {}){
 /* ---------- Таблица растворимости ---------- */
 let solvabilityAssetsLoaded = false;
 let solvabilityLoadPromise = null;
-
 async function loadSolvabilityAssets(){
   if (solvabilityAssetsLoaded) return;
   if (solvabilityLoadPromise) return solvabilityLoadPromise;
@@ -2233,17 +2201,12 @@ async function showSolvability(opts = {}){
   if (!opts.fromPop && !suppressHistory) pushView({view:'solvability'});
   homePage.style.display = 'none';
   document.getElementById('backToModules')?.remove();
-
   contentPages.innerHTML = `
     <div id="solvability-root">
-      <p style="text-align:center;color:var(--ink-muted);padding:4rem 1rem;">
-        🔄 Загрузка таблицы растворимости…
-      </p>
+      <p style="text-align:center;color:var(--ink-muted);padding:4rem 1rem;">🔄 Загрузка таблицы растворимости…</p>
     </div>`;
-
-  ensureBackButton(() => showHome());
+  showBackButton(true, () => showHome());
   if (!opts.fromPop) window.scrollTo({top:0, behavior:'auto'});
-
   try {
     await loadSolvabilityAssets();
     const root = document.getElementById('solvability-root');
@@ -2252,64 +2215,43 @@ async function showSolvability(opts = {}){
   } catch(e){
     const root = document.getElementById('solvability-root');
     if (root){
-      root.innerHTML = `
-        <div style="text-align:center;padding:3rem 1rem;">
-          <p style="color:var(--accent-red);font-weight:700;font-size:1.1rem;">⚠️ Не удалось загрузить таблицу растворимости</p>
-          <p style="color:var(--ink-muted);margin-top:0.8rem;">${e.message || 'Проверьте интернет.'}</p>
-        </div>`;
+      root.innerHTML = `<div style="text-align:center;padding:3rem 1rem;">
+        <p style="color:var(--accent-red);font-weight:700;font-size:1.1rem;">⚠️ Не удалось загрузить таблицу растворимости</p>
+        <p style="color:var(--ink-muted);margin-top:0.8rem;">${e.message || 'Проверьте интернет.'}</p>
+      </div>`;
     }
   }
 }
 
 /* ============================================================
-   ИНСТРУМЕНТЫ — ленивая загрузка модулей
+   ИНСТРУМЕНТЫ
    ============================================================ */
 const TOOLS = {
   'molar-mass': {
-    title: 'Калькулятор молярных масс',
-    icon: '⚖️',
-    color: '#22d3ee',
-    css: './tools/molar-mass/molar-mass.css',
-    js: './tools/molar-mass/molar-mass.js',
-    renderFn: '__renderMolarMass'
+    title: 'Калькулятор молярных масс', icon: '⚖️', color: '#22d3ee',
+    css: './tools/molar-mass/molar-mass.css', js: './tools/molar-mass/molar-mass.js', renderFn: '__renderMolarMass'
   },
   'equation-balancer': {
-    title: 'Ввод уравнений реакций',
-    icon: '⚗️',
-    color: '#b47cf0',
-    css: './tools/equation-balancer/equation-balancer.css',
-    js: './tools/equation-balancer/equation-balancer.js',
-    renderFn: '__renderEquationBalancer'
+    title: 'Ввод уравнений реакций', icon: '⚗️', color: '#b47cf0',
+    css: './tools/equation-balancer/equation-balancer.css', js: './tools/equation-balancer/equation-balancer.js', renderFn: '__renderEquationBalancer'
   },
   'formula-builder': {
-    title: 'Конструктор формул',
-    icon: '🧬',
-    color: '#34d399',
-    css: './tools/formula-builder/formula-builder.css',
-    js: './tools/formula-builder/formula-builder.js',
-    renderFn: '__renderFormulaBuilder'
+    title: 'Конструктор формул', icon: '🧬', color: '#34d399',
+    css: './tools/formula-builder/formula-builder.css', js: './tools/formula-builder/formula-builder.js', renderFn: '__renderFormulaBuilder'
   },
   'iupac-catalog': {
-    title: 'Справочник названий',
-    icon: '📖',
-    color: '#22d3ee',
-    css: './tools/iupac-catalog/iupac-catalog.css',
-    js: './tools/iupac-catalog/iupac-catalog.js',
-    renderFn: '__renderIupacCatalog'
+    title: 'Справочник названий', icon: '📖', color: '#22d3ee',
+    css: './tools/iupac-catalog/iupac-catalog.css', js: './tools/iupac-catalog/iupac-catalog.js', renderFn: '__renderIupacCatalog'
   }
 };
 
-const toolAssets = {}; // { toolId: Promise }
-
+const toolAssets = {};
 async function loadToolAssets(toolId){
   if (toolAssets[toolId]) return toolAssets[toolId];
   const t = TOOLS[toolId];
   if (!t) throw new Error('Неизвестный инструмент: ' + toolId);
   toolAssets[toolId] = (async () => {
-    await Promise.all([
-      loadStyle(t.css),
-      loadScript(t.js)
-    ]);
+    await Promise.all([loadStyle(t.css), loadScript(t.js)]);
   })();
   return toolAssets[toolId];
 }
@@ -2317,8 +2259,6 @@ async function loadToolAssets(toolId){
 async function showTool(toolId, opts = {}){
   const t = TOOLS[toolId];
   if (!t) return;
-
-  // Специальная маршрутизация для справочника ИЮПАК (view: 'iupac')
   const isIupac = toolId === 'iupac-catalog';
 
   if (!opts.fromPop && !suppressHistory){
@@ -2338,15 +2278,12 @@ async function showTool(toolId, opts = {}){
         </div>
       </div>
       <div id="tool-body">
-        <p style="text-align:center;color:var(--ink-muted);padding:3rem;">
-          🔄 Загрузка…
-        </p>
+        <p style="text-align:center;color:var(--ink-muted);padding:3rem;">🔄 Загрузка…</p>
       </div>
     </div>`;
 
   contentPages.querySelector('[data-goto="home"]')?.addEventListener('click', () => showHome());
-
-  ensureBackButton(() => showHome());
+  showBackButton(true, () => showHome());
   if (!opts.fromPop) window.scrollTo({top:0, behavior:'auto'});
 
   try {
@@ -2356,9 +2293,7 @@ async function showTool(toolId, opts = {}){
     if (typeof window[t.renderFn] === 'function'){
       await window[t.renderFn](body);
     } else {
-      body.innerHTML = `<p style="text-align:center;color:var(--accent-red);padding:3rem;">
-        ⚠️ Инструмент не загрузился корректно
-      </p>`;
+      body.innerHTML = `<p style="text-align:center;color:var(--accent-red);padding:3rem;">⚠️ Инструмент не загрузился корректно</p>`;
     }
   } catch(e){
     const body = document.getElementById('tool-body');
@@ -2372,7 +2307,7 @@ async function showTool(toolId, opts = {}){
 }
 
 /* ============================================================
-   КЛАССЫ — каталог
+   КЛАССЫ
    ============================================================ */
 function showKlassCatalog(opts = {}){
   if (!opts.fromPop && !suppressHistory) pushView({view:'klass-catalog'});
@@ -2395,9 +2330,7 @@ function showKlassCatalog(opts = {}){
         <h2>Теория по классам органических веществ</h2>
         <p>Выберите класс — откроется подробный конспект: строение, свойства, реакции, получение и применение.</p>
       </div>
-      <div class="klass-grid" id="klassGrid">
-        ${cards}
-      </div>
+      <div class="klass-grid" id="klassGrid">${cards}</div>
       <div style="text-align:center; margin-top:2rem;">
         <button class="module-btn" style="max-width:300px; margin:0 auto; padding:0.8rem 1.5rem;" data-goto="home">← На главную</button>
       </div>
@@ -2418,13 +2351,10 @@ function showKlassCatalog(opts = {}){
     card.addEventListener('mouseleave', () => { card.style.transform = ''; });
   });
 
-  ensureBackButton(() => showHome());
+  showBackButton(true, () => showHome());
   if (!opts.fromPop) window.scrollTo({top:0, behavior:'auto'});
 }
 
-/* ============================================================
-   КЛАССЫ — детальная страница
-   ============================================================ */
 async function showKlassDetail(id, opts = {}){
   const meta = KLASS_LIST.find(k => k.id === id);
   if (!meta) return;
@@ -2438,9 +2368,7 @@ async function showKlassDetail(id, opts = {}){
       <div class="number-tasks-header">
         <div class="badge">${meta.icon} ${meta.title}</div>
         <h2>${meta.title}</h2>
-        <div class="meta" id="klassMeta">
-          <span>🔄 Загрузка…</span>
-        </div>
+        <div class="meta" id="klassMeta"><span>🔄 Загрузка…</span></div>
         <div class="header-actions" style="justify-content:center; display:flex; gap:0.7rem; margin-top:1.2rem; flex-wrap:wrap;">
           <button class="module-btn" data-goto="catalog">← Все классы</button>
           <button class="module-btn" data-goto="home">← На главную</button>
@@ -2454,7 +2382,7 @@ async function showKlassDetail(id, opts = {}){
   contentPages.querySelector('[data-goto="catalog"]')?.addEventListener('click', () => showKlassCatalog());
   contentPages.querySelector('[data-goto="home"]')?.addEventListener('click', () => showHome());
 
-  ensureBackButton(() => showKlassCatalog());
+  showBackButton(true, () => showKlassCatalog());
   if (!opts.fromPop) window.scrollTo({top:0, behavior:'auto'});
 
   const body = document.getElementById('klassBody');
@@ -2476,7 +2404,7 @@ async function showKlassDetail(id, opts = {}){
 }
 
 /* ============================================================
-   ЕГЭ ПО НОМЕРАМ — каталог
+   ЕГЭ ПО НОМЕРАМ
    ============================================================ */
 function showNumbersCatalog(opts = {}){
   if (!opts.fromPop && !suppressHistory) pushView({view:'numbers-catalog'});
@@ -2499,9 +2427,7 @@ function showNumbersCatalog(opts = {}){
         <h2>Выберите номер задания</h2>
         <p>Реальные задания ЕГЭ, сгруппированные по номерам. Кликните на карточку — увидите все варианты с картинками.</p>
       </div>
-      <div class="numbers-grid" id="numbersGrid">
-        ${cards}
-      </div>
+      <div class="numbers-grid" id="numbersGrid">${cards}</div>
       <div style="text-align:center; margin-top:2rem;">
         <button class="module-btn" style="max-width:300px; margin:0 auto; padding:0.8rem 1.5rem;" data-goto="home">← На главную</button>
       </div>
@@ -2522,13 +2448,10 @@ function showNumbersCatalog(opts = {}){
     card.addEventListener('mouseleave', () => { card.style.transform = ''; });
   });
 
-  ensureBackButton(() => showHome());
+  showBackButton(true, () => showHome());
   if (!opts.fromPop) window.scrollTo({top:0, behavior:'auto'});
 }
 
-/* ============================================================
-   ЕГЭ ПО НОМЕРАМ — страница заданий номера
-   ============================================================ */
 async function showNumberTasks(num, opts = {}){
   const meta = NUMBER_TASKS[num];
   if (!meta) return;
@@ -2542,9 +2465,7 @@ async function showNumberTasks(num, opts = {}){
       <div class="number-tasks-header">
         <div class="badge">${meta.icon} Задание ${num} ЕГЭ</div>
         <h2>${meta.title}</h2>
-        <div class="meta" id="numMeta">
-          <span>🔄 Загрузка…</span>
-        </div>
+        <div class="meta" id="numMeta"><span>🔄 Загрузка…</span></div>
         <div class="header-actions" style="justify-content:center; display:flex; gap:0.7rem; margin-top:1.2rem; flex-wrap:wrap;">
           <button class="module-btn" data-goto="catalog">← Все номера</button>
           <button class="module-btn" data-goto="home">← На главную</button>
@@ -2558,7 +2479,7 @@ async function showNumberTasks(num, opts = {}){
   contentPages.querySelector('[data-goto="catalog"]')?.addEventListener('click', () => showNumbersCatalog());
   contentPages.querySelector('[data-goto="home"]')?.addEventListener('click', () => showHome());
 
-  ensureBackButton(() => showNumbersCatalog());
+  showBackButton(true, () => showNumbersCatalog());
   if (!opts.fromPop) window.scrollTo({top:0, behavior:'auto'});
 
   const list = document.getElementById('numTasksList');
@@ -2583,16 +2504,9 @@ async function showNumberTasks(num, opts = {}){
   }
 }
 
-/* ============================================================
-   ПАРСЕР ФАЙЛОВ "N. M" + ![[картинка]] + вложенный ответ
-   ============================================================ */
 function parseNumberTasks(md, imagesDir){
   if (!md) return [];
-
-  md = md
-    .replace(/\u00A0/g, ' ')
-    .replace(/[\u200B\u200C\u200D\uFEFF]/g, '');
-
+  md = md.replace(/\u00A0/g, ' ').replace(/[\u200B\u200C\u200D\uFEFF]/g, '');
   const lines = md.split('\n');
   const tasks = [];
   let current = null;
@@ -2611,12 +2525,7 @@ function parseNumberTasks(md, imagesDir){
     const numMatch = s.match(/^(\d+)[.)]\s+(\d+)\s*$/);
     if (numMatch){
       flushTask();
-      current = {
-        fileNum: parseInt(numMatch[1], 10),
-        egeNum: parseInt(numMatch[2], 10),
-        images: [],
-        answer: []
-      };
+      current = {fileNum: parseInt(numMatch[1], 10), egeNum: parseInt(numMatch[2], 10), images: [], answer: []};
       continue;
     }
 
@@ -2627,7 +2536,6 @@ function parseNumberTasks(md, imagesDir){
       const name = imgMatch[1].trim();
       const alt = (imgMatch[2] || name).trim();
       const src = name.includes('/') ? name : (imagesDir + name);
-
       if (current.inAnswer){
         current.answer.push({ level: 1, isImage: true, src, text: '' });
       } else {
@@ -2650,7 +2558,6 @@ function parseNumberTasks(md, imagesDir){
       const indentMatch = raw.match(/^(\s*)/);
       const indent = indentMatch ? indentMatch[1].length : 0;
       const listMatch = raw.match(/^\s*-\s+(.*)$/);
-
       if (listMatch){
         if (indent > current.ansIndent){
           const text = listMatch[1].trim();
@@ -2681,7 +2588,6 @@ function renderNumberTasks(tasks, container, numColor){
     container.innerHTML = '<p style="text-align:center;color:var(--ink-muted);padding:2rem;">Задания не найдены</p>';
     return;
   }
-
   container.innerHTML = '';
 
   tasks.forEach(t => {
@@ -2691,10 +2597,7 @@ function renderNumberTasks(tasks, container, numColor){
 
     const imagesHtml = t.images.length
       ? `<div class="num-task-images">${t.images.map(img => `
-          <img class="num-task-image"
-               src="${img.src}"
-               alt="${img.alt}"
-               loading="lazy"
+          <img class="num-task-image" src="${img.src}" alt="${img.alt}" loading="lazy"
                onerror="this.classList.add('error'); this.removeAttribute('src'); this.textContent='⚠️ Картинка не найдена: ${escapeHtml(img.src)}';">
         `).join('')}</div>`
       : '<em style="color:var(--ink-muted)">Условие отсутствует</em>';
@@ -2715,24 +2618,19 @@ function renderNumberTasks(tasks, container, numColor){
         <div class="num-task-title">Задание ${t.fileNum}</div>
       </div>
       ${imagesHtml}
-      <button class="num-task-answer-toggle" type="button">
-        <span>👁</span> Показать ответ
-      </button>
+      <button class="num-task-answer-toggle" type="button"><span>👁</span> Показать ответ</button>
       <div class="num-task-answer">
         <div class="num-task-answer-label">Ответ:</div>
         <ul class="num-task-answer-list">${answerItems}</ul>
       </div>`;
-
     container.appendChild(div);
   });
 }
 
 function escapeHtml(s){
   return String(s)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
 /* ============================================================
@@ -2745,8 +2643,7 @@ async function fetchMarkdown(filename){
       refreshMarkdownInBackground(filename);
       return cached;
     }
-  } catch(e) {}
-
+  } catch(e){}
   try {
     const url = LOCAL_BASE + filename;
     const r = await fetch(url, {cache:'force-cache'});
@@ -2755,8 +2652,7 @@ async function fetchMarkdown(filename){
       saveMdToStorage(filename, text);
       return text;
     }
-  } catch(e){ /* fallback */ }
-
+  } catch(e){}
   let lastErr = null;
   for (const base of RAW_FALLBACKS){
     try {
@@ -2772,19 +2668,16 @@ async function fetchMarkdown(filename){
   }
   throw lastErr || new Error('Не удалось загрузить ' + filename);
 }
-
 function saveMdToStorage(filename, text){
-  try {
-    localStorage.setItem(MD_STORAGE_PREFIX + filename, text);
-  } catch(e){
+  try { localStorage.setItem(MD_STORAGE_PREFIX + filename, text); }
+  catch(e){
     try {
       const keys = Object.keys(localStorage).filter(k => k.startsWith(MD_STORAGE_PREFIX));
       keys.slice(0, Math.floor(keys.length / 2)).forEach(k => localStorage.removeItem(k));
       localStorage.setItem(MD_STORAGE_PREFIX + filename, text);
-    } catch(e2){ /* ignore */ }
+    } catch(e2){}
   }
 }
-
 function refreshMarkdownInBackground(filename){
   fetch(LOCAL_BASE + filename, {cache:'no-store'})
     .then(r => r.ok ? r.text() : null)
@@ -2802,13 +2695,12 @@ function refreshMarkdownInBackground(filename){
 }
 
 /* ============================================================
-   ПОКАЗ .MD ДЛЯ МОДУЛЕЙ
+   ПОКАЗ .MD
    ============================================================ */
 async function showContentPage(num, title, filename, type, practiceIdx, opts = {}){
   if (!opts.fromPop && !suppressHistory){
     pushView({view:'content', num, type, idx:practiceIdx, title, filename});
   }
-
   homePage.style.display = 'none';
   const m = getModule(num);
   const typeLabel = type === 'theory' ? '📖 Теория' : '✏️ Задания';
@@ -2879,7 +2771,7 @@ async function showContentPage(num, title, filename, type, practiceIdx, opts = {
     });
   });
 
-  ensureBackButton(() => showHome());
+  showBackButton(true, () => showHome());
   if (!opts.fromPop) window.scrollTo({top:0, behavior:'auto'});
   const body = document.getElementById('page-body');
   const meta = document.getElementById('headerMeta');
@@ -2896,9 +2788,12 @@ async function showContentPage(num, title, filename, type, practiceIdx, opts = {
     const md = await fetchMarkdown(filename);
     const isPractice = type === 'practice';
     const parsed = parseMarkdown(md, isPractice);
-    contentCache.set(filename, {html: parsed.html, meta: parsed.taskCount
-      ? `<span>📋 Заданий: <strong>${parsed.taskCount}</strong></span><span>👁 Ответы скрыты</span>`
-      : `<span>📖 Теоретический материал</span>`});
+    contentCache.set(filename, {
+      html: parsed.html,
+      meta: parsed.taskCount
+        ? `<span>📋 Заданий: <strong>${parsed.taskCount}</strong></span><span>👁 Ответы скрыты</span>`
+        : `<span>📖 Теоретический материал</span>`
+    });
     body.innerHTML = parsed.html;
     meta.innerHTML = contentCache.get(filename).meta;
     renderMathJax(body);
@@ -2918,7 +2813,6 @@ async function showContentPage(num, title, filename, type, practiceIdx, opts = {
 function parseMarkdown(md, isPractice){
   if (!md) return {html:'<p>Контент недоступен</p>', taskCount:0};
   md = md.replace(/\u00A0/g, ' ').replace(/[\u200B\u200C\u200D\uFEFF]/g, '');
-
   if (!isPractice) return {html: parseSimpleMarkdown(md), taskCount:0};
 
   const taskRegex = /^\*{0,2}\s*Задание\s+(\d+)\s*\.?\s*\*{0,2}/gmi;
@@ -3141,60 +3035,72 @@ window.addEventListener('popstate', (e) => {
 });
 
 /* ============================================================
-   ВЫПАДАЮЩЕЕ МЕНЮ ИНСТРУМЕНТОВ
+   ОБРАБОТКА DROPDOWN-ГРУПП
    ============================================================ */
-(function initToolsDropdown(){
-  const dropdown = document.getElementById('toolsDropdown');
-  const btn = document.getElementById('toolsBtn');
-  if (!dropdown || !btn) return;
-
-  function closeMenu(){
-    dropdown.classList.remove('open');
-    btn.setAttribute('aria-expanded', 'false');
-  }
-  function toggleMenu(){
-    const isOpen = dropdown.classList.toggle('open');
-    btn.setAttribute('aria-expanded', String(isOpen));
-  }
-
-  btn.addEventListener('click', e => {
-    e.stopPropagation();
-    toggleMenu();
-  });
-
-  document.addEventListener('click', e => {
-    if (!dropdown.contains(e.target)) closeMenu();
-  });
-
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') closeMenu();
-  });
-
-  dropdown.querySelectorAll('.tools-menu-item').forEach(item => {
-    item.addEventListener('click', () => {
-      const tool = item.dataset.tool;
-      closeMenu();
-      showTool(tool);
+(function initNavGroups(){
+  const groups = document.querySelectorAll('.nav-group');
+  function closeAll(except){
+    groups.forEach(g => {
+      if (g !== except){
+        g.classList.remove('open');
+        const btn = g.querySelector('.nav-group-btn');
+        if (btn) btn.setAttribute('aria-expanded', 'false');
+      }
     });
+  }
+  groups.forEach(g => {
+    const btn = g.querySelector('.nav-group-btn');
+    if (!btn) return;
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      const willOpen = !g.classList.contains('open');
+      closeAll(g);
+      g.classList.toggle('open', willOpen);
+      btn.setAttribute('aria-expanded', String(willOpen));
+    });
+  });
+  document.addEventListener('click', e => {
+    if (!e.target.closest('.nav-group')) closeAll();
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeAll();
+  });
+
+  // При клике на пункт меню — закрываем dropdown
+  document.querySelectorAll('.nav-menu-item').forEach(item => {
+    item.addEventListener('click', () => closeAll());
   });
 })();
 
 /* ============================================================
-   NAV + SCROLL
+   NAV CLICK HANDLERS
    ============================================================ */
-document.querySelectorAll('[data-nav]').forEach(btn => {
+document.querySelectorAll('.nav-menu-item[data-nav]').forEach(btn => {
   btn.addEventListener('click', () => {
     const id = btn.dataset.nav;
-    const isHome = homePage.style.display !== 'none';
-    if (!isHome){
-      showHome();
-      requestAnimationFrame(() => {
-        setTimeout(() => {
-          document.getElementById(id)?.scrollIntoView({behavior:'smooth', block:'start'});
-        }, 80);
-      });
-    } else {
-      document.getElementById(id)?.scrollIntoView({behavior:'smooth', block:'start'});
+    if (id === 'modules') {
+      const isHome = homePage.style.display !== 'none';
+      if (!isHome){
+        showHome();
+        requestAnimationFrame(() => {
+          setTimeout(() => document.getElementById('modules')?.scrollIntoView({behavior:'smooth', block:'start'}), 80);
+        });
+      } else {
+        document.getElementById('modules')?.scrollIntoView({behavior:'smooth', block:'start'});
+      }
+    }
+    else if (id === 'klassBtn') showKlassCatalog();
+    else if (id === 'numbersBtn') showNumbersCatalog();
+    else if (id === 'about') {
+      const isHome = homePage.style.display !== 'none';
+      if (!isHome){
+        showHome();
+        requestAnimationFrame(() => {
+          setTimeout(() => document.getElementById('about')?.scrollIntoView({behavior:'smooth', block:'start'}), 80);
+        });
+      } else {
+        document.getElementById('about')?.scrollIntoView({behavior:'smooth', block:'start'});
+      }
     }
   });
 });
@@ -3228,6 +3134,11 @@ document.getElementById('openIupacBtn')?.addEventListener('click', () => showToo
 document.getElementById('iupacBanner')?.addEventListener('click', (e) => {
   if (e.target.closest('#openIupacBtn')) return;
   showTool('iupac-catalog');
+});
+
+/* Инструменты через dropdown "Инструменты" */
+document.querySelectorAll('.nav-menu-item[data-tool]').forEach(item => {
+  item.addEventListener('click', () => showTool(item.dataset.tool));
 });
 
 const scrollProgress = document.getElementById('scrollProgress');
