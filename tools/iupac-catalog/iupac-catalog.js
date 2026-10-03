@@ -20,6 +20,7 @@
      КАТАЛОГ ВЕЩЕСТВ
      ============================================================ */
   const CATALOG = [
+    /* ---------------- АЛКАНЫ ---------------- */
     {
       id: 'alkany',
       title: 'Алканы',
@@ -36,7 +37,7 @@
         { name: '2-Метилбутан',       iupac: '2-methylbutane',      formula: 'C₅H₁₂',     file: '2-methylbutane.sdf' },
         { name: '2,2-Диметилпропан',  iupac: '2,2-dimethylpropane', formula: 'C₅H₁₂',     file: '2,2-dimethylpropan.sdf' },
         { name: 'Гексан',             iupac: 'hexane',              formula: 'C₆H₁₄',     file: 'Hexane.sdf' },
-        { name: '2,3-Диметилбутан',   iupac: '2,3-dimethylbutane',  formula: 'C₆H₁₄',     file: '2,3-dimethylbuthane.sdf' },
+        { name: '2,2-Диметилбутан',   iupac: '2,2-dimethylbutane',  formula: 'C₆H₁₄',     file: '2,2-dimethylbuthane.sdf' },
         { name: 'Гептан',             iupac: 'heptane',             formula: 'C₇H₁₆',     file: 'Gepthane.sdf' },
         { name: 'Октан',              iupac: 'octane',              formula: 'C₈H₁₈',     file: 'Okthane.sdf' },
         { name: 'Нонан',              iupac: 'nonane',              formula: 'C₉H₂₀',     file: 'Nonane.sdf' },
@@ -46,6 +47,8 @@
         { name: 'Циклобутан',         iupac: 'cyclobutane',         formula: 'C₄H₈',      file: 'Cyklobuthane.sdf' }
       ]
     },
+
+    /* ---------------- АЛКЕНЫ ---------------- */
     {
       id: 'alkeny',
       title: 'Алкены',
@@ -53,21 +56,22 @@
       color: '#5b8def',
       dir: 'tools/iupac-catalog/3D_model/Alkeny/',
       items: [
-        { name: 'Этен (этилен)',    iupac: 'ethene',          formula: 'C₂H₄',       file: null },
-        { name: 'Пропен (пропилен)',iupac: 'propene',         formula: 'C₃H₆',       file: null },
-        { name: 'Бутен-1',          iupac: 'but-1-ene',       formula: 'C₄H₈',       file: null },
-        { name: 'Бутен-2 (цис)',    iupac: 'cis-but-2-ene',   formula: 'C₄H₈',       file: null },
-        { name: 'Бутен-2 (транс)',  iupac: 'trans-but-2-ene', formula: 'C₄H₈',       file: null },
-        { name: '2-Метилпропен',    iupac: '2-methylpropene', formula: 'C₄H₈',       file: null },
-        { name: 'Пентен-1',         iupac: 'pent-1-ene',      formula: 'C₅H₁₀',      file: null },
-        { name: 'Пентен-2',         iupac: 'pent-2-ene',      formula: 'C₅H₁₀',      file: null },
-        { name: 'Гексен-1',         iupac: 'hex-1-ene',       formula: 'C₆H₁₂',      file: null },
-        { name: 'Стирол',           iupac: 'styrene',         formula: 'C₆H₅CH=CH₂', file: null },
-        { name: 'Бутадиен-1,3',     iupac: 'buta-1,3-diene',  formula: 'C₄H₆',       file: null },
-        { name: 'Изопрен',          iupac: 'isoprene',        formula: 'C₅H₈',       file: null },
-        { name: 'Циклогексен',      iupac: 'cyclohexene',     formula: 'C₆H₁₀',      file: null }
+        { name: 'Этен (этилен)',    iupac: 'ethene',          formula: 'C₂H₄',       file: 'Ethylene.sdf' },
+        { name: 'Пропен (пропилен)',iupac: 'propene',         formula: 'C₃H₆',       file: 'Propylene.sdf' },
+        { name: 'Бутен-1',          iupac: 'but-1-ene',       formula: 'C₄H₈',       file: '1-Butene.sdf' },
+        { name: 'Бутен-2 (цис)',    iupac: 'cis-but-2-ene',   formula: 'C₄H₈',       file: 'cis-2-BUTENE.sdf' },
+        { name: 'Бутен-2 (транс)',  iupac: 'trans-but-2-ene', formula: 'C₄H₈',       file: 'trans-2-BUTENE.sdf' },
+        { name: '2-Метилпропен',    iupac: '2-methylpropene', formula: 'C₄H₈',       file: 'Isobutylene.sdf' },
+        { name: 'Пентен-1',         iupac: 'pent-1-ene',      formula: 'C₅H₁₀',      file: '1-Pentene.sdf' },
+        { name: 'Пентен-2',         iupac: 'pent-2-ene',      formula: 'C₅H₁₀',      file: '2-Pentene.sdf' },
+        { name: 'Гексен-1',         iupac: 'hex-1-ene',       formula: 'C₆H₁₂',      file: '1-Hexene.sdf' },
+        { name: 'Бутадиен-1,3',     iupac: 'buta-1,3-diene',  formula: 'C₄H₆',       file: '1,3-Butadiene.sdf' },
+        { name: 'Изопрен',          iupac: 'isoprene',        formula: 'C₅H₈',       file: 'Isoprene.sdf' },
+        { name: 'Циклогексен',      iupac: 'cyclohexene',     formula: 'C₆H₁₀',      file: 'Cyclohexene.sdf' }
       ]
     },
+
+    /* ---------------- АЛКИНЫ ---------------- */
     {
       id: 'alkiny',
       title: 'Алкины',
@@ -75,15 +79,17 @@
       color: '#b47cf0',
       dir: 'tools/iupac-catalog/3D_model/Alkiny/',
       items: [
-        { name: 'Этин (ацетилен)', iupac: 'ethyne',    formula: 'C₂H₂',  file: null },
-        { name: 'Пропин',          iupac: 'propyne',   formula: 'C₃H₄',  file: null },
-        { name: 'Бутин-1',         iupac: 'but-1-yne', formula: 'C₄H₆',  file: null },
-        { name: 'Бутин-2',         iupac: 'but-2-yne', formula: 'C₄H₆',  file: null },
-        { name: 'Пентин-1',        iupac: 'pent-1-yne',formula: 'C₅H₈',  file: null },
-        { name: 'Гексин-1',        iupac: 'hex-1-yne', formula: 'C₆H₁₀', file: null },
-        { name: 'Октин-1',         iupac: 'oct-1-yne', formula: 'C₈H₁₄', file: null }
+        { name: 'Этин (ацетилен)', iupac: 'ethyne',    formula: 'C₂H₂',  file: 'Acetylene.sdf' },
+        { name: 'Пропин',          iupac: 'propyne',   formula: 'C₃H₄',  file: 'Propyne.sdf' },
+        { name: 'Бутин-1',         iupac: 'but-1-yne', formula: 'C₄H₆',  file: '1-Butyne.sdf' },
+        { name: 'Бутин-2',         iupac: 'but-2-yne', formula: 'C₄H₆',  file: '2-Butyne.sdf' },
+        { name: 'Пентин-1',        iupac: 'pent-1-yne',formula: 'C₅H₈',  file: '1-Pentyne.sdf' },
+        { name: 'Гексин-1',        iupac: 'hex-1-yne', formula: 'C₆H₁₀', file: '1-Hexyne.sdf' },
+        { name: 'Октин-1',         iupac: 'oct-1-yne', formula: 'C₈H₁₄', file: '1-Octyne.sdf' }
       ]
     },
+
+    /* ---------------- АРЕНЫ ---------------- */
     {
       id: 'areny',
       title: 'Арены',
@@ -91,18 +97,21 @@
       color: '#fbbf24',
       dir: 'tools/iupac-catalog/3D_model/Areny/',
       items: [
-        { name: 'Бензол',              iupac: 'benzene',      formula: 'C₆H₆',          file: null },
-        { name: 'Метилбензол (толуол)',iupac: 'toluene',      formula: 'C₆H₅CH₃',       file: null },
-        { name: 'Этилбензол',          iupac: 'ethylbenzene', formula: 'C₆H₅C₂H₅',      file: null },
-        { name: 'о-Ксилол',            iupac: 'o-xylene',     formula: 'C₆H₄(CH₃)₂',    file: null },
-        { name: 'м-Ксилол',            iupac: 'm-xylene',     formula: 'C₆H₄(CH₃)₂',    file: null },
-        { name: 'п-Ксилол',            iupac: 'p-xylene',     formula: 'C₆H₄(CH₃)₂',    file: null },
-        { name: 'Кумол',               iupac: 'cumene',       formula: 'C₆H₅CH(CH₃)₂',  file: null },
-        { name: 'Нафталин',            iupac: 'naphthalene',  formula: 'C₁₀H₈',         file: null },
-        { name: 'Антрацен',            iupac: 'anthracene',   formula: 'C₁₄H₁₀',        file: null },
-        { name: 'Фенантрен',           iupac: 'phenanthrene', formula: 'C₁₄H₁₀',        file: null }
+        { name: 'Бензол',              iupac: 'benzene',      formula: 'C₆H₆',          file: 'Benzene.sdf' },
+        { name: 'Метилбензол (толуол)',iupac: 'toluene',      formula: 'C₆H₅CH₃',       file: 'Toluene.sdf' },
+        { name: 'Этилбензол',          iupac: 'ethylbenzene', formula: 'C₆H₅C₂H₅',      file: 'Ethylbenzene.sdf' },
+        { name: 'Стирол',              iupac: 'styrene',      formula: 'C₆H₅CH=CH₂',    file: 'Styrene.sdf' },
+        { name: 'о-Ксилол',            iupac: 'o-xylene',     formula: 'C₆H₄(CH₃)₂',    file: 'O-Xylene.sdf' },
+        { name: 'м-Ксилол',            iupac: 'm-xylene',     formula: 'C₆H₄(CH₃)₂',    file: 'M-Xylene.sdf' },
+        { name: 'п-Ксилол',            iupac: 'p-xylene',     formula: 'C₆H₄(CH₃)₂',    file: 'P-Xylene.sdf' },
+        { name: 'Кумол',               iupac: 'cumene',       formula: 'C₆H₅CH(CH₃)₂',  file: 'Cumene.sdf' },
+        { name: 'Нафталин',            iupac: 'naphthalene',  formula: 'C₁₀H₈',         file: 'Naphthalene.sdf' },
+        { name: 'Антрацен',            iupac: 'anthracene',   formula: 'C₁₄H₁₀',        file: 'Anthracene.sdf' },
+        { name: 'Фенантрен',           iupac: 'phenanthrene', formula: 'C₁₄H₁₀',        file: 'Phenanthrene.sdf' }
       ]
     },
+
+    /* ---------------- СПИРТЫ ---------------- */
     {
       id: 'spirty',
       title: 'Спирты',
@@ -110,21 +119,23 @@
       color: '#fb923c',
       dir: 'tools/iupac-catalog/3D_model/Spirty/',
       items: [
-        { name: 'Метанол',            iupac: 'methanol',           formula: 'CH₃OH',         file: null },
-        { name: 'Этанол',             iupac: 'ethanol',            formula: 'C₂H₅OH',        file: null },
-        { name: 'Пропанол-1',         iupac: 'propan-1-ol',        formula: 'C₃H₇OH',        file: null },
-        { name: 'Пропанол-2',         iupac: 'propan-2-ol',        formula: 'CH₃CHOHCH₃',    file: null },
-        { name: 'Бутанол-1',          iupac: 'butan-1-ol',         formula: 'C₄H₉OH',        file: null },
-        { name: 'Бутанол-2',          iupac: 'butan-2-ol',         formula: 'C₂H₅CHOHCH₃',   file: null },
-        { name: '2-Метилпропанол-1',  iupac: '2-methylpropan-1-ol',formula: '(CH₃)₂CHCH₂OH', file: null },
-        { name: '2-Метилпропанол-2',  iupac: '2-methylpropan-2-ol',formula: '(CH₃)₃COH',     file: null },
-        { name: 'Пентанол-1',         iupac: 'pentan-1-ol',        formula: 'C₅H₁₁OH',       file: null },
-        { name: 'Этиленгликоль',      iupac: 'ethane-1,2-diol',    formula: 'HOCH₂CH₂OH',    file: null },
-        { name: 'Глицерин',           iupac: 'glycerol',           formula: 'C₃H₅(OH)₃',     file: null },
-        { name: 'Циклогексанол',      iupac: 'cyclohexanol',       formula: 'C₆H₁₁OH',       file: null },
-        { name: 'Бензиловый спирт',   iupac: 'benzyl alcohol',     formula: 'C₆H₅CH₂OH',     file: null }
+        { name: 'Метанол',            iupac: 'methanol',           formula: 'CH₃OH',         file: 'Methanol.sdf' },
+        { name: 'Этанол',             iupac: 'ethanol',            formula: 'C₂H₅OH',        file: 'Ethanol.sdf' },
+        { name: 'Пропанол-1',         iupac: 'propan-1-ol',        formula: 'C₃H₇OH',        file: '1-Propanol.sdf' },
+        { name: 'Пропанол-2',         iupac: 'propan-2-ol',        formula: 'CH₃CHOHCH₃',    file: '2-Propanol.sdf' },
+        { name: 'Бутанол-1',          iupac: 'butan-1-ol',         formula: 'C₄H₉OH',        file: '1-Butanol.sdf' },
+        { name: 'Бутанол-2',          iupac: 'butan-2-ol',         formula: 'C₂H₅CHOHCH₃',   file: '2-Butanol.sdf' },
+        { name: '2-Метилпропанол-1',  iupac: '2-methylpropan-1-ol',formula: '(CH₃)₂CHCH₂OH', file: '2-Methylpropanol-1.sdf' },
+        { name: '2-Метилпропанол-2',  iupac: '2-methylpropan-2-ol',formula: '(CH₃)₃COH',     file: '2-Methylpropanol-2.sdf' },
+        { name: 'Пентанол-1',         iupac: 'pentan-1-ol',        formula: 'C₅H₁₁OH',       file: '1-Pentanol.sdf' },
+        { name: 'Этиленгликоль',      iupac: 'ethane-1,2-diol',    formula: 'HOCH₂CH₂OH',    file: 'Ethylene_Glycol.sdf' },
+        { name: 'Глицерин',           iupac: 'glycerol',           formula: 'C₃H₅(OH)₃',     file: 'Glycerol.sdf' },
+        { name: 'Циклогексанол',      iupac: 'cyclohexanol',       formula: 'C₆H₁₁OH',       file: 'Cyclohexanol.sdf' },
+        { name: 'Бензиловый спирт',   iupac: 'benzyl alcohol',     formula: 'C₆H₅CH₂OH',     file: 'Benzyl_Alcohol.sdf' }
       ]
     },
+
+    /* ---------------- ФЕНОЛЫ ---------------- */
     {
       id: 'fenoly',
       title: 'Фенолы',
@@ -132,70 +143,75 @@
       color: '#f87171',
       dir: 'tools/iupac-catalog/3D_model/Fenoly/',
       items: [
-        { name: 'Фенол',              iupac: 'phenol',          formula: 'C₆H₅OH',        file: null },
-        { name: 'о-Крезол',           iupac: 'o-cresol',        formula: 'CH₃C₆H₄OH',     file: null },
-        { name: 'м-Крезол',           iupac: 'm-cresol',        formula: 'CH₃C₆H₄OH',     file: null },
-        { name: 'п-Крезол',           iupac: 'p-cresol',        formula: 'CH₃C₆H₄OH',     file: null },
-        { name: 'Пирокатехин',        iupac: 'pyrocatechol',    formula: 'C₆H₄(OH)₂',     file: null },
-        { name: 'Резорцин',           iupac: 'resorcinol',      formula: 'C₆H₄(OH)₂',     file: null },
-        { name: 'Гидрохинон',         iupac: 'hydroquinone',    formula: 'C₆H₄(OH)₂',     file: null },
-        { name: 'Пикриновая кислота', iupac: 'picric acid',     formula: 'C₆H₂(NO₂)₃OH',  file: null }
+        { name: 'Фенол',              iupac: 'phenol',          formula: 'C₆H₅OH',        file: 'Phenol.sdf' },
+        { name: 'о-Крезол',           iupac: 'o-cresol',        formula: 'CH₃C₆H₄OH',     file: 'O-Cresol.sdf' },
+        { name: 'м-Крезол',           iupac: 'm-cresol',        formula: 'CH₃C₆H₄OH',     file: 'M-Cresol.sdf' },
+        { name: 'п-Крезол',           iupac: 'p-cresol',        formula: 'CH₃C₆H₄OH',     file: 'P-Cresol.sdf' },
+        { name: 'Пирокатехин',        iupac: 'pyrocatechol',    formula: 'C₆H₄(OH)₂',     file: 'Catechol.sdf' },
+        { name: 'Резорцин',           iupac: 'resorcinol',      formula: 'C₆H₄(OH)₂',     file: 'Resorcinol.sdf' },
+        { name: 'Гидрохинон',         iupac: 'hydroquinone',    formula: 'C₆H₄(OH)₂',     file: 'Hydroquinone.sdf' },
+        { name: 'Пикриновая кислота', iupac: 'picric acid',     formula: 'C₆H₂(NO₂)₃OH',  file: 'Picric Acid.sdf' }
       ]
     },
+
+    /* ---------------- АЛЬДЕГИДЫ И КЕТОНЫ ---------------- */
     {
       id: 'aldehydy',
       title: 'Альдегиды и кетоны',
       icon: '⚗️',
       color: '#34d399',
-      dir: 'tools/iupac-catalog/3D_model/Aldegidy_ketony/',
+      dir: 'tools/iupac-catalog/3D_model/Aldegidy_Ketony/',
       items: [
-        { name: 'Формальдегид (метаналь)', iupac: 'formaldehyde', formula: 'HCHO',        file: null },
-        { name: 'Ацетальдегид (этаналь)',  iupac: 'acetaldehyde', formula: 'CH₃CHO',      file: null },
-        { name: 'Пропаналь',               iupac: 'propanal',     formula: 'C₂H₅CHO',     file: null },
-        { name: 'Бутаналь',                iupac: 'butanal',      formula: 'C₃H₇CHO',     file: null },
-        { name: 'Бензальдегид',            iupac: 'benzaldehyde', formula: 'C₆H₅CHO',     file: null },
-        { name: 'Ацетон (пропанон)',       iupac: 'acetone',      formula: 'CH₃COCH₃',    file: null },
-        { name: 'Бутанон-2',               iupac: 'butan-2-one',  formula: 'C₂H₅COCH₃',   file: null },
-        { name: 'Циклогексанон',           iupac: 'cyclohexanone',formula: 'C₆H₁₀O',      file: null },
-        { name: 'Ацетофенон',              iupac: 'acetophenone', formula: 'C₆H₅COCH₃',   file: null }
+        { name: 'Формальдегид (метаналь)', iupac: 'formaldehyde', formula: 'HCHO',        file: 'Formaldehyde.sdf' },
+        { name: 'Ацетальдегид (этаналь)',  iupac: 'acetaldehyde', formula: 'CH₃CHO',      file: 'Acetaldehyde.sdf' },
+        { name: 'Пропаналь',               iupac: 'propanal',     formula: 'C₂H₅CHO',     file: 'Propanal.sdf' },
+        { name: 'Бутаналь',                iupac: 'butanal',      formula: 'C₃H₇CHO',     file: 'Butanal.sdf' },
+        { name: 'Бензальдегид',            iupac: 'benzaldehyde', formula: 'C₆H₅CHO',     file: 'Benzaldehyde.sdf' },
+        { name: 'Ацетон (пропанон)',       iupac: 'acetone',      formula: 'CH₃COCH₃',    file: 'Acetone.sdf' },
+        { name: 'Бутанон-2',               iupac: 'butan-2-one',  formula: 'C₂H₅COCH₃',   file: 'Methyl_Ethyl_Ketone.sdf' },
+        { name: 'Циклогексанон',           iupac: 'cyclohexanone',formula: 'C₆H₁₀O',      file: 'Cyclohexanone.sdf' },
+        { name: 'Ацетофенон',              iupac: 'acetophenone', formula: 'C₆H₅COCH₃',   file: 'Acetophenone.sdf' }
       ]
     },
+
+    /* ---------------- КАРБОНОВЫЕ КИСЛОТЫ ---------------- */
     {
       id: 'karbonovye',
       title: 'Карбоновые кислоты',
       icon: '🧪',
       color: '#10b981',
-      dir: 'tools/iupac-catalog/3D_model/Karbonovye_kisloty/',
+      dir: 'tools/iupac-catalog/3D_model/Kisloty/',
       items: [
-        { name: 'Муравьиная кислота',   iupac: 'formic acid',    formula: 'HCOOH',            file: null },
-        { name: 'Уксусная кислота',     iupac: 'acetic acid',    formula: 'CH₃COOH',          file: null },
-        { name: 'Пропионовая кислота',  iupac: 'propionic acid', formula: 'C₂H₅COOH',         file: null },
-        { name: 'Масляная кислота',     iupac: 'butyric acid',   formula: 'C₃H₇COOH',         file: null },
-        { name: 'Валериановая кислота', iupac: 'valeric acid',   formula: 'C₄H₉COOH',         file: null },
-        { name: 'Щавелевая кислота',    iupac: 'oxalic acid',    formula: 'HOOC-COOH',        file: null },
-        { name: 'Малоновая кислота',    iupac: 'malonic acid',   formula: 'HOOC-CH₂-COOH',    file: null },
-        { name: 'Янтарная кислота',     iupac: 'succinic acid',  formula: 'HOOC-(CH₂)₂-COOH', file: null },
-        { name: 'Бензойная кислота',    iupac: 'benzoic acid',   formula: 'C₆H₅COOH',         file: null },
-        { name: 'Акриловая кислота',    iupac: 'acrylic acid',   formula: 'CH₂=CHCOOH',       file: null }
+        { name: 'Муравьиная кислота',   iupac: 'formic acid',    formula: 'HCOOH',            file: 'Formic_Acid.sdf' },
+        { name: 'Уксусная кислота',     iupac: 'acetic acid',    formula: 'CH₃COOH',          file: 'Acetic_Acid.sdf' },
+        { name: 'Пропионовая кислота',  iupac: 'propionic acid', formula: 'C₂H₅COOH',         file: 'Propionic_Acid.sdf' },
+        { name: 'Масляная кислота',     iupac: 'butyric acid',   formula: 'C₃H₇COOH',         file: 'Butyric_Acid.sdf' },
+        { name: 'Валериановая кислота', iupac: 'valeric acid',   formula: 'C₄H₉COOH',         file: 'Pentanoic_Acid.sdf' },
+        { name: 'Щавелевая кислота',    iupac: 'oxalic acid',    formula: 'HOOC-COOH',        file: 'Oxalic_Acid.sdf' },
+        { name: 'Малоновая кислота',    iupac: 'malonic acid',   formula: 'HOOC-CH₂-COOH',    file: 'Malonic_Acid.sdf' },
+        { name: 'Янтарная кислота',     iupac: 'succinic acid',  formula: 'HOOC-(CH₂)₂-COOH', file: 'Succinic_Acid.sdf' },
+        { name: 'Бензойная кислота',    iupac: 'benzoic acid',   formula: 'C₆H₅COOH',         file: 'Benzoic_Acid.sdf' }
       ]
     },
+
+    /* ---------------- СЛОЖНЫЕ ЭФИРЫ ---------------- */
     {
       id: 'efiry',
       title: 'Сложные эфиры',
       icon: '💠',
       color: '#06b6d4',
-      dir: 'tools/iupac-catalog/3D_model/Efiry/',
+      dir: 'tools/iupac-catalog/3D_model/Ephiry/',
       items: [
-        { name: 'Метилформиат',  iupac: 'methyl formate',  formula: 'HCOOCH₃',      file: null },
-        { name: 'Этилформиат',   iupac: 'ethyl formate',   formula: 'HCOOC₂H₅',     file: null },
-        { name: 'Метилацетат',   iupac: 'methyl acetate',  formula: 'CH₃COOCH₃',    file: null },
-        { name: 'Этилацетат',    iupac: 'ethyl acetate',   formula: 'CH₃COOC₂H₅',   file: null },
-        { name: 'Пропилацетат',  iupac: 'propyl acetate',  formula: 'CH₃COOC₃H₇',   file: null },
-        { name: 'Метилбензоат',  iupac: 'methyl benzoate', formula: 'C₆H₅COOCH₃',   file: null },
-        { name: 'Тристеарин',    iupac: 'tristearin',      formula: 'C₅₇H₁₁₀O₆',    file: null },
-        { name: 'Триолеин',      iupac: 'triolein',        formula: 'C₅₇H₁₀₄O₆',    file: null }
+        { name: 'Метилформиат',  iupac: 'methyl formate',  formula: 'HCOOCH₃',      file: 'Methyl_formate.sdf' },
+        { name: 'Этилформиат',   iupac: 'ethyl formate',   formula: 'HCOOC₂H₅',     file: 'Ethyl_formate.sdf' },
+        { name: 'Метилацетат',   iupac: 'methyl acetate',  formula: 'CH₃COOCH₃',    file: 'Methyl_Acetate.sdf' },
+        { name: 'Этилацетат',    iupac: 'ethyl acetate',   formula: 'CH₃COOC₂H₅',   file: 'Ethyl_Acetate.sdf' },
+        { name: 'Пропилацетат',  iupac: 'propyl acetate',  formula: 'CH₃COOC₃H₇',   file: 'Propyl_Acetate.sdf' },
+        { name: 'Метилбензоат',  iupac: 'methyl benzoate', formula: 'C₆H₅COOCH₃',   file: 'Methyl_Benzoate.sdf' }
       ]
     },
+
+    /* ---------------- АМИНЫ ---------------- */
     {
       id: 'aminy',
       title: 'Амины',
@@ -203,15 +219,17 @@
       color: '#818cf8',
       dir: 'tools/iupac-catalog/3D_model/Aminy/',
       items: [
-        { name: 'Метиламин',   iupac: 'methylamine',   formula: 'CH₃NH₂',   file: null },
-        { name: 'Этиламин',    iupac: 'ethylamine',    formula: 'C₂H₅NH₂',  file: null },
-        { name: 'Пропиламин',  iupac: 'propylamine',   formula: 'C₃H₇NH₂',  file: null },
-        { name: 'Диметиламин', iupac: 'dimethylamine', formula: '(CH₃)₂NH', file: null },
-        { name: 'Триметиламин',iupac: 'trimethylamine',formula: '(CH₃)₃N',  file: null },
-        { name: 'Анилин',      iupac: 'aniline',       formula: 'C₆H₅NH₂',  file: null },
-        { name: 'Дифениламин', iupac: 'diphenylamine', formula: '(C₆H₅)₂NH',file: null }
+        { name: 'Метиламин',   iupac: 'methylamine',   formula: 'CH₃NH₂',   file: 'Methylamine.sdf' },
+        { name: 'Этиламин',    iupac: 'ethylamine',    formula: 'C₂H₅NH₂',  file: 'Ethylamine.sdf' },
+        { name: 'Пропиламин',  iupac: 'propylamine',   formula: 'C₃H₇NH₂',  file: 'Propylamine.sdf' },
+        { name: 'Диметиламин', iupac: 'dimethylamine', formula: '(CH₃)₂NH', file: 'Dimethylamine.sdf' },
+        { name: 'Триметиламин',iupac: 'trimethylamine',formula: '(CH₃)₃N',  file: 'Trimethylamine.sdf' },
+        { name: 'Анилин',      iupac: 'aniline',       formula: 'C₆H₅NH₂',  file: 'Aniline.sdf' },
+        { name: 'Дифениламин', iupac: 'diphenylamine', formula: '(C₆H₅)₂NH',file: 'Diphenylamine.sdf' }
       ]
     },
+
+    /* ---------------- АМИНОКИСЛОТЫ ---------------- */
     {
       id: 'aminokisloty',
       title: 'Аминокислоты',
@@ -219,25 +237,25 @@
       color: '#c084fc',
       dir: 'tools/iupac-catalog/3D_model/Aminokisloty/',
       items: [
-        { name: 'Глицин',                iupac: 'glycine',      formula: 'NH₂CH₂COOH',             file: null },
-        { name: 'Аланин',                iupac: 'alanine',      formula: 'CH₃CH(NH₂)COOH',         file: null },
-        { name: 'Валин',                 iupac: 'valine',       formula: '(CH₃)₂CHCH(NH₂)COOH',    file: null },
-        { name: 'Лейцин',                iupac: 'leucine',      formula: '(CH₃)₂CHCH₂CH(NH₂)COOH', file: null },
-        { name: 'Изолейцин',             iupac: 'isoleucine',   formula: 'C₂H₅CH(CH₃)CH(NH₂)COOH', file: null },
-        { name: 'Серин',                 iupac: 'serine',       formula: 'HOCH₂CH(NH₂)COOH',       file: null },
-        { name: 'Цистеин',               iupac: 'cysteine',     formula: 'HSCH₂CH(NH₂)COOH',       file: null },
-        { name: 'Метионин',              iupac: 'methionine',   formula: 'CH₃SCH₂CH₂CH(NH₂)COOH',  file: null },
-        { name: 'Фенилаланин',           iupac: 'phenylalanine',formula: 'C₆H₅CH₂CH(NH₂)COOH',     file: null },
-        { name: 'Тирозин',               iupac: 'tyrosine',     formula: 'HOC₆H₄CH₂CH(NH₂)COOH',   file: null },
-        { name: 'Аспарагиновая кислота', iupac: 'aspartic acid',formula: 'HOOCCH₂CH(NH₂)COOH',     file: null },
-        { name: 'Глутаминовая кислота',  iupac: 'glutamic acid',formula: 'HOOC(CH₂)₂CH(NH₂)COOH',  file: null },
-        { name: 'Лизин',                 iupac: 'lysine',       formula: 'H₂N(CH₂)₄CH(NH₂)COOH',   file: null },
-        { name: 'Аргинин',               iupac: 'arginine',     formula: 'H₂NC(=NH)NH(CH₂)₃CH(NH₂)COOH', file: null },
-        { name: 'Гистидин',              iupac: 'histidine',    formula: 'C₆H₉N₃O₂',               file: null },
-        { name: 'Пролин',                iupac: 'proline',      formula: 'C₅H₉NO₂',                file: null },
-        { name: 'Триптофан',             iupac: 'tryptophan',   formula: 'C₁₁H₁₂N₂O₂',             file: null }
+        { name: 'Глицин',                iupac: 'glycine',      formula: 'NH₂CH₂COOH',             file: 'Glycine.sdf' },
+        { name: 'Аланин',                iupac: 'alanine',      formula: 'CH₃CH(NH₂)COOH',         file: 'Alanine.sdf' },
+        { name: 'Валин',                 iupac: 'valine',       formula: '(CH₃)₂CHCH(NH₂)COOH',    file: 'Valine.sdf' },
+        { name: 'Лейцин',                iupac: 'leucine',      formula: '(CH₃)₂CHCH₂CH(NH₂)COOH', file: 'Leucine.sdf' },
+        { name: 'Изолейцин',             iupac: 'isoleucine',   formula: 'C₂H₅CH(CH₃)CH(NH₂)COOH', file: 'Isoleucine.sdf' },
+        { name: 'Серин',                 iupac: 'serine',       formula: 'HOCH₂CH(NH₂)COOH',       file: 'Serine.sdf' },
+        { name: 'Цистеин',               iupac: 'cysteine',     formula: 'HSCH₂CH(NH₂)COOH',       file: 'Cysteine.sdf' },
+        { name: 'Метионин',              iupac: 'methionine',   formula: 'CH₃SCH₂CH₂CH(NH₂)COOH',  file: 'Methionine.sdf' },
+        { name: 'Фенилаланин',           iupac: 'phenylalanine',formula: 'C₆H₅CH₂CH(NH₂)COOH',     file: 'Phenylalanine.sdf' },
+        { name: 'Аспарагиновая кислота', iupac: 'aspartic acid',formula: 'HOOCCH₂CH(NH₂)COOH',     file: 'Aspartic_Acid.sdf' },
+        { name: 'Глутаминовая кислота',  iupac: 'glutamic acid',formula: 'HOOC(CH₂)₂CH(NH₂)COOH',  file: 'Glutamic_Acid.sdf' },
+        { name: 'Лизин',                 iupac: 'lysine',       formula: 'H₂N(CH₂)₄CH(NH₂)COOH',   file: 'Lysine.sdf' },
+        { name: 'Аргинин',               iupac: 'arginine',     formula: 'H₂NC(=NH)NH(CH₂)₃CH(NH₂)COOH', file: 'Arginine.sdf' },
+        { name: 'Пролин',                iupac: 'proline',      formula: 'C₅H₉NO₂',                file: 'Proline.sdf' },
+        { name: 'Триптофан',             iupac: 'tryptophan',   formula: 'C₁₁H₁₂N₂O₂',             file: 'Tryptophan.sdf' }
       ]
     },
+
+    /* ---------------- УГЛЕВОДЫ ---------------- */
     {
       id: 'uglevody',
       title: 'Углеводы',
@@ -245,14 +263,11 @@
       color: '#fb7185',
       dir: 'tools/iupac-catalog/3D_model/Uglevody/',
       items: [
-        { name: 'Глюкоза',       iupac: 'D-glucose',   formula: 'C₆H₁₂O₆',   file: null },
-        { name: 'Фруктоза',      iupac: 'D-fructose',  formula: 'C₆H₁₂O₆',   file: null },
-        { name: 'Галактоза',     iupac: 'D-galactose', formula: 'C₆H₁₂O₆',   file: null },
-        { name: 'Рибоза',        iupac: 'D-ribose',    formula: 'C₅H₁₀O₅',   file: null },
-        { name: 'Дезоксирибоза', iupac: 'deoxyribose', formula: 'C₅H₁₀O₄',   file: null },
-        { name: 'Сахароза',      iupac: 'sucrose',     formula: 'C₁₂H₂₂O₁₁', file: null },
-        { name: 'Мальтоза',      iupac: 'maltose',     formula: 'C₁₂H₂₂O₁₁', file: null },
-        { name: 'Лактоза',       iupac: 'lactose',     formula: 'C₁₂H₂₂O₁₁', file: null }
+        { name: 'Глюкоза',   iupac: 'D-glucose',   formula: 'C₆H₁₂O₆',   file: 'Glucose.sdf' },
+        { name: 'Фруктоза',  iupac: 'D-fructose',  formula: 'C₆H₁₂O₆',   file: 'Fructose.sdf' },
+        { name: 'Галактоза', iupac: 'D-galactose', formula: 'C₆H₁₂O₆',   file: 'Galactose.sdf' },
+        { name: 'Рибоза',    iupac: 'D-ribose',    formula: 'C₅H₁₀O₅',   file: 'Ribose.sdf' },
+        { name: 'Сахароза',  iupac: 'sucrose',     formula: 'C₁₂H₂₂O₁₁', file: 'Sucrose.sdf' }
       ]
     }
   ];
@@ -499,7 +514,6 @@
       container.style.background = 'rgba(255,255,255,0.03)';
       viewerEl.appendChild(container);
 
-      // Форсируем layout, чтобы размеры точно посчитались
       var cw = container.clientWidth;
       var ch = container.clientHeight;
       console.log('📐 Размер контейнера:', cw, '×', ch);
@@ -676,7 +690,7 @@
           '<div class="iupac-badge">📖 Справочник названий</div>' +
           '<h2>ИЮПАК и тривиальные названия</h2>' +
           '<p>' + totalCount + ' соединений по классам. ' +
-            'Доступно 3D-моделей: <b>' + withModel + '</b> (остальные будут добавлены позже). ' +
+            'Доступно 3D-моделей: <b>' + withModel + '</b>. ' +
             'Нажмите <b>3D</b>, чтобы увидеть пространственное строение молекулы.</p>' +
         '</div>' +
         '<div class="iupac-search">' +
