@@ -6,21 +6,17 @@
    (tools/iupac-catalog/3D_model/...).
    3Dmol.js подключается из ./lib/3Dmol-min.js (fallback — CDN).
 
-   ВАЖНО: в каталоге поле называется `file` (только имя файла),
-   полный путь собирается как group.dir + item.file.
-   Поле `sdf` в объекте item НЕ ИСПОЛЬЗУЕТСЯ при проверке hasModel.
+   ВАЖНО:
+   - в каталоге поле называется `file` (только имя файла),
+     полный путь собирается как group.dir + item.file.
+   - перед созданием viewer ждём завершения CSS-анимации модалки,
+     иначе canvas получает нулевой размер и сцена пустая.
    ============================================================ */
 (function(){
   'use strict';
 
   /* ============================================================
      КАТАЛОГ ВЕЩЕСТВ
-     Каждый item содержит:
-       name    — русское название
-       iupac   — IUPAC-имя (для поиска)
-       formula — формула
-       file    — имя SDF-файла внутри папки группы (group.dir),
-                 либо null, если файла пока нет
      ============================================================ */
   const CATALOG = [
     {
@@ -49,11 +45,6 @@
         { name: 'Циклобутан',         iupac: 'cyclobutane',         formula: 'C₄H₈',      file: 'Cyklobuthane.sdf' }
       ]
     },
-    /* ------------------------------------------------------------------
-       Остальные классы пока без SDF-файлов. Как только положите файлы
-       в соответствующую папку и впишете имя в поле `file`,
-       кнопка 3D станет активной.
-       ------------------------------------------------------------------ */
     {
       id: 'alkeny',
       title: 'Алкены',
@@ -267,8 +258,6 @@
 
   /* ============================================================
      ЗАГРУЗКА 3DMOL.JS
-     Сначала пробуем ЛОКАЛЬНУЮ копию, потом — резервные CDN.
-     Чтобы работало строго локально — оставьте только первый URL.
      ============================================================ */
   const THREEDMOL_SOURCES = [
     'tools/iupac-catalog/lib/3Dmol-min.js',
@@ -341,7 +330,7 @@
   }
 
   /* ============================================================
-     ЗАГРУЗКА SDF ИЗ ЛОКАЛЬНОГО ФАЙЛА
+     ЗАГРУЗКА SDF
      ============================================================ */
   const SDF_CACHE_PREFIX = 'orgchem-sdf:';
 
@@ -351,7 +340,7 @@
   }
   function sdfCacheSet(key, value){
     try { sessionStorage.setItem(SDF_CACHE_PREFIX + key, value); }
-    catch(e){ /* переполнение — игнорируем */ }
+    catch(e){ /* ignore */ }
   }
 
   async function fetchSDF(url, cacheKey){
@@ -454,7 +443,6 @@
      ОТКРЫТИЕ МОДАЛКИ С 3D
      ============================================================ */
   async function openMoleculeModal(item, groupColor){
-    // item.sdf должен быть уже собран как полный путь.
     if (!item.sdf){
       alert('Для этого соединения 3D-модель пока не добавлена в репозиторий.');
       return;
@@ -492,29 +480,43 @@
       log('✅ Шаг 2: SDF получен<br>' +
           '<span style="font-size:0.7rem;color:var(--ink-muted)">Размер: ' + sdf.length + ' байт</span>');
 
-      log('📦 Шаг 3/4: создание контейнера…');
-      await new Promise(function(r){ setTimeout(r, 60); });
+      log('📦 Шаг 3/4: подготовка контейнера…');
 
+      // ⚠️ Ждём завершения CSS-анимации открытия модалки
+      //    (transform: scale(0.9) → scale(1)), иначе контейнер
+      //    получит нулевые размеры и canvas будет пустым.
+      await new Promise(function(r){ setTimeout(r, 350); });
+
+      // Полностью очищаем viewerEl и создаём свежий контейнер
       viewerEl.innerHTML = '';
       var container = document.createElement('div');
       container.id = 'iupac-3d-canvas';
       container.style.width = '100%';
-      container.style.height = '480px';
+      container.style.height = '100%';
+      container.style.position = 'absolute';
+      container.style.top = '0';
+      container.style.left = '0';
       container.style.background = 'rgba(255,255,255,0.03)';
-      container.style.borderRadius = '12px';
-      container.style.position = 'relative';
+      viewerEl.style.position = 'relative';
       viewerEl.appendChild(container);
 
-      await new Promise(function(r){ setTimeout(r, 60); });
+      // Ждём двух кадров, чтобы браузер пересчитал layout
+      await new Promise(function(r){
+        requestAnimationFrame(function(){ requestAnimationFrame(r); });
+      });
 
-      var rect = container.getBoundingClientRect();
-      if (rect.width < 10 || rect.height < 10){
-        throw new Error('Контейнер имеет нулевой размер: ' + rect.width + '×' + rect.height);
+      var cw = container.clientWidth;
+      var ch = container.clientHeight;
+      console.log('📐 Размер контейнера:', cw, '×', ch);
+
+      if (cw < 10 || ch < 10){
+        throw new Error('Контейнер имеет нулевой размер: ' + cw + '×' + ch);
       }
 
       log('📦 Шаг 4/4: рендер…');
       var viewer = window.$3Dmol.createViewer(container, {
-        backgroundColor: '#0a0e27'
+        backgroundColor: '#0a0e27',
+        antialias: true
       });
       if (!viewer) throw new Error('createViewer вернул null');
       currentViewer = viewer;
@@ -528,11 +530,25 @@
       });
       viewer.zoomTo();
       viewer.render();
-      viewer.spin('y', 0.5);
 
-      await new Promise(function(r){ setTimeout(r, 180); });
-      var statusEl = viewerEl.querySelector('.iupac-3d-status');
-      if (statusEl) statusEl.remove();
+      // ⚠️ Повторный resize + render через 300 мс — часто именно это
+      //    «оживляет» canvas, если первый рендер ушёл в никуда.
+      setTimeout(function(){
+        try {
+          viewer.resize();
+          viewer.render();
+          viewer.spin('y', 0.5);
+          console.log('✅ Повторный рендер выполнен');
+        } catch(err){
+          console.warn('Повторный рендер не удался:', err);
+        }
+      }, 300);
+
+      // Убираем статус «Загрузка…»
+      setTimeout(function(){
+        var statusEl = viewerEl.querySelector('.iupac-3d-status');
+        if (statusEl) statusEl.remove();
+      }, 400);
 
     } catch(e){
       console.error('❌ ОШИБКА 3D:', e);
@@ -570,8 +586,7 @@
       if (query && !filtered.length) return '';
 
       var itemsHtml = filtered.map(function(item){
-        // ⚠️ ВАЖНО: проверяем именно item.file (имя файла),
-        //    а не item.sdf (его в каталоге нет).
+        // ⚠️ Проверяем именно item.file (имя файла), а не item.sdf.
         var hasModel = !!item.file;
 
         return '<div class="iupac-item' + (hasModel ? '' : ' iupac-item-disabled') + '">' +
@@ -621,7 +636,7 @@
         var item = group && group.items.find(function(it){ return it.iupac === iupac; });
         if (!item || !group) return;
 
-        // Собираем полный путь к SDF: dir + file → item.sdf
+        // Собираем полный путь: dir + file → item.sdf
         var fullItem = Object.assign({}, item, {
           sdf: item.file ? (group.dir + item.file) : null
         });
@@ -653,7 +668,6 @@
   window.__renderIupacCatalog = function(containerEl){
     var totalCount = CATALOG.reduce(function(sum, g){ return sum + g.items.length; }, 0);
     var withModel = CATALOG.reduce(function(sum, g){
-      // ⚠️ Считаем по item.file, а не по item.sdf
       return sum + g.items.filter(function(it){ return !!it.file; }).length;
     }, 0);
 
