@@ -526,7 +526,8 @@
       log('📦 Шаг 4/4: рендер…');
       var viewer = window.$3Dmol.createViewer(container, {
         backgroundColor: '#0a0e27',
-        antialias: true
+        antialias: false,
+        upscale: false
       });
       if (!viewer) throw new Error('createViewer вернул null');
       currentViewer = viewer;
